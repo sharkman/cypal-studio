@@ -26,7 +26,7 @@
          </run>
       </runtime>
       <builder
-            id="in.cypal.gwtpro.core.builder2">
+            id="in.cypal.studio.gwt.core.gwtBuilder">
       </builder>
    </extension>
    <extension
@@ -41,11 +41,11 @@
          </run></builder>
    </extension>
    <extension
-         id="in.cypal.gwtpro.core.gwtFacet"
+         id="in.cypal.studio.gwt.core.gwtFacet"
          point="org.eclipse.wst.common.project.facet.core.facets">
-      <project-facet id="in.cypal.gwtpro.core.gwtFacet">
+      <project-facet id="in.cypal.studio.gwt.core.gwtFacet">
          <label>
-            GWT Pro
+            Cypal's GWT Facet
          </label>
          <description>
             Enables the web application to use Google's Ajax library, GWT
@@ -55,10 +55,10 @@
          </icon>
       </project-facet>
       <project-facet-version
-            facet="in.cypal.gwtpro.core.gwtFacet"
+            facet="in.cypal.studio.gwt.core.gwtFacet"
             version="1.0">
          <action
-               id="in.cypal.gwtpro.core.gwtFacet.install"
+               id="in.cypal.studio.gwt.core.gwtFacet.install"
                type="install">
             <config-factory class="in.cypal.studio.gwt.core.facet.InstallActionConfigFactory"/>
             <delegate class="in.cypal.studio.gwt.core.facet.InstallDelegate"/>
@@ -74,15 +74,15 @@
             </and>
          </constraint>
          <action
-               id="in.cypal.gwtpro.core.gwtFacet.uninstall"
+               id="in.cypal.studio.gwt.core.gwtFacet.uninstall"
                type="uninstall">
             <config-factory class="in.cypal.studio.gwt.core.facet.UnInstallActionConfigFactory"/>
             <delegate class="in.cypal.studio.gwt.core.facet.UnInstallDelegate"/>
          </action>
       </project-facet-version>
-      <preset id="in.cypal.gwtpro.core.gwtPreset">
+      <preset id="in.cypal.studio.gwt.core.gwtPreset">
          <label>
-            Default GWT Pro Project
+            Default Cypal Studio Project
          </label>
          <facet
                id="jst.java"
@@ -91,7 +91,7 @@
                id="jst.web"
                version="2.2"/>
          <facet
-               id="in.cypal.gwtpro.core.gwtFacet"
+               id="in.cypal.studio.gwt.core.gwtFacet"
                version="1.0"/>
       </preset>
    </extension>
