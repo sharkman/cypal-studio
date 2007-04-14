@@ -20,11 +20,14 @@ package in.cypal.studio.gwt.ui.wizards;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 
 /**
@@ -32,14 +35,15 @@ import org.eclipse.jface.resource.ImageDescriptor;
  *
  */
 //@SuppressWarnings("restriction")
-public class NewGwtRemoteServiceWizard  extends NewElementWizard {
+public class NewGwtRemoteServiceWizard  extends NewElementWizard implements IExecutableExtension{
 
 	private NewGwtRemoteServiceWizardPage wizardPage;
+	private IConfigurationElement config;
 	
 	public NewGwtRemoteServiceWizard() {
 		setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(this.getClass(), "/icons/new_remote_service.gif"));//$NON-NLS-1$
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
-		setWindowTitle("");
+		setWindowTitle("New GWT Remote Service");
 	}
 	
 	public void addPages() {
@@ -63,6 +67,7 @@ public class NewGwtRemoteServiceWizard  extends NewElementWizard {
 				openResource((IFile) resource);
 			}	
 		}
+		BasicNewProjectResourceWizard.updatePerspective(config);
 		return res;
 	}
 	
@@ -70,5 +75,10 @@ public class NewGwtRemoteServiceWizard  extends NewElementWizard {
 
 		return wizardPage.getCreatedType();
 	}	
+	
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		this.config = config;
+	}
+
 	
 }

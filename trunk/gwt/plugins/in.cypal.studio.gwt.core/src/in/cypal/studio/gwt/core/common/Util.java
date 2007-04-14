@@ -63,9 +63,6 @@ import org.eclipse.jdt.core.JavaModelException;
  */
 public class Util {
 
-	public static final IStatus okStatus = Status.OK_STATUS;
-	public static final IStatus errorStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, -1, "Error", null);//$NON-NLS-1$
-	public static final String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
 	
 	public static final String SRC_FOLDER = "src";
 	public static final String BIN_FOLDER = "bin";
@@ -87,10 +84,6 @@ public class Util {
 		return devLibPath;
 	}
 	
-	public static IStatus getErrorStatus(String errorMessage) {
-		return new Status(IStatus.ERROR, Activator.PLUGIN_ID, IStatus.OK, errorMessage, null);
-	}
-	
 	public static boolean isModuleXml(IResource resource) {
 		
 		boolean isModuleXml;
@@ -102,34 +95,6 @@ public class Util {
 		return isModuleXml;
 	}
 	
-	public static void writeFile(String templateResource, IFile output, Map templateVars) throws IOException, CoreException {
-	
-		String contents = Util.getResourceContents(templateResource);
-	
-		for (Iterator i = templateVars.keySet().iterator(); i.hasNext();) {
-			String aKey = (String) i.next();
-			
-			String value = ((String)templateVars.get(aKey)).replaceAll("\\\\", "\\\\\\\\");//$NON-NLS-1$ //$NON-NLS-2$ 
-			contents = contents.replaceAll(aKey, value);
-		}
-	
-		if(output.exists())
-			output.setContents(new StringBufferInputStream(contents), true, false, null);
-		else
-			output.create(new StringBufferInputStream(contents), true, null);
-	}
-
-	public static String getResourceContents(String resourceName) throws IOException {
-	
-		InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
-		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-	
-		StringBuilder contents = new StringBuilder(5000);
-		while(reader.ready()) {
-			contents.append(reader.readLine()).append(Util.lineSeparator);
-		}
-		return contents.toString();
-	}
 	
 	public static IJavaProject[] getGwtProjects() {
 		

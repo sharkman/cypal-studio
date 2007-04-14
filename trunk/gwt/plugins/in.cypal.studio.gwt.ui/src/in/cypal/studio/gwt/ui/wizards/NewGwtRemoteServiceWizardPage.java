@@ -20,6 +20,7 @@ package in.cypal.studio.gwt.ui.wizards;
 import in.cypal.studio.gwt.core.common.Constants;
 import in.cypal.studio.gwt.core.common.Util;
 import in.cypal.studio.gwt.ui.Activator;
+import in.cypal.studio.gwt.ui.Common;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,9 +84,9 @@ import org.w3c.dom.Node;
  */
 public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
-	protected IStatus moduleStatus = Util.okStatus;
-	protected IStatus projectStatus = Util.okStatus;
-	protected IStatus serviceUriStatus = Util.okStatus;
+	protected IStatus moduleStatus = Common.okStatus;
+	protected IStatus projectStatus = Common.okStatus;
+	protected IStatus serviceUriStatus = Common.okStatus;
 
 	private String serviceUri = "";//$NON-NLS-1$
 	private Map templateVars;
@@ -289,7 +290,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 			createRemoteServiceImpl(new SubProgressMonitor(monitor, 2));
 			addServletToGwtXml(new SubProgressMonitor(monitor, 3));
 		} catch (Exception e) {
-			throw new CoreException(Util.errorStatus);
+			throw new CoreException(Common.errorStatus);
 		}
 	}
 	
@@ -419,7 +420,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 			IFile remoteServiceImpl = Util.getProject(projectText).getFile(getPackageFragment().getResource().getProjectRelativePath().append(getTypeName() + "Impl.java")); 
 //			modifiedResource = remoteServiceImpl;
 			initTemplateVars(getTypeName(), "", getBasePackageFragment().getElementName()); 
-			Util.writeFile("RemoteService.ServiceImpl.template", remoteServiceImpl, templateVars); 
+			Common.writeFile("RemoteService.ServiceImpl.template", remoteServiceImpl, templateVars); 
 		} finally {
 			monitor.done();
 		}
@@ -484,15 +485,15 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	protected void doStatusUpdate() {
 
 		if(projectCombo!=null) {
-			projectStatus = projectText.equals("")? Util.getErrorStatus(""):Util.okStatus;  //$NON-NLS-2$
+			projectStatus = projectText.equals("")? Common.getErrorStatus(""):Common.okStatus;  //$NON-NLS-2$
 		}
 		
 		if(moduleCombo != null) {
-			moduleStatus = moduleText.equals("")? Util.getErrorStatus(""):Util.okStatus;  //$NON-NLS-2$
+			moduleStatus = moduleText.equals("")? Common.getErrorStatus(""):Common.okStatus;  //$NON-NLS-2$
 		}
 		
 		if(serviceUriText !=null) {
-			serviceUriStatus = serviceUri.equals("")?Util.getErrorStatus(""):Util.okStatus;  //$NON-NLS-2$
+			serviceUriStatus = serviceUri.equals("")?Common.getErrorStatus(""):Common.okStatus;  //$NON-NLS-2$
 		}
 
 		IStatus[] status= new IStatus[] {

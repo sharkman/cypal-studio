@@ -22,5 +22,35 @@
             id="mainPreferenceKeyword"
             label="GWT HOME compile Async Google Cypal"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="in.cypal.studio.gwt.ui.cypalNewWizardCategory"
+            name="Cypal Studio"/>
+      <wizard
+            category="in.cypal.studio.gwt.ui.cypalNewWizardCategory"
+            class="in.cypal.studio.gwt.ui.wizards.NewGwtModuleWizard"
+            finalPerspective="org.eclipse.jst.j2ee.J2EEPerspective"
+            icon="icons/gwt_icon16.png"
+            id="newModuleWizard"
+            name="Module"
+            preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective"/>
+      <wizard
+            category="in.cypal.studio.gwt.ui.cypalNewWizardCategory"
+            class="in.cypal.studio.gwt.ui.wizards.NewGwtRemoteServiceWizard"
+            finalPerspective="org.eclipse.jst.j2EEPerspective"
+            icon="icons/gwt_icon16.png"
+            id="newRemoteServiceWizard"
+            name="Remote Service"
+            preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective"/>
+      <wizard
+            category="in.cypal.studio.gwt.ui.cypalNewWizardCategory"
+            class="in.cypal.studio.gwt.ui.wizards.NewGwtEntryPointClassWizard"
+            finalPerspective="org.eclipse.jst.j2EEPerspective"
+            icon="icons/gwt_icon16.png"
+            id="newEntryPointClassWizard"
+            name="Entry Point"
+            preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective"/>
+   </extension>
 
 </plugin>

@@ -15,5 +15,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jst.j2ee,
  org.eclipse.emf.ecore,
  org.eclipse.wst.common.project.facet.ui,
- in.cypal.studio.gwt.core
+ in.cypal.studio.gwt.core,
+ org.eclipse.ui.ide
 Eclipse-LazyStart: true

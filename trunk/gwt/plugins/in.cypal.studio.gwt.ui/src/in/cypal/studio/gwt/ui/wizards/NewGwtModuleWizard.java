@@ -19,21 +19,25 @@ package in.cypal.studio.gwt.ui.wizards;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 
-public class NewGwtModuleWizard extends NewElementWizard {
+public class NewGwtModuleWizard extends NewElementWizard implements IExecutableExtension{
 
 	private NewGwtModuleWizardPage wizardPage;
+	private IConfigurationElement config;
 	
 	public NewGwtModuleWizard() {
 		setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(this.getClass(), "/icons/new_module.gif")); //$NON-NLS-1$
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
-		setWindowTitle(""); //$NON-NLS-1$
+		setWindowTitle("New GWT Module"); //$NON-NLS-1$
 	}
 
 
@@ -63,12 +67,18 @@ public class NewGwtModuleWizard extends NewElementWizard {
 				openResource((IFile) resource);
 			}
 		}
+		BasicNewProjectResourceWizard.updatePerspective(config);
 		return res;
 	}
 
 	
 	public IJavaElement getCreatedElement() {
 		return wizardPage.getCreatedType();
+	}
+
+
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		this.config = config;
 	}
 
 }

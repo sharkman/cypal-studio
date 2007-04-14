@@ -20,10 +20,13 @@ package in.cypal.studio.gwt.ui.wizards;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
+import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 
 
@@ -31,12 +34,13 @@ import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
  * @author Ravi (kkravikumar@gmail.com)
  *
  */
-public class NewGwtEntryPointClassWizard extends NewElementWizard {
+public class NewGwtEntryPointClassWizard extends NewElementWizard implements IExecutableExtension{
 
 	private NewGwtEntryPointClassWizardPage entryPointClassWizardPage;
+	private IConfigurationElement config;
 	
 	public NewGwtEntryPointClassWizard() {
-		setWindowTitle("");
+		setWindowTitle("New GWT Entry Point class");
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
 	}
 
@@ -71,6 +75,11 @@ public class NewGwtEntryPointClassWizard extends NewElementWizard {
 				openResource((IFile)resource);
 			}
 		}
+		BasicNewProjectResourceWizard.updatePerspective(config);
 		return response;
+	}
+
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		this.config = config;
 	}
 }
