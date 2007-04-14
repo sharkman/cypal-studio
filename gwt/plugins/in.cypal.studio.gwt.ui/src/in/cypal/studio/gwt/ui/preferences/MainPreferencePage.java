@@ -37,7 +37,7 @@ public class MainPreferencePage extends FieldEditorPreferencePage implements IWo
 	
 	public MainPreferencePage() {
 		super(GRID);
-		setDescription("Options for GWT Pro");
+		setDescription("Options for Cypal Studio for GWT");
 		setPreferenceStore(Util.getPreferenceStore());
 		
 	}

@@ -30,6 +30,7 @@ public class Constants {
 	private static final String QUALIFIER = PLUGIN_ID+".";
 	public static final Object FACET_ID = QUALIFIER+"gwtFacet";
 	public static final String NATURE_ID = QUALIFIER+"gwtNature";
+	public static final String BUILDER_ID = QUALIFIER+"gwtBuilder";
 	public static final String MODULE_XML_CONTENT_ID=QUALIFIER+"moduleXml";
 
 	

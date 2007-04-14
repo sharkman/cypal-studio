@@ -76,7 +76,7 @@ public class InstallDelegate implements IDelegate{
 			IPath actualLocation = new Path(Constants.GWT_HOME_PATH+"/gwt-servlet.jar");  
 			theLink.createLink(actualLocation, IResource.REPLACE, null);  
 		} catch (CoreException e) {
-			monitor.setCanceled(true);
+			// the jar is already in the classpath.  
 			Activator.logException(e);
 		}finally {
 			monitor.done();
@@ -100,7 +100,7 @@ public class InstallDelegate implements IDelegate{
 			javaProject.setRawClasspath(newClasspath, monitor);
 
 		} catch (JavaModelException e) {
-			monitor.setCanceled(true);
+			// the jar is already in the classpath.  
 			Activator.logException(e);
 		}finally {
 			monitor.done();

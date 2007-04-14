@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.wst.common.project.facet.ui.images">
       <image
-            facet="in.cypal.gwtpro.core.gwtFacet"
+            facet="in.cypal.studio.gwt.core.gwtFacet"
             path="icons/gwt_icon16.png"/>
    </extension>
    <extension
@@ -12,15 +12,15 @@
       <page
             class="in.cypal.studio.gwt.ui.preferences.MainPreferencePage"
             id="mainPreferencePage"
-            name="GWT Pro">
-         <keywordReference id="in.cypal.gwtpro.ui.mainPreferenceKeyword"/>
+            name="Cypal Studio">
+         <keywordReference id="in.cypal.studio.gwt.ui.mainPreferenceKeyword"/>
       </page>
    </extension>
    <extension
          point="org.eclipse.ui.keywords">
       <keyword
             id="mainPreferenceKeyword"
-            label="GWT HOME compile Async Google"/>
+            label="GWT HOME compile Async Google Cypal"/>
    </extension>
 
 </plugin>
