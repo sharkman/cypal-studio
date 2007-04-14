@@ -2,7 +2,7 @@ package in.cypal.studio.gwt.ui.preferences;
 
 import in.cypal.studio.gwt.core.common.Constants;
 import in.cypal.studio.gwt.ui.Activator;
-import in.cypal.studio.gwt.ui.common.Util;
+import in.cypal.studio.gwt.ui.Common;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -38,11 +38,10 @@ public class MainPreferencePage extends FieldEditorPreferencePage implements IWo
 	public MainPreferencePage() {
 		super(GRID);
 		setDescription("Options for Cypal Studio for GWT");
-		setPreferenceStore(Util.getPreferenceStore());
+		setPreferenceStore(Common.getPreferenceStore());
 		
 	}
 
-	@Override
 	protected void createFieldEditors() {
 		addField(new DirectoryFieldEditor(Constants.GWT_HOME_PREFERENCE, "GWT Home:", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Constants.UPDATE_ASYNC_PREFERENCE, "Manually manage Async files", getFieldEditorParent()));
@@ -54,7 +53,6 @@ public class MainPreferencePage extends FieldEditorPreferencePage implements IWo
 		getPreferenceStore().addPropertyChangeListener(changeListener);
 	}
 	
-	@Override
 	public void dispose() {
 		super.dispose();
 		getPreferenceStore().removePropertyChangeListener(changeListener);
