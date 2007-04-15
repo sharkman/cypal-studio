@@ -45,14 +45,11 @@
          point="org.eclipse.wst.common.project.facet.core.facets">
       <project-facet id="in.cypal.studio.gwt.core.gwtFacet">
          <label>
-            Cypal's GWT Facet
+            Cypal&apos;s GWT Facet
          </label>
          <description>
             Enables the web application to use Google's Ajax library, GWT
          </description>
-         <icon>
-            icons/google_project.gif
-         </icon>
       </project-facet>
       <project-facet-version
             facet="in.cypal.studio.gwt.core.gwtFacet"

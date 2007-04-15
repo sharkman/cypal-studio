@@ -100,8 +100,8 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
 	public NewGwtRemoteServiceWizardPage() {
 		super();
-		setTitle(""); 
-		setDescription(""); 
+		setTitle("Remote Service");
+		setDescription("Create a new GWT Remote Service"); 
 	}
 
 
@@ -170,7 +170,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	public void createProjectControls(Composite parent, int nColumns) {
 
 		Label locationLabel = new Label(parent, SWT.NONE);
-		locationLabel.setText(""); 
+		locationLabel.setText("Project:"); 
 		locationLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 		projectCombo = new Combo(parent, SWT.BORDER | SWT.READ_ONLY);
@@ -178,7 +178,6 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		data.horizontalSpan = 2;
 		projectCombo.setLayoutData(data);
 		projectCombo.addSelectionListener(new SelectionAdapter() {
-//			@Override
 			public void widgetSelected(SelectionEvent e) {
 				projectText = projectCombo.getText();
 				projectChanged();
@@ -198,7 +197,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	public void createModuleControls(Composite parent, int nColumns) {
 
 		Label moduleLabel = new Label(parent, SWT.None);
-		moduleLabel.setText(""); 
+		moduleLabel.setText("Module:"); 
 		moduleLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 		moduleCombo = new Combo(parent, SWT.BORDER | SWT.READ_ONLY);
