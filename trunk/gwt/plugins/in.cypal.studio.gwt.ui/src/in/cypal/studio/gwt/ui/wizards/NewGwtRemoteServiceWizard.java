@@ -41,7 +41,7 @@ public class NewGwtRemoteServiceWizard  extends NewElementWizard implements IExe
 	private IConfigurationElement config;
 	
 	public NewGwtRemoteServiceWizard() {
-		setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(this.getClass(), "/icons/new_remote_service.gif"));//$NON-NLS-1$
+		setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(this.getClass(), "/icons/gwt_icon48.png"));//$NON-NLS-1$
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
 		setWindowTitle("New GWT Remote Service");
 	}

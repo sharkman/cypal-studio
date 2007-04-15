@@ -35,7 +35,7 @@ public class NewGwtModuleWizard extends NewElementWizard implements IExecutableE
 	private IConfigurationElement config;
 	
 	public NewGwtModuleWizard() {
-		setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(this.getClass(), "/icons/new_module.gif")); //$NON-NLS-1$
+		setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(this.getClass(), "/icons/gwt_icon48.png")); //$NON-NLS-1$
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
 		setWindowTitle("New GWT Module"); //$NON-NLS-1$
 	}
