@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 
@@ -40,6 +41,7 @@ public class NewGwtEntryPointClassWizard extends NewElementWizard implements IEx
 	private IConfigurationElement config;
 	
 	public NewGwtEntryPointClassWizard() {
+		setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(this.getClass(), "/icons/gwt_icon48.png"));//$NON-NLS-1$
 		setWindowTitle("New GWT Entry Point class");
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
 	}
