@@ -38,7 +38,7 @@
       <wizard
             category="in.cypal.studio.gwt.ui.cypalNewWizardCategory"
             class="in.cypal.studio.gwt.ui.wizards.NewGwtRemoteServiceWizard"
-            finalPerspective="org.eclipse.jst.j2EEPerspective"
+            finalPerspective="org.eclipse.jst.j2ee.J2EEPerspective"
             icon="icons/gwt_icon16.png"
             id="newRemoteServiceWizard"
             name="Remote Service"
@@ -46,7 +46,7 @@
       <wizard
             category="in.cypal.studio.gwt.ui.cypalNewWizardCategory"
             class="in.cypal.studio.gwt.ui.wizards.NewGwtEntryPointClassWizard"
-            finalPerspective="org.eclipse.jst.j2EEPerspective"
+            finalPerspective="org.eclipse.jst.j2ee.J2EEPerspectiven"
             icon="icons/gwt_icon16.png"
             id="newEntryPointClassWizard"
             name="Entry Point"

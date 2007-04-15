@@ -79,8 +79,8 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 	
 	public NewGwtEntryPointClassWizardPage(boolean isClass, String pageName) {
 		super(isClass, pageName);
-		setTitle(""); 
-		setDescription("");
+		setTitle("Entry Point Class"); 
+		setDescription("Creates a new GWT Entry Point Class");
 	}
 
 	public NewGwtEntryPointClassWizardPage() {
@@ -220,7 +220,7 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 	public void createModuleControls(Composite parent, int nColumns) {
 
 		Label moduleLabel = new Label(parent, SWT.None);
-		moduleLabel.setText(""); //$NON-NLS-1$
+		moduleLabel.setText("Module:");
 		moduleLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 		moduleCombo = new Combo(parent, SWT.BORDER | SWT.READ_ONLY);
@@ -229,7 +229,6 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 		
 		moduleCombo.setLayoutData(gridData);
 		moduleCombo.addSelectionListener(new SelectionAdapter() {
-//			@Override
 			public void widgetSelected(SelectionEvent e) {
 				moduleText = moduleCombo.getText();
 				doStatusUpdate();
@@ -242,7 +241,7 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 	public void createProjectControls(Composite parent, int nColumns) {
 
 		Label locationLabel = new Label(parent, SWT.NONE);
-		locationLabel.setText(""); 
+		locationLabel.setText("Project:"); 
 		locationLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 		projectCombo = new Combo(parent, SWT.BORDER | SWT.READ_ONLY);
@@ -250,7 +249,6 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 		data.horizontalSpan = 2;
 		projectCombo.setLayoutData(data);
 		projectCombo.addSelectionListener(new SelectionAdapter() {
-//			@Override
 			public void widgetSelected(SelectionEvent e) {
 				projectText = projectCombo.getText();
 				projectChanged();
