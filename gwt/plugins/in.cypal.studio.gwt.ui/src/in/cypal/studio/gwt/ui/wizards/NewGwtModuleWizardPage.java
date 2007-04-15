@@ -20,7 +20,7 @@ package in.cypal.studio.gwt.ui.wizards;
 
 import in.cypal.studio.gwt.core.common.Constants;
 import in.cypal.studio.gwt.ui.Activator;
-import in.cypal.studio.gwt.ui.Common;
+import in.cypal.studio.gwt.ui.common.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -103,7 +103,7 @@ public class NewGwtModuleWizardPage extends NewClassWizardPage {
 //	@Override
 	public void createType(IProgressMonitor monitor) throws CoreException, InterruptedException {
 	
-		monitor = Common.getNonNullMonitor(monitor);
+		monitor = Util.getNonNullMonitor(monitor);
 
 		basePackageFragment = getPackageFragment();
 		// Create server package
@@ -123,16 +123,16 @@ public class NewGwtModuleWizardPage extends NewClassWizardPage {
 			initTemplateVars();
 
 			IFile moduleHtml = project.getFile(publicFolder.getProjectRelativePath().append(getTypeName() + ".html"));  //$NON-NLS-1$
-			Common.writeFile("Module.html.template", moduleHtml, templateVars); //$NON-NLS-1$
+			Util.writeFile("Module.html.template", moduleHtml, templateVars); //$NON-NLS-1$
 
 			IFile moduleXml = project.getFile(basePackageFragment.getResource().getProjectRelativePath().append(getTypeName()+'.'+Constants.GWT_XML_EXT));
-			Common.writeFile("Module.gwt.xml.template", moduleXml, templateVars); //$NON-NLS-1$
+			Util.writeFile("Module.gwt.xml.template", moduleXml, templateVars); //$NON-NLS-1$
 			
 			createModuleEntry(project);
 			
 		} catch (IOException e) {
 			Activator.logException(e);
-			throw new CoreException(Common.errorStatus);
+			throw new CoreException(Util.errorStatus);
 		}
 		
 	}

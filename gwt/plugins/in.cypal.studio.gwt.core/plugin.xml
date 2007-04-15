@@ -100,5 +100,17 @@
       <initializer class="in.cypal.studio.gwt.core.common.DefaultPreferencesInitializer"/>
    </extension>
    
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="in.cypal.studio.gwt.core.launch.LaunchConfigurationDelegate"
+            id="in.cypal.studio.gwt.core.launchConfigurationType"
+            modes="run, debug"
+            name="GWT Hosted Mode Application">
+         <fileExtension
+               default="true"
+               extension="gwt.xml"/>
+      </launchConfigurationType>
+   </extension>
 
 </plugin>

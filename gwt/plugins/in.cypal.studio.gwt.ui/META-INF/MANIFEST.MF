@@ -13,8 +13,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jst.j2ee.web,
  org.eclipse.jst.j2ee.core,
  org.eclipse.jst.j2ee,
- org.eclipse.emf.ecore,
- org.eclipse.wst.common.project.facet.ui,
  in.cypal.studio.gwt.core,
- org.eclipse.ui.ide
+ org.eclipse.ui.ide,
+ org.eclipse.debug.ui,
+ org.eclipse.debug.core,
+ org.eclipse.jdt.debug.ui,
+ org.eclipse.jdt.launching,
+ org.eclipse.emf.ecore
 Eclipse-LazyStart: true

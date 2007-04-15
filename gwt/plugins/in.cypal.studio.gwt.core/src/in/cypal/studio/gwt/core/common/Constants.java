@@ -3,6 +3,7 @@ package in.cypal.studio.gwt.core.common;
 import in.cypal.studio.gwt.core.Activator;
 
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 
 public class Constants {
 	
@@ -17,6 +18,21 @@ public class Constants {
 	public static final String SERVER_PACKAGE = "server";
 	public static final String PUBLIC_FOLDER = "public";
 
+	// Attributes for Lauch configuration
+	
+	public static final String LAUNCH_CONFIG_TYPE = "in.cypal.studio.gwt.core.launchConfigurationType"; //$NON-NLS-1$
+	public static final String LAUNCH_ATTR_USE_DEFAULT_URL = PLUGIN_ID+".launchAttrUseDefaultUrl"; //$NON-NLS-1$
+	public static final String LAUNCH_ATTR_URL = PLUGIN_ID+".launchAttrUrl"; //$NON-NLS-1$
+	public static final String LAUNCH_ATTR_USE_EMBEDDED_SERVER = PLUGIN_ID+".launchAttrUseEmbeddedServer"; //$NON-NLS-1$
+	public static final String LAUNCH_ATTR_HEADLESS = PLUGIN_ID+".launchAttrHeadless"; //$NON-NLS-1$
+	public static final String LAUNCH_ATTR_PORT = PLUGIN_ID+".launchAttrPort";//$NON-NLS-1$
+	public static final String LAUNCH_ATTR_LOGLEVEL = PLUGIN_ID+".launchAttrLogLevel";//$NON-NLS-1$
+	public static final String LAUNCH_ATTR_OUTDIR = PLUGIN_ID+".launchAttrOutDir";//$NON-NLS-1$
+	public static final String LAUNCH_ATTR_STYLE = PLUGIN_ID+".launchAttrStyle";//$NON-NLS-1$
+	public static final String LAUNCH_ATTR_MAIN_TYPE = IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME;
+	public static final String LAUNCH_ATTR_PROJECT_NAME = IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME;
+
+	
 	//Folders
 	public static final String OUTPUT_FOLDER= "build/gwtOutput"; //$NON-NLS-1$
 	
