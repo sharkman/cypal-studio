@@ -109,5 +109,12 @@
                extension="gwt.xml"/>
       </launchConfigurationType>
    </extension>
+   <extension
+         point="org.eclipse.wst.server.core.publishTasks">
+      <publishTask
+            class="in.cypal.studio.gwt.core.builders.GwtPublishTaskDelegate"
+            id="com.googlipse.gwt.publishTask"
+            typeIds="*"/>
+   </extension>
 
 </plugin>

@@ -17,8 +17,6 @@
 
 package in.cypal.studio.gwt.core.builder;
 
-import in.cypal.studio.gwt.core.Activator;
-import in.cypal.studio.gwt.core.builder.GwtCompileOperation;
 import in.cypal.studio.gwt.core.common.Constants;
 import in.cypal.studio.gwt.core.common.Preferences;
 import in.cypal.studio.gwt.core.common.Util;
