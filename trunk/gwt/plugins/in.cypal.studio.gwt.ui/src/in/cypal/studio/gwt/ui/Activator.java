@@ -1,8 +1,14 @@
 package in.cypal.studio.gwt.ui;
 
-import java.io.IOException;
-
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -17,10 +23,21 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 	
+	public static final String FILE_ICON="icons/file.gif"; //$NON-NLS-1$
+	public static final String GWT_ICON="icons/gwt_icon16.png"; //$NON-NLS-1$
+	public static final String PARAMETERS_ICON="icons/parameters_tab.gif"; //$NON-NLS-1$
+
 	/**
 	 * The constructor
 	 */
 	public Activator() {
+		plugin = this;
+		
+		ImageRegistry registry = getImageRegistry();
+		registry.put(FILE_ICON,  getImageDescriptor(FILE_ICON));
+		registry.put(GWT_ICON,  getImageDescriptor(GWT_ICON));
+		registry.put(PARAMETERS_ICON,  getImageDescriptor(PARAMETERS_ICON));
+		
 	}
 
 	/*
@@ -50,9 +67,80 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public static void logException(Exception e) {
-		// TODO Auto-generated method stub
-		
+	/**
+	 * Logs the exception to the default logger of the plugin
+	 * @param e Exception to be logged
+	 */
+	public static void logException(final Throwable e) {
+
+		final ILog log = getDefault().getLog();
+		final String msg = "Encountered an unexpected exception.";
+		log.log(new Status(IStatus.ERROR, PLUGIN_ID, -1, msg, e));
 	}
+	
+	public static void logInfo(String message) {
+
+		final ILog log = getDefault().getLog();
+		log.log(new Status(IStatus.INFO, PLUGIN_ID, IStatus.OK, message, null));
+	}
+
+	public static void logError(String message) {
+
+		final ILog log = getDefault().getLog();
+		log.log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, message, null));
+	}
+
+	public static void logWarning(String message) {
+
+		final ILog log = getDefault().getLog();
+		log.log(new Status(IStatus.WARNING, PLUGIN_ID, IStatus.OK, message, null));
+	}
+	
+
+	public static Image getImage(String which) {
+		return getDefault().getImageRegistry().get(which);
+	}
+	
+	public static ImageDescriptor getImageDescriptor(String path) {
+		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+	}
+
+	/**
+	 * This would log the exception and then display an error dialog to the user
+	 * @param e the exception to be handled
+	 */
+	public static void handleException(Exception e) {
+		handleException(e, null, null, null);
+	}
+	
+	/**
+	 * This would log the exception and then display an error dialog to the user
+	 * @param e the exception to be handled
+	 * @param shell the shell where the error dialog box has to be shown. Can be <code>null</code> 
+	 * @param title the title of the dialog box. Can be <code>null</code>
+	 * @param message the error message. If this is empty, then the exception message will be displayed 
+	 */
+	public static void handleException(final Exception e, final Shell shell, final String title, String message) {
+		
+		logException(e);
+		
+		if(message == null) {
+			if(e.getMessage() == null || e.getMessage().length()==0) {
+				message = "See Error Log for more details";
+			}else {
+				message = e.getMessage();
+			}
+		}
+		final String errorDetail = message;
+
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+
+			public void run() {
+				MessageDialog.openError(shell, title, errorDetail);
+			}
+		});
+	}
+	
+
 
 }

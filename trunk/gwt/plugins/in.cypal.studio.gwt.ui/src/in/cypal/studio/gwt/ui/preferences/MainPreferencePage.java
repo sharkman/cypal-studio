@@ -2,7 +2,7 @@ package in.cypal.studio.gwt.ui.preferences;
 
 import in.cypal.studio.gwt.core.common.Constants;
 import in.cypal.studio.gwt.ui.Activator;
-import in.cypal.studio.gwt.ui.Common;
+import in.cypal.studio.gwt.ui.common.Util;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -38,7 +38,7 @@ public class MainPreferencePage extends FieldEditorPreferencePage implements IWo
 	public MainPreferencePage() {
 		super(GRID);
 		setDescription("Options for Cypal Studio for GWT");
-		setPreferenceStore(Common.getPreferenceStore());
+		setPreferenceStore(Util.getPreferenceStore());
 		
 	}
 

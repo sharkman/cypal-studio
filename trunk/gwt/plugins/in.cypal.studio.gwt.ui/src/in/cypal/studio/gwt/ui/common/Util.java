@@ -1,6 +1,7 @@
-package in.cypal.studio.gwt.ui;
+package in.cypal.studio.gwt.ui.common;
 
 import in.cypal.studio.gwt.core.common.Constants;
+import in.cypal.studio.gwt.ui.Activator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +12,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -20,7 +23,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
-public class Common {
+public class Util extends in.cypal.studio.gwt.core.common.Util{
 
 	public static final IStatus okStatus = Status.OK_STATUS;
 	public static final IStatus errorStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, -1, "Error", null);//$NON-NLS-1$
@@ -44,7 +47,7 @@ public class Common {
 
 	public static void writeFile(String templateResource, IFile output, Map templateVars) throws IOException, CoreException {
 		
-		String contents = Common.getResourceContents(templateResource);
+		String contents = Util.getResourceContents(templateResource);
 	
 		for (Iterator i = templateVars.keySet().iterator(); i.hasNext();) {
 			String aKey = (String) i.next();
@@ -66,10 +69,9 @@ public class Common {
 	
 		StringBuilder contents = new StringBuilder(5000);
 		while(reader.ready()) {
-			contents.append(reader.readLine()).append(Common.lineSeparator);
+			contents.append(reader.readLine()).append(Util.lineSeparator);
 		}
 		return contents.toString();
 	}
-
 
 }

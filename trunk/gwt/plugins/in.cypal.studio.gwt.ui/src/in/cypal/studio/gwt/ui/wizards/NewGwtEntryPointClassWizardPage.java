@@ -17,10 +17,9 @@
 
 package in.cypal.studio.gwt.ui.wizards;
 
-import in.cypal.studio.gwt.core.common.Constants;
-import in.cypal.studio.gwt.core.common.Util;
 import in.cypal.studio.gwt.ui.Activator;
-import in.cypal.studio.gwt.ui.Common;
+import in.cypal.studio.gwt.ui.common.Constants;
+import in.cypal.studio.gwt.ui.common.Util;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -75,8 +74,8 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 	private String projectText=""; //$NON-NLS-1$
 	private Combo projectCombo;
 	private IJavaProject[] gwtProjects;
-	protected IStatus moduleStatus = Common.okStatus;
-	protected IStatus projectStatus = Common.okStatus;
+	protected IStatus moduleStatus = Util.okStatus;
+	protected IStatus projectStatus = Util.okStatus;
 	
 	public NewGwtEntryPointClassWizardPage(boolean isClass, String pageName) {
 		super(isClass, pageName);
@@ -137,11 +136,11 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 	private void doStatusUpdate() {
 		
 		if(projectCombo!=null) {
-			projectStatus = projectText.equals("")? Common.getErrorStatus(""):Common.okStatus;
+			projectStatus = projectText.equals("")? Util.getErrorStatus(""):Util.okStatus;
 		}
 		
 		if(moduleCombo != null) {
-			moduleStatus = moduleText.equals("")? Common.getErrorStatus(""):Common.okStatus;
+			moduleStatus = moduleText.equals("")? Util.getErrorStatus(""):Util.okStatus;
 		}
 		
 		IStatus[] status= new IStatus[] {
@@ -175,13 +174,13 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 		try {
 			addEntryPointClassToGwtXml(new SubProgressMonitor(monitor, 3));
 		} catch (Exception e) {
-			throw new CoreException(Common.errorStatus);
+			throw new CoreException(Util.errorStatus);
 		}
 	}
 	
 	private void addEntryPointClassToGwtXml(IProgressMonitor monitor) throws Exception {
 
-		monitor = Common.getNonNullMonitor(monitor);
+		monitor = Util.getNonNullMonitor(monitor);
 
 		try {
 

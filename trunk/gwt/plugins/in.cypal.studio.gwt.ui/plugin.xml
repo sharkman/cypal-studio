@@ -52,5 +52,43 @@
             name="Entry Point"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective"/>
    </extension>
+      <extension
+         point="org.eclipse.debug.ui.launchShortcuts">
+      <shortcut
+            class="in.cypal.studio.gwt.ui.launch.LaunchShortcut"
+            icon="icons/gwt_icon16.png"
+            id="launchshortcut"
+            label="Gwt Hosted Mode Application"
+            modes="run, debug">
+         <contextualLaunch>
+            <enablement>
+               <with variable="selection">
+                  <count value="1"/>
+                  <iterate>
+                     <test
+                           forcePluginActivation="true"
+                           property="org.eclipse.debug.ui.matchesPattern"
+                           value="*.gwt.xml"/>
+                  </iterate>
+               </with>
+            </enablement>
+         </contextualLaunch>
+      </shortcut>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="in.cypal.studio.gwt.core.launchConfigurationType"
+            icon="icons/gwt_icon16.png"
+            id="gwtLaunchConfigurationTypeImage"/>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="in.cypal.studio.gwt.ui.launch.GwtLaunchConfigurationTabGroup"
+            id="gwtLaunchConfigurationTabGroup"
+            type="in.cypal.studio.gwt.core.launchConfigurationType"/>
+   </extension>
+   
 
 </plugin>
