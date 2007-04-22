@@ -10,6 +10,7 @@ public class Constants {
 	public static final String PLUGIN_ID = Activator.PLUGIN_ID;
 	
 	// GWT related stuff
+	public static final String GWT_ENTRY_POINT_CLASS = "com.google.gwt.core.client.EntryPoint";  //$NON-NLS-1$
 	public static final String GWT_SHELL_CLASS = "com.google.gwt.dev.GWTShell"; //$NON-NLS-1$
 	public static final String GWT_COMPILER_CLASS = "com.google.gwt.dev.GWTCompiler"; //$NON-NLS-1$
 	public static final Object REMOTE_SERVICE_CLASS = "RemoteService";

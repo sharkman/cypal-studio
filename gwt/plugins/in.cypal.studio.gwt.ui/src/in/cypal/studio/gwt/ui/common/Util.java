@@ -64,7 +64,7 @@ public class Util extends in.cypal.studio.gwt.core.common.Util{
 
 	public static String getResourceContents(String resourceName) throws IOException {
 	
-		InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
+		InputStream inputStream = Util.class.getResourceAsStream(resourceName);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 	
 		StringBuilder contents = new StringBuilder(5000);

@@ -46,18 +46,15 @@ public class NewGwtEntryPointClassWizard extends NewElementWizard implements IEx
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
 	}
 
-//	@Override
 	protected void finishPage(IProgressMonitor monitor)
 			throws InterruptedException, CoreException {
 		entryPointClassWizardPage.createType(monitor);
 	}
 
-//	@Override
 	public IJavaElement getCreatedElement() {
 		return entryPointClassWizardPage.getCreatedType();
 	}
 	
-//	@Override
 	public void addPages() {
 		entryPointClassWizardPage = new NewGwtEntryPointClassWizardPage();
 		entryPointClassWizardPage.init(getSelection());
@@ -66,7 +63,6 @@ public class NewGwtEntryPointClassWizard extends NewElementWizard implements IEx
 		super.addPages();
 	}
 
-//	@Override
 	public boolean performFinish() {
 		warnAboutTypeCommentDeprecation();
 		boolean response = super.performFinish();

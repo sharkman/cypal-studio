@@ -52,6 +52,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.wizards.NewInterfaceWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jst.j2ee.web.componentcore.util.WebArtifactEdit;
 import org.eclipse.jst.j2ee.webapplication.Servlet;
 import org.eclipse.jst.j2ee.webapplication.ServletMapping;
@@ -97,6 +98,8 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	private boolean isImplCreation;
 	private Text serviceUriText;
 	private IFile modifiedResource;
+	private IFile selectedModule;
+	private String selectedProject;
 
 	public NewGwtRemoteServiceWizardPage() {
 		super();
@@ -186,9 +189,13 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		gwtProjects = Util.getGwtProjects();
 		for (int i = 0; i < gwtProjects.length; i++) {
 			IJavaProject gwtProject = gwtProjects[i];
-			projectCombo.add(gwtProject.getProject().getName());
+			String name = gwtProject.getProject().getName();
+			projectCombo.add(name);
+			if(name.equals(selectedProject))
+				projectCombo.select(i);
 		}
-		projectCombo.select(0);
+		if(projectCombo.getSelectionIndex()  == -1)
+			projectCombo.select(0);
 		
 		new Label(parent, SWT.NONE);
 	}
@@ -242,7 +249,10 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 					moduleCombo.add(projectRelativePath.toString());
 					moduleCombo.setData(moduleName, file);
 				}
-				moduleCombo.select(0);
+				int i = modulesList.indexOf(selectedModule);
+				if(i == -1)
+					i=0;
+				moduleCombo.select(i);
 				moduleText = moduleCombo.getText();
 			} catch (CoreException e) {
 				Activator.logException(e);
@@ -418,7 +428,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 			IFile remoteServiceImpl = Util.getProject(projectText).getFile(getPackageFragment().getResource().getProjectRelativePath().append(getTypeName() + "Impl.java")); 
 //			modifiedResource = remoteServiceImpl;
 			initTemplateVars(getTypeName(), "", getBasePackageFragment().getElementName()); 
-			Util.writeFile("RemoteService.ServiceImpl.template", remoteServiceImpl, templateVars); 
+			Util.writeFile("/RemoteService.ServiceImpl.template", remoteServiceImpl, templateVars); 
 		} finally {
 			monitor.done();
 		}
@@ -450,7 +460,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 			ServletMapping mapping = WebapplicationFactory.eINSTANCE.createServletMapping();
 			mapping.setServlet(servlet);
 			mapping.setName(servlet.getServletName());
-			mapping.setUrlPattern(serviceUri);
+			mapping.setUrlPattern("/" + serviceUri);
 			webApp.getServletMappings().add(mapping);
 
 			artifactEdit.saveIfNecessary(monitor);
@@ -503,6 +513,24 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		};
 
 		updateStatus(status);
+	}
+	
+	public void init(IStructuredSelection selection) {
+		if(selection!=null && selection instanceof IStructuredSelection) {
+			Object firstElement = ((IStructuredSelection)selection).getFirstElement();
+			if(firstElement instanceof IFile && Util.isModuleXml((IResource) firstElement)) { 
+				this.selectedModule = (IFile)firstElement;
+				this.selectedProject = ((IFile)firstElement).getProject().getName();
+			}
+		}
+		super.init(selection);
+	}
+	
+	/**
+	 * @return the serviceUri
+	 */
+	public String getServiceUri() {
+		return serviceUri;
 	}
 
 }

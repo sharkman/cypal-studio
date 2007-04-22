@@ -123,10 +123,10 @@ public class NewGwtModuleWizardPage extends NewClassWizardPage {
 			initTemplateVars();
 
 			IFile moduleHtml = project.getFile(publicFolder.getProjectRelativePath().append(getTypeName() + ".html"));  //$NON-NLS-1$
-			Util.writeFile("Module.html.template", moduleHtml, templateVars); //$NON-NLS-1$
+			Util.writeFile("/Module.html.template", moduleHtml, templateVars); //$NON-NLS-1$
 
 			IFile moduleXml = project.getFile(basePackageFragment.getResource().getProjectRelativePath().append(getTypeName()+'.'+Constants.GWT_XML_EXT));
-			Util.writeFile("Module.gwt.xml.template", moduleXml, templateVars); //$NON-NLS-1$
+			Util.writeFile("/Module.gwt.xml.template", moduleXml, templateVars); //$NON-NLS-1$
 			
 			createModuleEntry(project);
 			

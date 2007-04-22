@@ -18,6 +18,7 @@
 package in.cypal.studio.gwt.core.common;
 
 import in.cypal.studio.gwt.core.Activator;
+import in.cypal.studio.gwt.core.builder.GwtCompileOperation;
 import in.cypal.studio.gwt.core.launch.Helper;
 
 import java.util.ArrayList;
@@ -104,12 +105,21 @@ public class GwtProject {
 		for (Iterator i = modules.iterator(); i.hasNext();) {
 			IFile aModule  = (IFile) i.next();
 			try {
-				compileModule(aModule);
+				localCompileModule(aModule);
 			} catch (CoreException e) {
 				// log the error and allow the other modules to compile
 				Activator.logException(e);
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @param module
+	 * 
+	 */
+	private void localCompileModule(IFile module) throws CoreException {
+		
 	}
 
 	public void doClean(IProgressMonitor monitor) throws CoreException {
