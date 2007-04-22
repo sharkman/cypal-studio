@@ -2,7 +2,7 @@
 <ecore:EPackage xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="gwtxml"
-    nsURI="platform:/resource/com.googlipse.gwt/schema/gwt.xml.xsd" nsPrefix="GwtXml">
+    nsURI="platform:/resource/in.cypal.studio.gwt.core/schema/gwt.xml.xsd" nsPrefix="GwtXml">
   <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
     <details key="qualified" value="false"/>
   </eAnnotations>

@@ -2,7 +2,7 @@
 <feature
       id="in.cypal.studio.gwt"
       label="Cypal Studio for GWT"
-      version="0.1.0.0"
+      version="0.1.0.qualifier"
       provider-name="Cypal Solutions (tools@cypal.in)">
 
    <description url="http://www.cypal-solutions.com/studio">
@@ -204,14 +204,14 @@ END OF TERMS AND CONDITIONS
          id="in.cypal.studio.gwt.core"
          download-size="0"
          install-size="0"
-         version="0.1.0.0"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="in.cypal.studio.gwt.ui"
          download-size="0"
          install-size="0"
-         version="0.1.0.0"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin

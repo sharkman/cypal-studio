@@ -74,7 +74,11 @@ public class NewGwtRemoteServiceWizard  extends NewElementWizard implements IExe
 	public IJavaElement getCreatedElement() {
 
 		return wizardPage.getCreatedType();
-	}	
+	}
+	
+	public String getUri() {
+		return wizardPage.getServiceUri();
+	}
 	
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
 		this.config = config;

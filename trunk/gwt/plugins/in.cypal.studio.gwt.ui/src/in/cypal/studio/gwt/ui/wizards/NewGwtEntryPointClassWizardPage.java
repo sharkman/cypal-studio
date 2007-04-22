@@ -76,11 +76,13 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 	private IJavaProject[] gwtProjects;
 	protected IStatus moduleStatus = Util.okStatus;
 	protected IStatus projectStatus = Util.okStatus;
+	private IFile selectedModule;
+	private String selectedProject;
 	
 	public NewGwtEntryPointClassWizardPage(boolean isClass, String pageName) {
 		super(isClass, pageName);
 		setTitle("Entry Point Class"); 
-		setDescription("Creates a new GWT Entry Point Class");
+		setDescription("Create a new GWT Entry Point Class");
 	}
 
 	public NewGwtEntryPointClassWizardPage() {
@@ -259,11 +261,17 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 		
 		for (int i = 0; i < gwtProjects.length; i++) {
 			IJavaProject gwtProject = gwtProjects[i];
-			projectCombo.add(gwtProject.getProject().getName());
+			String name  = gwtProject.getProject().getName();
+			projectCombo.add(name);
+			if(name.equals(selectedProject)) {
+				projectCombo.select(i);
+			}
+		}
+		
+		if(projectCombo.getSelectionIndex() == -1) {
+			projectCombo.select(0);
 		}
 
-		projectCombo.select(0);
-		
 		new Label(parent, SWT.NONE);
 	}
 	
@@ -291,7 +299,11 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 					moduleCombo.add(projectRelativePath.toString());
 					moduleCombo.setData(moduleName, file);
 				}
-				moduleCombo.select(0);
+				
+				int i = modulesList.indexOf(selectedModule);
+				if(i == -1)
+					i=0;
+				moduleCombo.select(i);
 				moduleText = moduleCombo.getText();
 			} catch (CoreException e) {
 				Activator.logException(e);
@@ -318,6 +330,15 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 	}
 
 	public void init(IStructuredSelection selection) {
+		
+		if(selection!=null && selection instanceof IStructuredSelection) {
+			Object firstElement = ((IStructuredSelection)selection).getFirstElement();
+			if(firstElement instanceof IFile && Util.isModuleXml((IResource) firstElement)) { 
+				this.selectedModule = (IFile)firstElement;
+				this.selectedProject = ((IFile)firstElement).getProject().getName();
+			}
+		}
+		
 		IJavaElement jelem= getInitialJavaElement(selection);
 			
 		initContainerPage(jelem);

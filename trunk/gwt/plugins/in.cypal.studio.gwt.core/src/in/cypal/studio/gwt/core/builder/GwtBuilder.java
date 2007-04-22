@@ -43,9 +43,11 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
+import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -54,21 +56,20 @@ import org.eclipse.text.edits.TextEdit;
 
 
 /**
- * @author Prakash (techieguy@gmail.com)
- * 
+ * @author Prakash G.R.
+ *
  */
 public class GwtBuilder extends IncrementalProjectBuilder {
 
-	in.cypal.studio.gwt.core.common.GwtProject gwtProject; 
+	GwtProject gwtProject; 
 
-//	@Override
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
 
 		monitor = Util.getNonNullMonitor(monitor);
 
 		try {
 
-			monitor.beginTask("", 2); //$NON-NLS-1$
+			monitor.beginTask("Building GWT sources...", 2); 
 
 			gwtProject = GwtProject.create(getProject());
 
@@ -91,17 +92,15 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 		return null;
 	}
 	
-//	@SuppressWarnings( { "unchecked" })
 	private void updateAsyncFiles(IProgressMonitor monitor) throws CoreException, BadLocationException {
 
 		monitor = Util.getNonNullMonitor(monitor);
 
 		try {
 
-			monitor.beginTask("", 1); //$NON-NLS-1$
-			
 			IResourceDelta delta = getDelta(getProject());
 			List remoteServices = gwtProject.getRemoteServices(delta);
+			monitor.beginTask("Updating Async files...", remoteServices.size()); 
 
 			for (Iterator i = remoteServices.iterator(); i.hasNext();) {
 
@@ -109,11 +108,6 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 				IPackageFragment clientPackage = (IPackageFragment) JavaCore.create(aRemoteServiceFile.getParent());
 				
-//				IPath clientPackagePath = aRemoteServiceFile .getProjectRelativePath().removeLastSegments(1);
-//				Activator.logWarning(asyncFileName.toString());
-//				IPath asyncFilePath = clientPackagePath.append(asyncFileName.toString());
-//				IFile asyncFile = project.getFile(asyncFilePath);
-
 				ICompilationUnit asyncContents = (ICompilationUnit) JavaCore.create(aRemoteServiceFile);
 				String source = asyncContents.getBuffer().getContents();
 				Document document = new Document(source);
@@ -129,7 +123,7 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 				List imports = astRoot.imports();
 				List importsToBeRemoved = new ArrayList();
 				
-				for (Iterator j = importsToBeRemoved.iterator(); j.hasNext();) {
+				for (Iterator j = imports.iterator(); j.hasNext();) {
 
 					ImportDeclaration anImportDecl = (ImportDeclaration) j.next();
 					String importName = anImportDecl.getName().getFullyQualifiedName(); 
@@ -172,11 +166,25 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 						
 						// Remove throws
 						aMethod.thrownExceptions().clear();
+						
+						// Remove @gwt tags
+                        Javadoc jdoc = aMethod.getJavadoc();
+                        List tags =  jdoc.tags();
+                        List tagsToRemove = new ArrayList();
+                        for(Iterator itTags = tags.iterator(); itTags.hasNext();) {
+                            TagElement tag = (TagElement) itTags.next();
+                            if (tag.toString().contains("@gwt")) {
+                                tagsToRemove.add(tag);
+                            }  
+                        }
+                        tags.removeAll(tagsToRemove);
+						
 					}else if(currDeclaration instanceof FieldDeclaration || currDeclaration instanceof TypeDeclaration) {
 						
 						// Remove the fields and inner classes
 						declarationsToDelete.add(currDeclaration);
 					}
+					
 					
 				}
 				
@@ -191,6 +199,8 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 				// update of the compilation unit			
 				clientPackage.createCompilationUnit(remoteServiceAsyncName+".java", newSource, true, monitor); //$NON-NLS-1$
+				
+				monitor.worked(1);
 			}
 
 		} finally {

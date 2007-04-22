@@ -3,9 +3,8 @@
 <plugin>
    <extension
          point="org.eclipse.help.toc">
-      <toc file="toc.xml"/>
       <toc
-            file="testToc.xml"
+            file="toc.xml"
             primary="true"/>
    </extension>
 
