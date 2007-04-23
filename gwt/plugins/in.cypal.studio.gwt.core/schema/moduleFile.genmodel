@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/in.cypal.studio.gwt.core/src"
+    modelPluginID="in.cypal.studio.gwt.core" modelName="ModuleFile" importerID="org.eclipse.xsd.ecore.importer">
+  <foreignModel>moduleFile.xsd</foreignModel>
+  <genPackages prefix="ModuleFile" resource="XML" disposableProviderFactory="true"
+      ecorePackage="ModuleFile.ecore#/">
+    <genClasses ecoreClass="ModuleFile.ecore#//Any">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ModuleFile.ecore#//Any/whenPropertyIs"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//DefineProperty">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//DefineProperty/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//DefineProperty/values"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//DocumentRoot">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//DocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//DocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//DocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//DocumentRoot/module"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//EntryPoint">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//EntryPoint/class"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//ExtendProperty">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//ExtendProperty/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//ExtendProperty/values"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//GenerateWith">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ModuleFile.ecore#//GenerateWith/whenTypeAssignable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//GenerateWith/class"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//Inherits">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//Inherits/name"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//Module">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//Module/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/servlet"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/setProperty"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/defineProperty"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/entryPoint"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/inherits"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/propertyProvider"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/source"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/superSource"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/generateWith"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/replaceWith"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/public"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/script"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/stylesheet"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ModuleFile.ecore#//Module/extendProperty"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//PropertyProvider">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//PropertyProvider/name"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//Public">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//Public/path"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//ReplaceWith">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ModuleFile.ecore#//ReplaceWith/whenTypeIs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ModuleFile.ecore#//ReplaceWith/whenPropertyIs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ModuleFile.ecore#//ReplaceWith/any"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//ReplaceWith/class"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//Script">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//Script/src"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//Servlet">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//Servlet/class"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//Servlet/path"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//SetProperty">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//SetProperty/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//SetProperty/value"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//Source">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//Source/path"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//Stylesheet">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//Stylesheet/src"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//SuperSource">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//SuperSource/path"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//WhenPropertyIs">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//WhenPropertyIs/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//WhenPropertyIs/value"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//WhenTypeAssignable">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//WhenTypeAssignable/class"/>
+    </genClasses>
+    <genClasses ecoreClass="ModuleFile.ecore#//WhenTypeIs">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ModuleFile.ecore#//WhenTypeIs/class"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
