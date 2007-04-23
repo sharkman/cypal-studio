@@ -6,6 +6,7 @@
       <toc
             file="toc.xml"
             primary="true"/>
+      <toc file="tocgettingstarted.xml"/>
    </extension>
 
 </plugin>

@@ -113,8 +113,8 @@
    <extension
          point="org.eclipse.wst.server.core.publishTasks">
       <publishTask
-            class="in.cypal.studio.gwt.core.builders.GwtPublishTaskDelegate"
-            id="com.googlipse.gwt.publishTask"
+            class="in.cypal.studio.gwt.core.builder.GwtPublishTaskDelegate"
+            id="in.cypal.studio.gwt.publishTask"
             typeIds="*"/>
    </extension>
 
