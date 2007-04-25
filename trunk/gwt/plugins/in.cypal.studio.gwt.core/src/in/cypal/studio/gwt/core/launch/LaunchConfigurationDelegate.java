@@ -86,7 +86,7 @@ public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 //	@Override
 	public String getVMArguments(ILaunchConfiguration configuration) throws CoreException {
 		
-		return super.getVMArguments(configuration) + Helper.getVMArguments();
+		return super.getVMArguments(configuration) + Helper.getVMArguments(configuration);
 	}
 	
 }
