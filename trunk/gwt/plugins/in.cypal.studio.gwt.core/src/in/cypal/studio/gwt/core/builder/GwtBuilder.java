@@ -169,15 +169,17 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 						
 						// Remove @gwt tags
                         Javadoc jdoc = aMethod.getJavadoc();
-                        List tags =  jdoc.tags();
-                        List tagsToRemove = new ArrayList();
-                        for(Iterator itTags = tags.iterator(); itTags.hasNext();) {
-                            TagElement tag = (TagElement) itTags.next();
-                            if (tag.toString().contains("@gwt")) {
-                                tagsToRemove.add(tag);
-                            }  
+                        if(jdoc != null) {
+	                        List tags =  jdoc.tags();
+	                        List tagsToRemove = new ArrayList();
+	                        for(Iterator itTags = tags.iterator(); itTags.hasNext();) {
+	                            TagElement tag = (TagElement) itTags.next();
+	                            if (tag.toString().contains("@gwt")) {
+	                                tagsToRemove.add(tag);
+	                            }  
+	                        }
+	                        tags.removeAll(tagsToRemove);
                         }
-                        tags.removeAll(tagsToRemove);
 						
 					}else if(currDeclaration instanceof FieldDeclaration || currDeclaration instanceof TypeDeclaration) {
 						
