@@ -105,7 +105,7 @@ public class GwtProject {
 		for (Iterator i = modules.iterator(); i.hasNext();) {
 			IFile aModule  = (IFile) i.next();
 			try {
-				localCompileModule(aModule);
+				compileModule(aModule);
 			} catch (CoreException e) {
 				// log the error and allow the other modules to compile
 				Activator.logException(e);

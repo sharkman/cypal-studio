@@ -119,9 +119,16 @@ public class Helper {
 		// headless is not working anyway. We will add it later
 		StringBuilder args = new StringBuilder();
 		List commonArgs = getCommonArgs(configuration);
+		boolean isOut = false;
 		for (Iterator i = commonArgs.iterator(); i.hasNext();) {
 			String aCommonArg = (String) i.next();
+			if(isOut) {
+				isOut = false;
+				aCommonArg = "\""+aCommonArg+"\"";
+			}
 			args.append(aCommonArg).append(' ');
+			if(aCommonArg.equals("-out"))
+				isOut = true;
 		}
 		args.append(portArg);
 		args.append(urlArg);
@@ -135,7 +142,7 @@ public class Helper {
 		String projectName = configuration.getAttribute(Constants.LAUNCH_ATTR_PROJECT_NAME, "");//$NON-NLS-1$
 
 		IFolder outputDir = Helper.getOutputLocation(Util.getProject(projectName));
-    	String outArg = ""+outputDir.getLocation().toPortableString()+"";//$NON-NLS-1$ //$NON-NLS-2$
+    	String outArg = outputDir.getLocation().toPortableString();
 
 		int logLevel = configuration.getAttribute(Constants.LAUNCH_ATTR_LOGLEVEL, 3);
 		String logLevelArg = logLevels[logLevel];
@@ -153,9 +160,9 @@ public class Helper {
 		return commonArgs;
 	}
 
-	public static String getVMArguments() throws CoreException {
+	public static String getVMArguments(ILaunchConfiguration configuration) throws CoreException {
 		
-		String args = "";//$NON-NLS-1$
+		String args = configuration.getAttribute(Constants.LAUNCH_ATTR_VMOPTIONS, "");
 		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
 			args = " -XstartOnFirstThread ";//$NON-NLS-1$
 		}

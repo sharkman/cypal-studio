@@ -30,6 +30,7 @@ public class Constants {
 	public static final String LAUNCH_ATTR_LOGLEVEL = PLUGIN_ID+".launchAttrLogLevel";//$NON-NLS-1$
 	public static final String LAUNCH_ATTR_OUTDIR = PLUGIN_ID+".launchAttrOutDir";//$NON-NLS-1$
 	public static final String LAUNCH_ATTR_STYLE = PLUGIN_ID+".launchAttrStyle";//$NON-NLS-1$
+	public static final String LAUNCH_ATTR_VMOPTIONS = PLUGIN_ID+".launchVmOptions";//$NON-NLS-1$
 	public static final String LAUNCH_ATTR_MAIN_TYPE = IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME;
 	public static final String LAUNCH_ATTR_PROJECT_NAME = IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME;
 

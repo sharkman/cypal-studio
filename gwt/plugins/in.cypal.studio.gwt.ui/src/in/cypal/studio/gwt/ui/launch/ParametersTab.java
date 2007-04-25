@@ -91,6 +91,7 @@ public class ParametersTab extends AbstractLaunchConfigurationTab{
 	}
 	
 	Listener listener = new Listener();
+	private Text vmOptions;
 		
 
 	
@@ -108,11 +109,32 @@ public class ParametersTab extends AbstractLaunchConfigurationTab{
 		createStyleOptions(composite, font);
 		createVerticalSpacer(composite, 1);
 		createLogLevelOptions(composite, font);
+		createVMOptions(composite, font);
 
 		setControl(composite);
 
 	}
 		
+	/**
+	 * @param composite
+	 * @param font
+	 */
+	private void createVMOptions(Composite parent, Font font) {
+		
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new GridLayout(2, false));
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		Label label = new Label(composite, SWT.NONE);
+		label.setText("VM Options:");
+		
+		vmOptions = new Text(composite, SWT.BORDER);
+		GridData data = new GridData(SWT.FILL, SWT.NONE, true, false);
+		data.grabExcessHorizontalSpace = true;
+		vmOptions.setLayoutData(data);
+		vmOptions.addModifyListener(listener);
+	}
+
 	private void createStyleOptions(Composite parent, Font font) {
 		
 		Group group= new Group(parent, SWT.NONE);
@@ -120,7 +142,7 @@ public class ParametersTab extends AbstractLaunchConfigurationTab{
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		group.setLayoutData(gd);
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
+		layout.numColumns = 3;
 		group.setLayout(layout);
 		group.setFont(font);
 		
@@ -240,6 +262,7 @@ public class ParametersTab extends AbstractLaunchConfigurationTab{
 			headless.setSelection(configuration.getAttribute(Constants.LAUNCH_ATTR_HEADLESS, false));
 			port.setText(configuration.getAttribute(Constants.LAUNCH_ATTR_PORT, "8888")); //$NON-NLS-1$
 			port.setEnabled(useEmbedddedServer.getSelection());
+			vmOptions.setText(configuration.getAttribute(Constants.LAUNCH_ATTR_VMOPTIONS, ""));
 			int style = configuration.getAttribute(Constants.LAUNCH_ATTR_STYLE, 0);
 			switch(style) {
 			case 0: stylePretty.setSelection(true); break;
@@ -294,7 +317,7 @@ public class ParametersTab extends AbstractLaunchConfigurationTab{
 		configuration.setAttribute(Constants.LAUNCH_ATTR_LOGLEVEL, logLevel);
 		configuration.setAttribute(Constants.LAUNCH_ATTR_PORT, port.getText().trim());
 		configuration.setAttribute(Constants.LAUNCH_ATTR_STYLE, style);
-			
+		configuration.setAttribute(Constants.LAUNCH_ATTR_VMOPTIONS, vmOptions.getText().trim());
 
 	}
 
@@ -307,7 +330,7 @@ public class ParametersTab extends AbstractLaunchConfigurationTab{
 		configuration.setAttribute(Constants.LAUNCH_ATTR_LOGLEVEL, 2);
 		configuration.setAttribute(Constants.LAUNCH_ATTR_PORT, "8888"); //$NON-NLS-1$
 		configuration.setAttribute(Constants.LAUNCH_ATTR_STYLE, 1);
-
+		configuration.setAttribute(Constants.LAUNCH_ATTR_VMOPTIONS, "");
 	}
 	
 	public boolean isValid(ILaunchConfiguration launchConfig) {
