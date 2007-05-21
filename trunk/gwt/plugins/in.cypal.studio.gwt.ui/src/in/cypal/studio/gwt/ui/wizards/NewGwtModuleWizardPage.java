@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Prakash (techieguy@gmail.com)
+ * Copyright 2006 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 
 package in.cypal.studio.gwt.ui.wizards;
 
@@ -35,8 +34,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -44,25 +45,23 @@ import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 
-
-
 /**
- * @author Prakash (techieguy@gmail.com)
- * 
+ * @author Prakash G.R.
+ *
  */
-public class NewGwtModuleWizardPage extends NewClassWizardPage {
+public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 
 	private boolean shouldAppendClient;
 	private HashMap templateVars;
 	private IPackageFragment basePackageFragment;
-
+	
 	public NewGwtModuleWizardPage() {
+		super(true, "NewGwtModuleWizardPage");
 		setTitle("GWT Module"); 
 		setDescription("Creates a new GWT Module");  
 	}
-	
+
 	public void createControl(Composite parent) {
-		
 		initializeDialogUnits(parent);
 		
 		Composite composite= new Composite(parent, SWT.NONE);
@@ -85,24 +84,26 @@ public class NewGwtModuleWizardPage extends NewClassWizardPage {
 		createTypeNameControls(composite, nColumns);
 //		createModifierControls(composite, nColumns);
 			
-		createSuperClassControls(composite, nColumns);
+//		createSuperClassControls(composite, nColumns);
 		createSuperInterfacesControls(composite, nColumns);
 				
+//		createMethodStubSelectionControls(composite, nColumns);
+		
 		createCommentControls(composite, nColumns);
 		enableCommentControl(true);
 		
 		setControl(composite);
 			
 		Dialog.applyDialogFont(composite);
-		
+
 		List superInterfaces = new ArrayList(1);
 		superInterfaces.add("com.google.gwt.core.client.EntryPoint"); //$NON-NLS-1$
 		setSuperInterfaces(superInterfaces, true);
 	}
+
 	
-//	@Override
 	public void createType(IProgressMonitor monitor) throws CoreException, InterruptedException {
-	
+		
 		monitor = Util.getNonNullMonitor(monitor);
 
 		basePackageFragment = getPackageFragment();
@@ -136,8 +137,13 @@ public class NewGwtModuleWizardPage extends NewClassWizardPage {
 		}
 		
 	}
-
 	
+	
+	protected void createTypeMembers(IType newType, ImportsManager imports, IProgressMonitor monitor) throws CoreException {
+		newType.createMethod("public void onModuleLoad() {\n\t// TODO Auto-generated method stub \n}", null, false, monitor);
+		super.createTypeMembers(newType, imports, monitor);
+	}
+
 	private void createModuleEntry(IProject project) throws CoreException {
 		
 		IVirtualComponent component = ComponentCore.createComponent(project);
@@ -146,7 +152,6 @@ public class NewGwtModuleWizardPage extends NewClassWizardPage {
 		
 	}
 
-//	@Override
 	public IPackageFragment getPackageFragment() {
 		
 		IPackageFragment fragment = super.getPackageFragment();
@@ -155,7 +160,6 @@ public class NewGwtModuleWizardPage extends NewClassWizardPage {
 		return fragment;
 	}
 
-//	@Override
 	public IResource getModifiedResource() {
 
 		shouldAppendClient = true;
@@ -172,6 +176,8 @@ public class NewGwtModuleWizardPage extends NewClassWizardPage {
 		templateVars.put("@clientPackage", basePackageFragment.getElementName() + '.' + Constants.CLIENT_PACKAGE); //$NON-NLS-1$
 	}
 
-	
-}
+	public void init(IStructuredSelection selection) {
+		
+	}
 
+}
