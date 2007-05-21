@@ -117,5 +117,14 @@
             id="in.cypal.studio.gwt.publishTask"
             typeIds="*"/>
    </extension>
+   <extension
+         point="org.eclipse.wst.common.project.facet.core.runtimes">
+      <supported>
+         <facet
+               id="in.cypal.studio.gwt.core.gwtFacet"
+               version="1.0"/>
+         <runtime-component any="true"/>
+      </supported>
+   </extension>
 
 </plugin>
