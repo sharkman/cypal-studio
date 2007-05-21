@@ -138,11 +138,11 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 	private void doStatusUpdate() {
 		
 		if(projectCombo!=null) {
-			projectStatus = projectText.equals("")? Util.getErrorStatus(""):Util.okStatus;
+			projectStatus = projectText.equals("")? Util.getErrorStatus("Project cannot be empty"):Util.okStatus;
 		}
 		
 		if(moduleCombo != null) {
-			moduleStatus = moduleText.equals("")? Util.getErrorStatus(""):Util.okStatus;
+			moduleStatus = moduleText.equals("")? Util.getErrorStatus("Module cannot be empty"):Util.okStatus;
 		}
 		
 		IStatus[] status= new IStatus[] {

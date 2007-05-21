@@ -97,7 +97,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	private IJavaProject[] gwtProjects;
 	private boolean isImplCreation;
 	private Text serviceUriText;
-	private IFile modifiedResource;
+//	private IFile modifiedResource;
 	private IFile selectedModule;
 	private String selectedProject;
 
@@ -151,7 +151,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	private void createServiceUriControls(Composite parent, int columns) {
 
 		Label serviceUriLabel = new Label(parent, SWT.NONE);
-		serviceUriLabel.setText(""); 
+		serviceUriLabel.setText("Service URI:"); 
 		serviceUriLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		
 		serviceUriText = new Text(parent, SWT.SINGLE | SWT.BORDER);
@@ -287,7 +287,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 //	@Override
 	public void createType(IProgressMonitor monitor) throws CoreException, InterruptedException {
 
-		
+		monitor = Util.getNonNullMonitor(monitor);
 		isImplCreation = false;
 		super.createType(monitor);
 		
@@ -493,15 +493,15 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	protected void doStatusUpdate() {
 
 		if(projectCombo!=null) {
-			projectStatus = projectText.equals("")? Util.getErrorStatus(""):Util.okStatus;  //$NON-NLS-2$
+			projectStatus = projectText.trim().equals("")? Util.getErrorStatus("Project cannot be empty"):Util.okStatus;  //$NON-NLS-2$
 		}
 		
 		if(moduleCombo != null) {
-			moduleStatus = moduleText.equals("")? Util.getErrorStatus(""):Util.okStatus;  //$NON-NLS-2$
+			moduleStatus = moduleText.trim().equals("")? Util.getErrorStatus("Module cannot be empty"):Util.okStatus;  //$NON-NLS-2$
 		}
 		
 		if(serviceUriText !=null) {
-			serviceUriStatus = serviceUri.equals("")?Util.getErrorStatus(""):Util.okStatus;  //$NON-NLS-2$
+			serviceUriStatus = serviceUri.trim().equals("")?Util.getErrorStatus("Service URI cannot be empty"):Util.okStatus;  //$NON-NLS-2$
 		}
 
 		IStatus[] status= new IStatus[] {
