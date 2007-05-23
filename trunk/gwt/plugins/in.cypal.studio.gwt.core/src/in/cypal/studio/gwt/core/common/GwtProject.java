@@ -18,7 +18,6 @@
 package in.cypal.studio.gwt.core.common;
 
 import in.cypal.studio.gwt.core.Activator;
-import in.cypal.studio.gwt.core.builder.GwtCompileOperation;
 import in.cypal.studio.gwt.core.launch.Helper;
 
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 
 /**
- * @author Prakash (prakash@cypal.in)
+ * @author Prakash G.R.
  * 
  */
 public class GwtProject {
@@ -111,15 +110,6 @@ public class GwtProject {
 				Activator.logException(e);
 			}
 		}
-	}
-
-	/**
-	 * 
-	 * @param module
-	 * 
-	 */
-	private void localCompileModule(IFile module) throws CoreException {
-		
 	}
 
 	public void doClean(IProgressMonitor monitor) throws CoreException {
