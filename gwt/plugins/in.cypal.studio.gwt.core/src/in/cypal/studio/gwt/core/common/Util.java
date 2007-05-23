@@ -1,7 +1,5 @@
-
-
 /*
- * Copyright 2006 Prakash (techieguy@gmail.com)
+ * Copyright 2006 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +20,8 @@ package in.cypal.studio.gwt.core.common;
 
 import in.cypal.studio.gwt.core.Activator;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringBufferInputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -40,11 +31,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaModel;
@@ -56,13 +45,11 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
 
-
 /**
- * @author Prakash (techieguy@gmail.com)
+ * @author Prakash G.R.
  *
  */
 public class Util {
-
 	
 	public static final String SRC_FOLDER = "src";
 	public static final String BIN_FOLDER = "bin";
@@ -332,16 +319,16 @@ public class Util {
 	
 	}
 	
-	public static boolean isHosted(IProject project) {
-
-		boolean isHosted = true;
-		try {
-			return Boolean.parseBoolean(project.getPersistentProperty(Constants.IS_HOSTED_DEPLOY_MODE));
-		} catch (CoreException e) {
-			Activator.logException(e);
-		}
-		return isHosted;
-	}
+//	public static boolean isHosted(IProject project) {
+//
+//		boolean isHosted = true;
+//		try {
+//			return Boolean.parseBoolean(project.getPersistentProperty(Constants.IS_HOSTED_DEPLOY_MODE));
+//		} catch (CoreException e) {
+//			Activator.logException(e);
+//		}
+//		return isHosted;
+//	}
 	
 	public static IProject getProject(String name) {
 		return ResourcesPlugin.getWorkspace().getRoot().getProject(name);

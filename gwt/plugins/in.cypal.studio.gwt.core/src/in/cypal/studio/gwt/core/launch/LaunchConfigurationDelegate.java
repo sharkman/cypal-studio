@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Prakash (techieguy@gmail.com)
+ * Copyright 2006 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package in.cypal.studio.gwt.core.launch;
 
 import in.cypal.studio.gwt.core.common.Constants;
@@ -34,30 +33,26 @@ import org.eclipse.jdt.launching.JavaLaunchDelegate;
 
 
 /**
- * @author Prakash (techieguy@gmail.com)
+ * @author Prakash G.R.
  *
  */
 public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 
-//	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		super.launch(configuration, mode, launch, monitor);
 	}
 	
-//	@Override
 	public String getMainTypeName(ILaunchConfiguration configuration) throws CoreException {
 
 		// ignore the config. Its always the GwtShell 
 		return Constants.GWT_SHELL_CLASS;		
 	}
 	
-//	@Override
 	public String getProgramArguments(ILaunchConfiguration configuration) throws CoreException {
 
 		return Helper.getShellArgs(configuration);
 	}
 
-//	@Override
 	public String[] getClasspath(ILaunchConfiguration configuration) throws CoreException {
 
 		String projectName = configuration.getAttribute(Constants.LAUNCH_ATTR_PROJECT_NAME, ""); //$NON-NLS-1$
@@ -83,7 +78,6 @@ public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 		
 	}
 	
-//	@Override
 	public String getVMArguments(ILaunchConfiguration configuration) throws CoreException {
 		
 		return super.getVMArguments(configuration) + Helper.getVMArguments(configuration);

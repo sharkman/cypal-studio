@@ -1,3 +1,20 @@
+/*
+ * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package in.cypal.studio.gwt.core.launch;
 
 import in.cypal.studio.gwt.core.common.Constants;
@@ -20,6 +37,10 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.launching.JavaRuntime;
 
+/**
+ * @author Prakash G.R.
+ *
+ */
 public class Helper {
 
 	public static final String []logLevels= {"ERROR", "WARN", "INFO", "TRACE", "DEBUG", "SPAM"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
@@ -42,7 +63,7 @@ public class Helper {
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType configType = launchManager.getLaunchConfigurationType(Constants.LAUNCH_CONFIG_TYPE);
 		ILaunchConfigurationWorkingCopy copy = configType.newInstance(null, launchManager.generateUniqueLaunchConfigurationNameFrom(moduleName));
-		copy.setAttribute(Constants.LAUNCH_ATTR_MAIN_TYPE, moduleName);
+		copy.setAttribute(Constants.LAUNCH_ATTR_MODULE_NAME, moduleName);
 		copy.setAttribute(Constants.LAUNCH_ATTR_PROJECT_NAME, projectName);
 		
 		return copy.doSave();
@@ -59,7 +80,7 @@ public class Helper {
 		for (int i = 0; i < launchConfigurations.length; i++) {
 			ILaunchConfiguration configuration = launchConfigurations[i];
 
-			if(moduleName.equals(configuration.getAttribute(Constants.LAUNCH_ATTR_MAIN_TYPE, "")) //$NON-NLS-1$
+			if(moduleName.equals(configuration.getAttribute(Constants.LAUNCH_ATTR_MODULE_NAME, "")) //$NON-NLS-1$
 					&& projectName.equals(configuration.getAttribute(Constants.LAUNCH_ATTR_PROJECT_NAME, ""))){//$NON-NLS-1$
 				toLaunch = configuration;
 				break;
@@ -88,7 +109,7 @@ public class Helper {
 	
 	public static List getCompilerArgs(ILaunchConfiguration configuration) throws CoreException {
 		
-		String moduleName = configuration.getAttribute(Constants.LAUNCH_ATTR_MAIN_TYPE, "");//$NON-NLS-1$
+		String moduleName = configuration.getAttribute(Constants.LAUNCH_ATTR_MODULE_NAME, "");//$NON-NLS-1$
 
 		List commonArgs = getCommonArgs(configuration);
 		commonArgs.add(moduleName);
@@ -103,7 +124,7 @@ public class Helper {
 		String urlArg;
 		if(useDefaultUrl) {
 			
-			String moduleName = configuration.getAttribute(Constants.LAUNCH_ATTR_MAIN_TYPE, "");//$NON-NLS-1$
+			String moduleName = configuration.getAttribute(Constants.LAUNCH_ATTR_MODULE_NAME, "");//$NON-NLS-1$
 			int index = moduleName.lastIndexOf('.');
 			String moduleHtml = moduleName.substring(index+1)+".html";//$NON-NLS-1$
 			urlArg = " "+moduleName+"/"+moduleHtml;//$NON-NLS-1$ //$NON-NLS-2$
