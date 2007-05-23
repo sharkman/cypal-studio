@@ -1,5 +1,5 @@
 /*
- * Copyright 2006  Prakash (techieguy@gmail.com)
+ * Copyright 2006 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package in.cypal.studio.gwt.ui.launch;
 
 import in.cypal.studio.gwt.core.launch.Helper;
@@ -33,7 +34,7 @@ import org.eclipse.ui.part.FileEditorInput;
 
 
 /**
- * @author Prakash (techieguy@gmail.com)
+ * @author Prakash G.R.
  *
  */
 public class LaunchShortcut implements ILaunchShortcut {
