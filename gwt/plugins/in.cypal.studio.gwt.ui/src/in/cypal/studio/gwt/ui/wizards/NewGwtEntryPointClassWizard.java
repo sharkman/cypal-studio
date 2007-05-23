@@ -17,6 +17,8 @@
 
 package in.cypal.studio.gwt.ui.wizards;
 
+import in.cypal.studio.gwt.ui.common.Util;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -56,6 +58,10 @@ public class NewGwtEntryPointClassWizard extends NewElementWizard implements IEx
 	}
 	
 	public void addPages() {
+
+		if(!Util.isGwtHomeSet())
+			addPage(new GwtHomeConfirmationPage());
+
 		entryPointClassWizardPage = new NewGwtEntryPointClassWizardPage();
 		entryPointClassWizardPage.init(getSelection());
 		addPage(entryPointClassWizardPage);

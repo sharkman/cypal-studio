@@ -20,6 +20,7 @@ package in.cypal.studio.gwt.core.common;
 
 import in.cypal.studio.gwt.core.Activator;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -319,19 +320,17 @@ public class Util {
 	
 	}
 	
-//	public static boolean isHosted(IProject project) {
-//
-//		boolean isHosted = true;
-//		try {
-//			return Boolean.parseBoolean(project.getPersistentProperty(Constants.IS_HOSTED_DEPLOY_MODE));
-//		} catch (CoreException e) {
-//			Activator.logException(e);
-//		}
-//		return isHosted;
-//	}
+	public static boolean isGwtHomeSet(){
+		
+		boolean set= false;
+		if(JavaCore.getClasspathVariable(Constants.GWT_HOME_CPE) != null) {
+			File gwtUserJar = new File(Preferences.getString(Constants.GWT_HOME_PREFERENCE)+"/gwt-user.jar");
+			set = gwtUserJar.exists(); 
+		}
+		return set;
+	}
 	
 	public static IProject getProject(String name) {
 		return ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 	}
-
 }
