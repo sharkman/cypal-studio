@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Prakash (techieguy@gmail.com)
+ * Copyright 2006 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.model.PublishOperation;
 
 /**
- * @author Prakash (techieguy@gmail.com)
+ * @author Prakash G.R.
  * 
  */
 public class GwtCompileOperation extends PublishOperation {

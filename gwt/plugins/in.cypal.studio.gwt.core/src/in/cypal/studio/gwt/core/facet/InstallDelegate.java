@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Prakash (techieguy@gmail.com)
+ * Copyright 2006 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 
 
 /**
- * @author Prakash (techieguy@gmail.com)
+ * @author Prakash G.R.
  *
  */
 public class InstallDelegate implements IDelegate{
