@@ -35,6 +35,7 @@ import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.JavaRuntime;
 
 /**
@@ -64,6 +65,7 @@ public class Helper {
 		ILaunchConfigurationType configType = launchManager.getLaunchConfigurationType(Constants.LAUNCH_CONFIG_TYPE);
 		ILaunchConfigurationWorkingCopy copy = configType.newInstance(null, launchManager.generateUniqueLaunchConfigurationNameFrom(moduleName));
 		copy.setAttribute(Constants.LAUNCH_ATTR_MODULE_NAME, moduleName);
+		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, projectName);
 		copy.setAttribute(Constants.LAUNCH_ATTR_PROJECT_NAME, projectName);
 		
 		return copy.doSave();
