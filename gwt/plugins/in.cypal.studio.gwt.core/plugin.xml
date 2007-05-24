@@ -126,5 +126,21 @@
          <runtime-component any="true"/>
       </supported>
    </extension>
+   <extension
+         point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution>
+      		<public
+              publicId="-//Cypal Solutions//DTD GWT XML 1.0//EN"
+              uri="schema/gwt_xml_1_0.dtd"
+              webURL="http://www.cypal.in/gwt_xml_1_0.dtd">
+				
+			</public>
+        <system
+              systemId="http://www.cypal.in/gwt_xml_1_0.dtd"
+              uri="schema/gwt_xml_1_0.dtd">
+        </system>
+      </catalogContribution>
+      
+   </extension>
 
 </plugin>
