@@ -30,6 +30,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jdt.core.IAccessRule;
+import org.eclipse.jdt.core.IClasspathAttribute;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -96,7 +98,10 @@ public class InstallDelegate implements IDelegate{
 			IClasspathEntry[] oldClasspath = javaProject.getRawClasspath();
 			IClasspathEntry[] newClasspath = new IClasspathEntry[oldClasspath.length+1];
 			System.arraycopy(oldClasspath, 0, newClasspath, 0, oldClasspath.length);
-			newClasspath[oldClasspath.length] = JavaCore.newVariableEntry(Util.getGwtUserLibPath(), null, null);
+			IClasspathEntry gwtUserJarEntry = JavaCore.newVariableEntry(Util.getGwtUserLibPath(), null, null);
+			IClasspathAttribute attr = JavaCore.newClasspathAttribute("org.eclipse.jst.component.dependency", "/WEB-INF/lib");
+			gwtUserJarEntry = JavaCore.newVariableEntry(gwtUserJarEntry.getPath(), null, null, new IAccessRule[0], new IClasspathAttribute[] {attr}, false);
+			newClasspath[oldClasspath.length] = gwtUserJarEntry;
 			javaProject.setRawClasspath(newClasspath, monitor);
 
 		} catch (JavaModelException e) {
