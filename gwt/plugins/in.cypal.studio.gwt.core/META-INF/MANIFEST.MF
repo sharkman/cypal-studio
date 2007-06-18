@@ -33,16 +33,4 @@ Export-Package: in.cypal.studio.gwt.core.common;
    org.eclipse.jdt.launching,
    org.eclipse.core.resources,
    org.eclipse.core.runtime,
-   org.eclipse.debug.core",
- in.cypal.studio.gwt.core.moduleFile;uses:="org.eclipse.emf.common.util,org.eclipse.emf.ecore.util,org.eclipse.emf.ecore",
- in.cypal.studio.gwt.core.moduleFile.util;
-  uses:="org.eclipse.emf.common.notify,
-   org.eclipse.emf.common.util,
-   org.eclipse.emf.ecore.util,
-   org.eclipse.emf.ecore.resource,
-   org.eclipse.emf.common.notify.impl,
-   org.eclipse.emf.ecore.xmi.util,
-   org.eclipse.emf.ecore.xmi.impl,
-   org.eclipse.emf.ecore.resource.impl,
-   in.cypal.studio.gwt.core.moduleFile,
-   org.eclipse.emf.ecore"
+   org.eclipse.debug.core"
