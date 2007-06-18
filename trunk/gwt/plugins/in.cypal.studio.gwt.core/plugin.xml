@@ -142,5 +142,17 @@
       </catalogContribution>
       
    </extension>
+   <extension
+         id="ExportWar"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="in.cypal.studio.gwt.core.builder.ExportWarApplication">
+         </run>
+      </application>
+   </extension>
 
 </plugin>
