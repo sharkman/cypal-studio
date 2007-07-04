@@ -80,7 +80,7 @@
       </project-facet-version>
       <preset id="in.cypal.studio.gwt.core.gwtPreset">
          <label>
-            Default Cypal Studio Project
+            Cypal Studio GWT Project
          </label>
          <facet
                id="jst.java"
