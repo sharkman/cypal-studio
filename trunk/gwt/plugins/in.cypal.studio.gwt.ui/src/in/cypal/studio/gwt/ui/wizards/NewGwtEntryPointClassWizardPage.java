@@ -176,7 +176,8 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 		try {
 			addEntryPointClassToGwtXml(new SubProgressMonitor(monitor, 3));
 		} catch (Exception e) {
-			throw new CoreException(Util.errorStatus);
+			Activator.logException(e);
+			throw new CoreException(Util.getErrorStatus(e.getMessage()));
 		}
 	}
 	
