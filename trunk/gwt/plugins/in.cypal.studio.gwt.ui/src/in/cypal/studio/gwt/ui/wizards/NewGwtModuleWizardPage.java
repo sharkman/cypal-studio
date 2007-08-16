@@ -33,6 +33,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
@@ -54,6 +55,9 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 	private boolean shouldAppendClient;
 	private HashMap templateVars;
 	private IPackageFragment basePackageFragment;
+//	private IStatus containerStatus = Status.OK_STATUS;
+//	private IStatus packageStatus = Status.OK_STATUS;
+//	private IStatus nameStatus = Status.OK_STATUS;
 	
 	public NewGwtModuleWizardPage() {
 		super(true, "NewGwtModuleWizardPage");
@@ -133,7 +137,7 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 			
 		} catch (IOException e) {
 			Activator.logException(e);
-			throw new CoreException(Util.errorStatus);
+			throw new CoreException(Util.getErrorStatus(e.getMessage()));
 		}
 		
 	}
@@ -177,6 +181,13 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 	}
 
 	public void init(IStructuredSelection selection) {
+		IJavaElement javaElement = getInitialJavaElement(selection);
+		initContainerPage(javaElement);
+		initTypePage(javaElement);
+	}
+	
+	void updateStatus(){
+		
 		
 	}
 
