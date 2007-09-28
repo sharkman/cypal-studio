@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Cypal Studio for GWT Documentation
+Bundle-SymbolicName: in.cypal.studio.gwt.doc;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: in.cypal.studio.gwt.doc.Activator
+Bundle-Vendor: Cypal Solutions (tools@cypal.in)
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.help.ui
+Eclipse-LazyStart: true
