@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaModel;
@@ -306,11 +307,13 @@ public class Util {
 	
 	public static String getQualifiedName(IFile file) {
 		
+		
 		String qualifiedName = "";//$NON-NLS-1$
 		if(file!=null) {
 			StringBuilder builder = new StringBuilder();
-			String [] segments = file.getProjectRelativePath().segments();
-			for(int i = 1; i<segments.length;i++) {
+			
+			String [] segments = getSegmentsFromSourceFolder(file);
+			for(int i = 0; i<segments.length;i++) {
 				builder.append(segments[i]);
 				builder.append('.');
 			}
@@ -320,6 +323,34 @@ public class Util {
 	
 	}
 	
+	/**
+	 * @param file 
+	 * @return
+	 */
+	private static String[] getSegmentsFromSourceFolder(IFile file) {
+		
+		int removeCount = 1;// by default, just remove the source folder;
+		try {
+			IJavaProject javaProject = JavaCore.create(file.getProject());
+			IClasspathEntry[] classpathEntries = javaProject.getRawClasspath();
+			for (int i = 0; i < classpathEntries.length; i++) {
+				
+				if(classpathEntries[i].getEntryKind() != IClasspathEntry.CPE_SOURCE)
+					continue;// we are interested only in source folders
+				IPath path = classpathEntries[i].getPath();
+				// Ugly way to ensure the right source folder when many are present. 
+				// Should work anyway
+				removeCount = path.segmentCount()-1;
+				
+			}
+		} catch (Throwable e) {
+			Activator.logException(new Exception(e));
+		}
+		
+		IPath filePath = file.getProjectRelativePath().removeFirstSegments(removeCount);
+		return filePath.segments();
+	}
+
 	public static boolean isGwtHomeSet(){
 		
 		boolean set= false;
