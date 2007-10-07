@@ -84,9 +84,9 @@ import org.w3c.dom.Node;
  */
 public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
-	protected IStatus moduleStatus = Util.okStatus;
-	protected IStatus projectStatus = Util.okStatus;
-	protected IStatus serviceUriStatus = Util.okStatus;
+	protected IStatus moduleStatus = in.cypal.studio.gwt.core.common.Util.okStatus;
+	protected IStatus projectStatus = in.cypal.studio.gwt.core.common.Util.okStatus;
+	protected IStatus serviceUriStatus = in.cypal.studio.gwt.core.common.Util.okStatus;
 
 	private String serviceUri = "";//$NON-NLS-1$
 	private Map templateVars;
@@ -494,15 +494,15 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	protected void doStatusUpdate() {
 
 		if(projectCombo!=null) {
-			projectStatus = projectText.trim().equals("")? Util.getErrorStatus("Project cannot be empty"):Util.okStatus;  //$NON-NLS-2$
+			projectStatus = projectText.trim().equals("")? Util.getErrorStatus("Project cannot be empty"):in.cypal.studio.gwt.core.common.Util.okStatus;  //$NON-NLS-2$
 		}
 		
 		if(moduleCombo != null) {
-			moduleStatus = moduleText.trim().equals("")? Util.getErrorStatus("Module cannot be empty"):Util.okStatus;  //$NON-NLS-2$
+			moduleStatus = moduleText.trim().equals("")? Util.getErrorStatus("Module cannot be empty"):in.cypal.studio.gwt.core.common.Util.okStatus;  //$NON-NLS-2$
 		}
 		
 		if(serviceUriText !=null) {
-			serviceUriStatus = serviceUri.trim().equals("")?Util.getErrorStatus("Service URI cannot be empty"):Util.okStatus;  //$NON-NLS-2$
+			serviceUriStatus = serviceUri.trim().equals("")?Util.getErrorStatus("Service URI cannot be empty"):in.cypal.studio.gwt.core.common.Util.okStatus;  //$NON-NLS-2$
 		}
 
 		IStatus[] status= new IStatus[] {
