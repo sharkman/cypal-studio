@@ -218,4 +218,10 @@ END OF TERMS AND CONDITIONS
          install-size="0"
          version="1.0.0.qualifier"/>
 
+   <plugin
+         id="in.cypal.studio.gwt.samples"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.qualifier"/>
+
 </feature>

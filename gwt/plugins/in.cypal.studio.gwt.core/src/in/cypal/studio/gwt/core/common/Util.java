@@ -32,9 +32,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
@@ -55,6 +57,8 @@ public class Util {
 	
 	public static final String SRC_FOLDER = "src";
 	public static final String BIN_FOLDER = "bin";
+	public static final IStatus okStatus = Status.OK_STATUS;
+	public static final IStatus errorStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, -1, "Error", null);
 
 	public static IPath getGwtUserLibPath() {
 		return new Path(Constants.GWT_HOME_CPE).append("gwt-user.jar");//$NON-NLS-1$
@@ -132,7 +136,7 @@ public class Util {
 
 		boolean hasGwtNature;
 		try {
-			hasGwtNature = project.hasNature(Constants.NATURE_ID);
+			hasGwtNature = project.isAccessible() && project.hasNature(Constants.NATURE_ID);
 		} catch (Exception e) {
 			Activator.logException(e);
 			hasGwtNature = false;
@@ -363,5 +367,9 @@ public class Util {
 	
 	public static IProject getProject(String name) {
 		return ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+	}
+
+	public static IStatus getErrorStatus(String errorMessage) {
+		return new Status(IStatus.ERROR, Activator.PLUGIN_ID, IStatus.OK, errorMessage, null);
 	}
 }

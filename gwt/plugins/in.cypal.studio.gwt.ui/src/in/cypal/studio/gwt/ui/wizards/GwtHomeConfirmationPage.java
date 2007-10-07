@@ -41,7 +41,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
  */
 public class GwtHomeConfirmationPage extends WizardPage {
 
-	protected GwtHomeConfirmationPage() {
+	public GwtHomeConfirmationPage() {
 		super("GwtHomeConfirmationPage");
 		setTitle("GWT Home");
 		setDescription("Set the install location of GWT");
@@ -58,6 +58,7 @@ public class GwtHomeConfirmationPage extends WizardPage {
 		final Text locationText = new Text(composite, SWT.BORDER);
 		locationText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		locationText.setText(Preferences.getString(Constants.GWT_HOME_PREFERENCE));
+		locationText.setEditable(false);
 		
 		Button setButton = new Button(composite, SWT.PUSH);
 		setButton.setText("Set...");

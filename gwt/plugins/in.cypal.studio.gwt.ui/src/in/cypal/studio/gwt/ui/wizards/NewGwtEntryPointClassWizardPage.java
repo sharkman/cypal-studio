@@ -74,8 +74,8 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 	private String projectText=""; //$NON-NLS-1$
 	private Combo projectCombo;
 	private IJavaProject[] gwtProjects;
-	protected IStatus moduleStatus = Util.okStatus;
-	protected IStatus projectStatus = Util.okStatus;
+	protected IStatus moduleStatus = in.cypal.studio.gwt.core.common.Util.okStatus;
+	protected IStatus projectStatus = in.cypal.studio.gwt.core.common.Util.okStatus;
 	private IFile selectedModule;
 	private String selectedProject;
 	
@@ -138,11 +138,11 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 	private void doStatusUpdate() {
 		
 		if(projectCombo!=null) {
-			projectStatus = projectText.equals("")? Util.getErrorStatus("Project cannot be empty"):Util.okStatus;
+			projectStatus = projectText.equals("")? Util.getErrorStatus("Project cannot be empty"):in.cypal.studio.gwt.core.common.Util.okStatus;
 		}
 		
 		if(moduleCombo != null) {
-			moduleStatus = moduleText.equals("")? Util.getErrorStatus("Module cannot be empty"):Util.okStatus;
+			moduleStatus = moduleText.equals("")? Util.getErrorStatus("Module cannot be empty"):in.cypal.studio.gwt.core.common.Util.okStatus;
 		}
 		
 		IStatus[] status= new IStatus[] {

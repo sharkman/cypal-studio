@@ -17,7 +17,6 @@
 package in.cypal.studio.gwt.ui.common;
 
 import in.cypal.studio.gwt.core.common.Constants;
-import in.cypal.studio.gwt.ui.Activator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,9 +29,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -42,13 +39,6 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  *
  */
 public class Util extends in.cypal.studio.gwt.core.common.Util{
-
-	public static final IStatus okStatus = Status.OK_STATUS;
-	public static final IStatus errorStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, -1, "Error", null);//$NON-NLS-1$
-	public static IStatus getErrorStatus(String errorMessage) {
-		return new Status(IStatus.ERROR, Activator.PLUGIN_ID, IStatus.OK, errorMessage, null);
-	}
-	
 
 	private final static IPreferenceStore preferenceStore = new ScopedPreferenceStore(new InstanceScope(), Constants.PLUGIN_ID);
 	public static final String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$

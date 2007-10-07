@@ -68,7 +68,7 @@
                      version="[2.2"/>
                <requires
                      facet="jst.java"
-                     version="[1.3"/>
+                     version="[1.4"/>
             </and>
          </constraint>
          <action
@@ -84,7 +84,7 @@
          </label>
          <facet
                id="jst.java"
-               version="1.3"/>
+               version="1.4"/>
          <facet
                id="jst.web"
                version="2.2"/>
