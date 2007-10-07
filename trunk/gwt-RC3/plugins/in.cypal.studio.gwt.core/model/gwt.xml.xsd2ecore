@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xsd2ecore:XSD2EcoreMappingRoot xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsd2ecore="http://www.eclipse.org/emf/2002/XSD2Ecore" inputs="../schema/gwt.xml.xsd#/"
+    outputs="GwtXml.ecore#/" topToBottom="true">
+  <nested inputs="bundleentry://374/cache/www.w3.org/2001/XMLSchema.xsd#//string;XSDSimpleTypeDefinition=7"
+      outputs="http://www.eclipse.org/emf/2003/XMLType#//String"/>
+  <nested inputs="../schema/gwt.xml.xsd#//servlet;XSDComplexTypeDefinition=4" outputs="GwtXml.ecore#//Servlet">
+    <nested inputs="../schema/gwt.xml.xsd#//servlet;XSDComplexTypeDefinition=4/XSDAttributeUse=1"
+        outputs="GwtXml.ecore#//Servlet/class"/>
+    <nested inputs="../schema/gwt.xml.xsd#//servlet;XSDComplexTypeDefinition=4/XSDAttributeUse"
+        outputs="GwtXml.ecore#//Servlet/path"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//set-property;XSDComplexTypeDefinition=5"
+      outputs="GwtXml.ecore#//SetProperty">
+    <nested inputs="../schema/gwt.xml.xsd#//set-property;XSDComplexTypeDefinition=5/XSDAttributeUse"
+        outputs="GwtXml.ecore#//SetProperty/name"/>
+    <nested inputs="../schema/gwt.xml.xsd#//set-property;XSDComplexTypeDefinition=5/XSDAttributeUse=1"
+        outputs="GwtXml.ecore#//SetProperty/value"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//define-property;XSDComplexTypeDefinition=1"
+      outputs="GwtXml.ecore#//DefineProperty">
+    <nested inputs="../schema/gwt.xml.xsd#//define-property;XSDComplexTypeDefinition=1/XSDAttributeUse"
+        outputs="GwtXml.ecore#//DefineProperty/name"/>
+    <nested inputs="../schema/gwt.xml.xsd#//define-property;XSDComplexTypeDefinition=1/XSDAttributeUse=1"
+        outputs="GwtXml.ecore#//DefineProperty/values"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//entry-point;XSDComplexTypeDefinition=6"
+      outputs="GwtXml.ecore#//EntryPoint">
+    <nested inputs="../schema/gwt.xml.xsd#//entry-point;XSDComplexTypeDefinition=6/XSDAttributeUse"
+        outputs="GwtXml.ecore#//EntryPoint/class"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//inherits;XSDComplexTypeDefinition" outputs="GwtXml.ecore#//Inherits">
+    <nested inputs="../schema/gwt.xml.xsd#//inherits;XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="GwtXml.ecore#//Inherits/name"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//property-provider;XSDComplexTypeDefinition=2"
+      outputs="GwtXml.ecore#//PropertyProvider">
+    <nested inputs="../schema/gwt.xml.xsd#//property-provider;XSDComplexTypeDefinition=2/XSDAttributeUse"
+        outputs="GwtXml.ecore#//PropertyProvider/name"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//source;XSDComplexTypeDefinition=3" outputs="GwtXml.ecore#//Source">
+    <nested inputs="../schema/gwt.xml.xsd#//source;XSDComplexTypeDefinition=3/XSDAttributeUse"
+        outputs="GwtXml.ecore#//Source/path"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//super-source;XSDComplexTypeDefinition=8"
+      outputs="GwtXml.ecore#//SuperSource">
+    <nested inputs="../schema/gwt.xml.xsd#//super-source;XSDComplexTypeDefinition=8/XSDAttributeUse"
+        outputs="GwtXml.ecore#//SuperSource/path"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//when-type-assignable;XSDComplexTypeDefinition=10"
+      outputs="GwtXml.ecore#//WhenTypeAssignable">
+    <nested inputs="../schema/gwt.xml.xsd#//when-type-assignable;XSDComplexTypeDefinition=10/XSDAttributeUse"
+        outputs="GwtXml.ecore#//WhenTypeAssignable/class"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//generate-with;XSDComplexTypeDefinition=9"
+      outputs="GwtXml.ecore#//GenerateWith">
+    <nested inputs="../schema/gwt.xml.xsd#//generate-with;XSDComplexTypeDefinition=9/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="GwtXml.ecore#//GenerateWith/whenTypeAssignable"/>
+    <nested inputs="../schema/gwt.xml.xsd#//generate-with;XSDComplexTypeDefinition=9/XSDAttributeUse"
+        outputs="GwtXml.ecore#//GenerateWith/class"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//when-type-is;XSDComplexTypeDefinition=12"
+      outputs="GwtXml.ecore#//WhenTypeIs">
+    <nested inputs="../schema/gwt.xml.xsd#//when-type-is;XSDComplexTypeDefinition=12/XSDAttributeUse"
+        outputs="GwtXml.ecore#//WhenTypeIs/class"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//when-property-is;XSDComplexTypeDefinition=13"
+      outputs="GwtXml.ecore#//WhenPropertyIs">
+    <nested inputs="../schema/gwt.xml.xsd#//when-property-is;XSDComplexTypeDefinition=13/XSDAttributeUse"
+        outputs="GwtXml.ecore#//WhenPropertyIs/name"/>
+    <nested inputs="../schema/gwt.xml.xsd#//when-property-is;XSDComplexTypeDefinition=13/XSDAttributeUse=1"
+        outputs="GwtXml.ecore#//WhenPropertyIs/value"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//any;XSDComplexTypeDefinition=14" outputs="GwtXml.ecore#//Any">
+    <nested inputs="../schema/gwt.xml.xsd#//any;XSDComplexTypeDefinition=14/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="GwtXml.ecore#//Any/whenPropertyIs"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//replace-with;XSDComplexTypeDefinition=11"
+      outputs="GwtXml.ecore#//ReplaceWith">
+    <nested inputs="../schema/gwt.xml.xsd#//replace-with;XSDComplexTypeDefinition=11/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="GwtXml.ecore#//ReplaceWith/whenTypeIs"/>
+    <nested inputs="../schema/gwt.xml.xsd#//replace-with;XSDComplexTypeDefinition=11/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="GwtXml.ecore#//ReplaceWith/whenPropertyIs"/>
+    <nested inputs="../schema/gwt.xml.xsd#//replace-with;XSDComplexTypeDefinition=11/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="GwtXml.ecore#//ReplaceWith/any"/>
+    <nested inputs="../schema/gwt.xml.xsd#//replace-with;XSDComplexTypeDefinition=11/XSDAttributeUse"
+        outputs="GwtXml.ecore#//ReplaceWith/class"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//public;XSDComplexTypeDefinition=15" outputs="GwtXml.ecore#//Public">
+    <nested inputs="../schema/gwt.xml.xsd#//public;XSDComplexTypeDefinition=15/XSDAttributeUse"
+        outputs="GwtXml.ecore#//Public/path"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//script;XSDComplexTypeDefinition=16" outputs="GwtXml.ecore#//Script">
+    <nested inputs="../schema/gwt.xml.xsd#//script;XSDComplexTypeDefinition=16/XSDAttributeUse"
+        outputs="GwtXml.ecore#//Script/src"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//stylesheet;XSDComplexTypeDefinition=17"
+      outputs="GwtXml.ecore#//Stylesheet">
+    <nested inputs="../schema/gwt.xml.xsd#//stylesheet;XSDComplexTypeDefinition=17/XSDAttributeUse"
+        outputs="GwtXml.ecore#//Stylesheet/src"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//extend-property;XSDComplexTypeDefinition=18"
+      outputs="GwtXml.ecore#//ExtendProperty">
+    <nested inputs="../schema/gwt.xml.xsd#//extend-property;XSDComplexTypeDefinition=18/XSDAttributeUse"
+        outputs="GwtXml.ecore#//ExtendProperty/name"/>
+    <nested inputs="../schema/gwt.xml.xsd#//extend-property;XSDComplexTypeDefinition=18/XSDAttributeUse=1"
+        outputs="GwtXml.ecore#//ExtendProperty/values"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7" outputs="GwtXml.ecore#//Module">
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle"
+        outputs="GwtXml.ecore#//Module/group"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="GwtXml.ecore#//Module/servlet"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="GwtXml.ecore#//Module/setProperty"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="GwtXml.ecore#//Module/defineProperty"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="GwtXml.ecore#//Module/entryPoint"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle=4"
+        outputs="GwtXml.ecore#//Module/inherits"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle=5"
+        outputs="GwtXml.ecore#//Module/propertyProvider"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle=6"
+        outputs="GwtXml.ecore#//Module/source"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle=7"
+        outputs="GwtXml.ecore#//Module/superSource"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle=8"
+        outputs="GwtXml.ecore#//Module/generateWith"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle=9"
+        outputs="GwtXml.ecore#//Module/replaceWith"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle=10"
+        outputs="GwtXml.ecore#//Module/public"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle=11"
+        outputs="GwtXml.ecore#//Module/script"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle=12"
+        outputs="GwtXml.ecore#//Module/stylesheet"/>
+    <nested inputs="../schema/gwt.xml.xsd#//module;XSDComplexTypeDefinition=7/XSDParticle/XSDModelGroup/XSDParticle=13"
+        outputs="GwtXml.ecore#//Module/extendProperty"/>
+  </nested>
+  <nested inputs="../schema/gwt.xml.xsd#//module;XSDElementDeclaration" outputs="GwtXml.ecore#//DocumentRoot/module"/>
+</xsd2ecore:XSD2EcoreMappingRoot>

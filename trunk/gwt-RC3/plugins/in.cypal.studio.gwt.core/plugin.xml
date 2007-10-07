@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="tools" name="GWT Compilers" schema="schema/tools.exsd"/>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            id="moduleXml"
+            name="GWT Module Definition"
+            priority="normal">
+         <describer
+               class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber">
+            <parameter
+                  name="element"
+                  value="module">
+            </parameter>
+         </describer>
+      </content-type>
+   </extension>
+   <extension
+         id="gwtNature"
+         name="GWT Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="in.cypal.studio.gwt.core.nature.GWTNature">
+         </run>
+      </runtime>
+      <builder
+            id="in.cypal.studio.gwt.core.gwtBuilder">
+      </builder>
+   </extension>
+   <extension
+         id="gwtBuilder"
+         name="GWT Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true"
+            >
+         <run
+               class="in.cypal.studio.gwt.core.builder.GwtBuilder">
+         </run></builder>
+   </extension>
+   <extension
+         id="in.cypal.studio.gwt.core.gwtFacet"
+         point="org.eclipse.wst.common.project.facet.core.facets">
+      <project-facet id="in.cypal.studio.gwt.core.gwtFacet">
+         <label>
+            Cypal&apos;s GWT Facet
+         </label>
+         <description>
+            Enables the web application to use Google's Ajax library, GWT
+         </description>
+      </project-facet>
+      <project-facet-version
+            facet="in.cypal.studio.gwt.core.gwtFacet"
+            version="1.0">
+         <action
+               id="in.cypal.studio.gwt.core.gwtFacet.install"
+               type="install">
+            <config-factory class="in.cypal.studio.gwt.core.facet.InstallActionConfigFactory"/>
+            <delegate class="in.cypal.studio.gwt.core.facet.InstallDelegate"/>
+         </action>
+         <constraint>
+            <and>
+               <requires
+                     facet="jst.web"
+                     version="[2.2"/>
+               <requires
+                     facet="jst.java"
+                     version="[1.4"/>
+            </and>
+         </constraint>
+         <action
+               id="in.cypal.studio.gwt.core.gwtFacet.uninstall"
+               type="uninstall">
+            <config-factory class="in.cypal.studio.gwt.core.facet.UnInstallActionConfigFactory"/>
+            <delegate class="in.cypal.studio.gwt.core.facet.UnInstallDelegate"/>
+         </action>
+      </project-facet-version>
+      <preset id="in.cypal.studio.gwt.core.gwtPreset">
+         <label>
+            Cypal Studio GWT Project
+         </label>
+         <facet
+               id="jst.java"
+               version="1.4"/>
+         <facet
+               id="jst.web"
+               version="2.2"/>
+         <facet
+               id="in.cypal.studio.gwt.core.gwtFacet"
+               version="1.0"/>
+      </preset>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer class="in.cypal.studio.gwt.core.common.DefaultPreferencesInitializer"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="in.cypal.studio.gwt.core.launch.LaunchConfigurationDelegate"
+            id="in.cypal.studio.gwt.core.launchConfigurationType"
+            modes="run, debug"
+            name="GWT Hosted Mode Application">
+         <fileExtension
+               default="true"
+               extension="gwt.xml"/>
+      </launchConfigurationType>
+   </extension>
+   <extension
+         point="org.eclipse.wst.server.core.publishTasks">
+      <publishTask
+            class="in.cypal.studio.gwt.core.builder.GwtPublishTaskDelegate"
+            id="in.cypal.studio.gwt.publishTask"
+            typeIds="*"/>
+   </extension>
+   <extension
+         point="org.eclipse.wst.common.project.facet.core.runtimes">
+      <supported>
+         <facet
+               id="in.cypal.studio.gwt.core.gwtFacet"
+               version="1.0"/>
+         <runtime-component any="true"/>
+      </supported>
+   </extension>
+   <extension
+         id="ExportWar"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="in.cypal.studio.gwt.core.builder.ExportWarApplication">
+         </run>
+      </application>
+   </extension>
+
+</plugin>

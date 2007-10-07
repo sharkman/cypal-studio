@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Cypal Studio for GWT Samples Plug-in
+Bundle-SymbolicName: in.cypal.studio.gwt.samples;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: in.cypal.studio.gwt.samples.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ in.cypal.studio.gwt.core,
+ in.cypal.studio.gwt.ui,
+ org.eclipse.core.filesystem,
+ org.eclipse.jdt.core
+Eclipse-LazyStart: true
+Bundle-Vendor: Cypal Solutions (tools@cypal.in)
