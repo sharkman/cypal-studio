@@ -127,9 +127,12 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 					ImportDeclaration anImportDecl = (ImportDeclaration) j.next();
 					String importName = anImportDecl.getName().getFullyQualifiedName(); 
-					if(importName.equals("com.google.gwt.user.client.rpc.RemoteService") || importName.endsWith("Exception")) //$NON-NLS-1$ //$NON-NLS-2$
+					if(importName.endsWith("Exception") || //$NON-NLS-1$
+							importName.equals("com.google.gwt.core.client.GWT") ||//$NON-NLS-1$
+							importName.equals("com.google.gwt.user.client.rpc.ServiceDefTarget") || //$NON-NLS-1$
+							importName.equals("com.google.gwt.user.client.rpc.RemoteService")//$NON-NLS-1$
+							)  
 						importsToBeRemoved.add(anImportDecl);
-					
 				}
 				
 				imports.removeAll(importsToBeRemoved);
