@@ -187,7 +187,7 @@ public class Helper {
 		
 		String args = configuration.getAttribute(Constants.LAUNCH_ATTR_VMOPTIONS, "");
 		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
-			args = " -XstartOnFirstThread ";//$NON-NLS-1$
+			args += " -XstartOnFirstThread ";//$NON-NLS-1$
 		}
 		return args;
 	}
