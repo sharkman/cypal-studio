@@ -105,7 +105,7 @@ public class Helper {
 	
 	public static IFolder getOutputLocation(IProject project) {
 
-		return project.getFolder(Constants.OUTPUT_FOLDER);
+		return project.getFolder(Util.getGwtOutputFolder());
 //		return project.getLocation().append(Constants.OUTPUT_FOLDER);
 	}
 	

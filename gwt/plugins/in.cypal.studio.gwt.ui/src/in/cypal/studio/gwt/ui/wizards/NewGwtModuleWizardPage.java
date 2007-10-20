@@ -152,7 +152,7 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 		
 		IVirtualComponent component = ComponentCore.createComponent(project);
 		IVirtualFolder moduleOutputFolder = component.getRootFolder().getFolder("/");  //$NON-NLS-1$
-		moduleOutputFolder.createLink(new Path(Constants.OUTPUT_FOLDER).append(basePackageFragment.getElementName()+'.'+getTypeName()), IResource.FORCE, null); 
+		moduleOutputFolder.createLink(new Path(Util.getGwtOutputFolder()).append(basePackageFragment.getElementName()+'.'+getTypeName()), IResource.FORCE, null); 
 		
 	}
 

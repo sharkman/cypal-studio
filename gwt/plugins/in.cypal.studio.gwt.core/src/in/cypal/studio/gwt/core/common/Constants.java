@@ -54,10 +54,11 @@ public class Constants {
 
 	
 	//Folders
-	public static final String OUTPUT_FOLDER= "build/gwtOutput"; //$NON-NLS-1$
+//	public static final String OUTPUT_FOLDER= "build/gwtOutput"; //$NON-NLS-1$
 	
 	//Preference keys
 	public static final String GWT_HOME_PREFERENCE = "GWT_HOME_PREFERENCE";
+	public static final String GWT_OUTPUT_PREFERENCE = "GWT_OUTPUT_PREFERENCE";
 	public static final String UPDATE_ASYNC_PREFERENCE = "UPDATE_ASYNC_PREFERENCE";
 	public static final String COMPILE_AT_FULLBUILD_PREFERENCE = "COMPILE_AT_FULLBUILD_PREFERENCE";
 	public static final String COMPILE_AT_PUBLISH_PREFERENCE = "COMPILE_AT_PUBLISH_PREFERENCE";	
