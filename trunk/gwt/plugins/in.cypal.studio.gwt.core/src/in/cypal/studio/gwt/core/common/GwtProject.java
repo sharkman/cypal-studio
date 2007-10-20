@@ -119,7 +119,7 @@ public class GwtProject {
 		try {
 			List modules = getModules();
 			monitor.beginTask("Starting clean...", modules.size()*2);
-			IFolder folder = project.getFolder(Constants.OUTPUT_FOLDER);
+			IFolder folder = project.getFolder(Util.getGwtOutputFolder());
 			for(int i=0;i<modules.size();i++) {
 				IFile aModuleFile = (IFile) modules.get(i);
 				String moduleName = Util.getQualifiedName(aModuleFile);

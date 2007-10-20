@@ -128,7 +128,7 @@ public class Util {
 	
 	private static String getOutputLocation(IProject project, String moduleName) {
 
-		IPath outputDir = project.getLocation().append(Constants.OUTPUT_FOLDER);
+		IPath outputDir = project.getLocation().append(getGwtOutputFolder());
     	return outputDir.toPortableString();
 	}
 
@@ -355,6 +355,11 @@ public class Util {
 		return filePath.segments();
 	}
 
+	public static String getGwtOutputFolder() {
+		return Preferences.getString(Constants.GWT_OUTPUT_PREFERENCE);
+		
+	}
+	
 	public static boolean isGwtHomeSet(){
 		
 		boolean set= false;

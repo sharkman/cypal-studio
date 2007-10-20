@@ -25,9 +25,11 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IWorkbench;
@@ -51,6 +53,11 @@ public class MainPreferencePage extends FieldEditorPreferencePage implements IWo
 					Activator.logException(e);
 				}
 			}
+			
+			if(event.getProperty().equals(Constants.GWT_OUTPUT_PREFERENCE)) {
+				MessageDialog.openInformation(null, "Cypal Studio for GWT", "Compiler output location is saved and will be reflected during next GWT Compilation");
+			}
+			
 		}
 	};
 		
@@ -63,7 +70,8 @@ public class MainPreferencePage extends FieldEditorPreferencePage implements IWo
 	}
 
 	protected void createFieldEditors() {
-		addField(new DirectoryFieldEditor(Constants.GWT_HOME_PREFERENCE, "GWT Home:", getFieldEditorParent()));
+		addField(new DirectoryFieldEditor(Constants.GWT_HOME_PREFERENCE, "GWT &Home:", getFieldEditorParent()));
+		addField(new StringFieldEditor(Constants.GWT_OUTPUT_PREFERENCE, "GWT Compiler &Output:", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Constants.UPDATE_ASYNC_PREFERENCE, "Manually manage Async files", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Constants.COMPILE_AT_FULLBUILD_PREFERENCE, "Invoke GWT Compiler on Clean &Build", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Constants.COMPILE_AT_PUBLISH_PREFERENCE, "Invoke GWT Compiler when publishing to an &external server", getFieldEditorParent())); 
