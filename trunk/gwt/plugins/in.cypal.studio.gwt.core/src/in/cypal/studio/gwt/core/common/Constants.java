@@ -50,6 +50,7 @@ public class Constants {
 	public static final String LAUNCH_ATTR_VMOPTIONS = PLUGIN_ID+".launchVmOptions";//$NON-NLS-1$
 	public static final String LAUNCH_ATTR_MODULE_NAME = PLUGIN_ID+".launchModuleName";//$NON-NLS-1$
 	public static final String LAUNCH_ATTR_PROJECT_NAME = PLUGIN_ID+".launchProjectName";//$NON-NLS-1$
+	public static final String LAUNCH_ATTR_GWT_COMPILE = PLUGIN_ID+".launchProcess";//$NON-NLS-1$
 
 	
 	//Folders
@@ -72,6 +73,7 @@ public class Constants {
 	public static final String GWT_HOME_CPE = "GWT_HOME";
 //	public static final QualifiedName IS_HOSTED_DEPLOY_MODE = null;
 	public static final String GWT_HOME_PATH = "GWT_HOME";
+
 
 
 

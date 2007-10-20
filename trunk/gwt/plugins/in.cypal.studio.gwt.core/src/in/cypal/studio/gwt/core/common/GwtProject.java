@@ -39,6 +39,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.Launch;
 import org.eclipse.debug.core.model.IProcess;
@@ -140,80 +141,85 @@ public class GwtProject {
 		String projectName = project.getName();
 		
 		ILaunchConfiguration launchConfig = Helper.findOrCreateLaunch(moduleName, projectName, true);
-		
-		launch(launchConfig);
-		
-	}
-
-	private void launch(ILaunchConfiguration launchConfig) throws CoreException {
-		
-		IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
-		IVMRunner vmRunner = vmInstall.getVMRunner(ILaunchManager.RUN_MODE);
-		
-		List classpath = Helper.getClasspath(javaProject);
-		IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
-		for (int i = 0; i < packageFragmentRoots.length; i++) {
-
-			IPackageFragmentRoot aRoot = packageFragmentRoots[i];
-			if(aRoot.getKind() == IPackageFragmentRoot.K_SOURCE) {
-				IResource resource = aRoot.getResource();
-				IPath location = resource.getLocation();
-				classpath.add(location.toOSString());
-			}
-		}
-			
-		VMRunnerConfiguration vmConfig = new VMRunnerConfiguration(Constants.GWT_COMPILER_CLASS, (String[]) classpath.toArray(new String[classpath.size()]));
-		vmConfig.setWorkingDirectory(project.getLocation().toOSString());
-		List compilerArgs = Helper.getCompilerArgs(launchConfig);
-		vmConfig.setProgramArguments((String[]) compilerArgs.toArray(new String[compilerArgs.size()]));
-		final ILaunch compiler = new Launch(null, ILaunchManager.RUN_MODE, null);
-		
-		DebugPlugin.getDefault().addDebugEventListener(new IDebugEventSetListener() {
-
-			public void handleDebugEvents(DebugEvent[] events) {
-
-				for(int i = 0;i<events.length;i++) {
-
-					DebugEvent event = events[i];
-					
-		            Object source = event.getSource();
-		            if (source instanceof IProcess && event.getKind() == DebugEvent.TERMINATE) {
-
-				        ILaunch launch = ((IProcess) source).getLaunch();
-				        if (compiler.equals(launch)) {
-				        	DebugPlugin.getDefault().removeDebugEventListener(this);
-
-							// wakeup the publisher
-							synchronized (GwtProject.this) {
-								GwtProject.this.notify();
-							}
-		                }
-					}
-				
-				}
-			}
-		});
-
-		vmRunner.run(vmConfig, compiler, null);
-		
-					
-		try {
-			synchronized (this) {
-				int i = 0;
-				while(!compiler.isTerminated() && i < 8) {
-					wait(5000);
-					i++;
-				}
-				// TODO: we throw an exception on timeout?
-			}
-		} catch (InterruptedException e) {
-			// ok;
-		}
-					
-		IFolder outputLocation = Helper.getOutputLocation(project);
-		outputLocation.refreshLocal(IResource.DEPTH_INFINITE, null);
+		ILaunchConfigurationWorkingCopy workingCopy = launchConfig.getWorkingCopy();
+		workingCopy.setAttribute(Constants.LAUNCH_ATTR_GWT_COMPILE, true);
+//		workingCopy.setAttribute(DebugPlugin.ATTR_CAPTURE_OUTPUT, true);
+		workingCopy.launch(ILaunchManager.RUN_MODE, null, false, true );
+//		launch(launchConfig);
 		
 	}
+//
+//	private void launch(ILaunchConfiguration launchConfig) throws CoreException {
+//		
+//		IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
+//		IVMRunner vmRunner = vmInstall.getVMRunner(ILaunchManager.RUN_MODE);
+//		
+//		List classpath = Helper.getClasspath(javaProject);
+//		IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
+//		for (int i = 0; i < packageFragmentRoots.length; i++) {
+//
+//			IPackageFragmentRoot aRoot = packageFragmentRoots[i];
+//			if(aRoot.getKind() == IPackageFragmentRoot.K_SOURCE) {
+//				IResource resource = aRoot.getResource();
+//				IPath location = resource.getLocation();
+//				classpath.add(location.toOSString());
+//			}
+//		}
+//			
+//		VMRunnerConfiguration vmConfig = new VMRunnerConfiguration(Constants.GWT_COMPILER_CLASS, (String[]) classpath.toArray(new String[classpath.size()]));
+//		vmConfig.setWorkingDirectory(project.getLocation().toOSString());
+//		List compilerArgs = Helper.getCompilerArgs(launchConfig);
+//		vmConfig.setProgramArguments((String[]) compilerArgs.toArray(new String[compilerArgs.size()]));
+//		final ILaunch compiler = new Launch(null, ILaunchManager.RUN_MODE, null);
+//		compiler.setAttribute(DebugPlugin.ATTR_CAPTURE_OUTPUT, "true");
+//		compiler.setAttribute(Constants.LAUNCH_ATTR_GWT_COMPILE, "true");
+//		
+//		DebugPlugin.getDefault().addDebugEventListener(new IDebugEventSetListener() {
+//
+//			public void handleDebugEvents(DebugEvent[] events) {
+//
+//				for(int i = 0;i<events.length;i++) {
+//
+//					DebugEvent event = events[i];
+//					
+//		            Object source = event.getSource();
+//		            if (source instanceof IProcess && event.getKind() == DebugEvent.TERMINATE) {
+//
+//				        ILaunch launch = ((IProcess) source).getLaunch();
+//				        if (compiler.equals(launch)) {
+//				        	DebugPlugin.getDefault().removeDebugEventListener(this);
+//
+//							// wakeup the publisher
+//							synchronized (GwtProject.this) {
+//								GwtProject.this.notify();
+//							}
+//		                }
+//					}
+//				
+//				}
+//			}
+//		});
+//
+//		vmRunner.run(vmConfig, compiler, null);
+//		
+//					
+//		try {
+//			synchronized (this) {
+//				int i = 0;
+//				while(!compiler.isTerminated() && i < 8) {
+//					wait(5000);
+//					i++;
+//				}
+//				// TODO: we throw an exception on timeout?
+//			}
+//		} catch (InterruptedException e) {
+//			// ok;
+//		}
+//					
+//		IFolder outputLocation = Helper.getOutputLocation(project);
+//		outputLocation.refreshLocal(IResource.DEPTH_INFINITE, null);
+//		
+//	}
 
 	public IProject getProject() {
 		return project;
