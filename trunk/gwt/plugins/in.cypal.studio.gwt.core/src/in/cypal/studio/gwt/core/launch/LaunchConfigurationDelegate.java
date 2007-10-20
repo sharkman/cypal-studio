@@ -44,12 +44,15 @@ public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 	
 	public String getMainTypeName(ILaunchConfiguration configuration) throws CoreException {
 
-		// ignore the config. Its always the GwtShell 
+		if(configuration.getAttribute(Constants.LAUNCH_ATTR_GWT_COMPILE, false))
+			return Constants.GWT_COMPILER_CLASS;
 		return Constants.GWT_SHELL_CLASS;		
 	}
 	
 	public String getProgramArguments(ILaunchConfiguration configuration) throws CoreException {
 
+		if(configuration.getAttribute(Constants.LAUNCH_ATTR_GWT_COMPILE, false))
+			return Helper.getArgs(configuration, true);
 		return Helper.getShellArgs(configuration);
 	}
 

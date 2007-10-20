@@ -109,16 +109,16 @@ public class Helper {
 //		return project.getLocation().append(Constants.OUTPUT_FOLDER);
 	}
 	
-	public static List getCompilerArgs(ILaunchConfiguration configuration) throws CoreException {
-		
-		String moduleName = configuration.getAttribute(Constants.LAUNCH_ATTR_MODULE_NAME, "");//$NON-NLS-1$
-
-		List commonArgs = getCommonArgs(configuration);
-		commonArgs.add(moduleName);
-		
-		return commonArgs;
-	}
-	
+//	public static List getCompilerArgs(ILaunchConfiguration configuration) throws CoreException {
+//		
+//		String moduleName = configuration.getAttribute(Constants.LAUNCH_ATTR_MODULE_NAME, "");//$NON-NLS-1$
+//
+//		List commonArgs = getCommonArgs(configuration);
+//		commonArgs.add(moduleName);
+//		
+//		return commonArgs;
+//	}
+//	
 	public static String getShellArgs(ILaunchConfiguration configuration) throws CoreException{
 
 		boolean useDefaultUrl = configuration.getAttribute(Constants.LAUNCH_ATTR_USE_DEFAULT_URL, true);
@@ -141,6 +141,17 @@ public class Helper {
 
 		// headless is not working anyway. We will add it later
 		StringBuilder args = new StringBuilder();
+		args.append(getArgs(configuration, false));
+		args.append(portArg);
+		args.append(urlArg);
+		args.append(noServer);
+		
+		return args.toString();
+	}
+
+
+	public static String getArgs(ILaunchConfiguration configuration, boolean addModuleName) throws CoreException {
+		StringBuilder args = new StringBuilder();
 		List commonArgs = getCommonArgs(configuration);
 		boolean isOut = false;
 		for (Iterator i = commonArgs.iterator(); i.hasNext();) {
@@ -153,10 +164,10 @@ public class Helper {
 			if(aCommonArg.equals("-out"))
 				isOut = true;
 		}
-		args.append(portArg);
-		args.append(urlArg);
-		args.append(noServer);
-		
+		if(addModuleName) {
+			args.append(' ');
+			args.append(configuration.getAttribute(Constants.LAUNCH_ATTR_MODULE_NAME, ""));
+		}
 		return args.toString();
 	}
 	
