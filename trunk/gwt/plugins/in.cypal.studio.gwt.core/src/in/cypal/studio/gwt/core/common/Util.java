@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -47,6 +48,10 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.wst.common.componentcore.ComponentCore;
+import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
+import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
+import org.eclipse.wst.common.componentcore.resources.IVirtualResource;
 
 
 /**
@@ -376,5 +381,24 @@ public class Util {
 
 	public static IStatus getErrorStatus(String errorMessage) {
 		return new Status(IStatus.ERROR, Activator.PLUGIN_ID, IStatus.OK, errorMessage, null);
+	}
+	
+	public static void deleteModules(IProject project) throws CoreException{
+		
+	}
+
+	public static void createModuleEntry(IProject project, String moduleName) throws CoreException {
+		
+		IVirtualComponent component = ComponentCore.createComponent(project);
+		IVirtualFolder folder = component.getRootFolder().getFolder("/");
+		IContainer[] underlyingFolders = folder.getUnderlyingFolders();
+		IResource[] underlyingResources = folder.getUnderlyingResources();
+		IVirtualResource[] members = folder.members();
+//		IVirtualResource[] members = folder.members();
+//		IVirtualFolder folder2 = folder.getFolder(new Path(getGwtOutputFolder()).append(moduleName));
+//		IContainer[] underlyingFolders = folder.getUnderlyingFolders();
+		IVirtualFolder moduleOutputFolder = component.getRootFolder().getFolder("/");  //$NON-NLS-1$
+		moduleOutputFolder.createLink(new Path(getGwtOutputFolder()).append(moduleName), IResource.FORCE, null); 
+		
 	}
 }

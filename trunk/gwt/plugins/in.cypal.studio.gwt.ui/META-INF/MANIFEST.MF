@@ -21,6 +21,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.launching,
  org.eclipse.emf.ecore,
  org.eclipse.wst.xml.core,
- org.eclipse.emf.edit.ui
+ org.eclipse.emf.edit.ui,
+ org.eclipse.ltk.core.refactoring,
+ org.eclipse.ltk.ui.refactoring
 Eclipse-LazyStart: true
 Export-Package: in.cypal.studio.gwt.ui.wizards

@@ -81,6 +81,18 @@
             id="gwtLaunchConfigurationTabGroup"
             type="in.cypal.studio.gwt.core.launchConfigurationType"/>
    </extension>
+   <extension
+         point="org.eclipse.ltk.core.refactoring.deleteParticipants">
+      <deleteParticipant
+            class="in.cypal.studio.gwt.ui.refactor.RemoteServiceDeleteParticipant"
+            id="in.cypal.studio.gwt.ui.RemoteServiceDeleteParticipant"
+            name="Remote Service Delete Participant">
+         <enablement>
+            <instanceof
+                  value="org.eclipse.core.resources.IFile">
+            </instanceof></enablement>
+      </deleteParticipant>
+   </extension>
    
 
 </plugin>
