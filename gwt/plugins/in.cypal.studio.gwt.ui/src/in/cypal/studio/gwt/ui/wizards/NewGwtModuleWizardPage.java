@@ -32,9 +32,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
@@ -186,9 +189,19 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 		initTypePage(javaElement);
 	}
 	
-	void updateStatus(){
-		
-		
+	protected IStatus packageChanged() {
+		String packageText = getPackageText();
+		if(packageText.trim().length() == 0) {
+			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Default package is not allowed");
+			updateStatus(status);
+			return status;
+		}
+		return super.packageChanged();
+	}
+	
+	protected void handleFieldChanged(String fieldName) {
+		super.handleFieldChanged(fieldName);
+		updateStatus(new IStatus[] {fContainerStatus, fPackageStatus, fTypeNameStatus});
 	}
 
 }
