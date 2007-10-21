@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2007 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +33,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
@@ -45,9 +43,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.common.componentcore.ComponentCore;
-import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
-import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 
 /**
  * @author Prakash G.R.
@@ -136,7 +131,7 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 			IFile moduleXml = project.getFile(basePackageFragment.getResource().getProjectRelativePath().append(getTypeName()+'.'+Constants.GWT_XML_EXT));
 			Util.writeFile("/Module.gwt.xml.template", moduleXml, templateVars); //$NON-NLS-1$
 			
-			createModuleEntry(project);
+			Util.createModuleEntry(project, basePackageFragment.getElementName()+'.'+getTypeName());
 			
 		} catch (IOException e) {
 			Activator.logException(e);
@@ -149,14 +144,6 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 	protected void createTypeMembers(IType newType, ImportsManager imports, IProgressMonitor monitor) throws CoreException {
 		newType.createMethod("public void onModuleLoad() {\n\t// TODO Auto-generated method stub \n}", null, false, monitor);
 		super.createTypeMembers(newType, imports, monitor);
-	}
-
-	private void createModuleEntry(IProject project) throws CoreException {
-		
-		IVirtualComponent component = ComponentCore.createComponent(project);
-		IVirtualFolder moduleOutputFolder = component.getRootFolder().getFolder("/");  //$NON-NLS-1$
-		moduleOutputFolder.createLink(new Path(Util.getGwtOutputFolder()).append(basePackageFragment.getElementName()+'.'+getTypeName()), IResource.FORCE, null); 
-		
 	}
 
 	public IPackageFragment getPackageFragment() {
