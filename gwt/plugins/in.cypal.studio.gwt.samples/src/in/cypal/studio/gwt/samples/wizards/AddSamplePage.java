@@ -146,8 +146,10 @@ public class AddSamplePage extends WizardPage{
 				projectCombo.setText(projectName);
 				project = projects[i];
 			}
-				
 		}
+		
+		if(projectCombo.getItemCount() > 0 && projectCombo.getSelectionIndex() == -1)
+			projectCombo.select(0);
 	}
 	
 	public String getSample() {
