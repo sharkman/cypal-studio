@@ -99,6 +99,14 @@ public class GwtProject {
 				Activator.logException(e);
 			}
 		}
+		
+		IFolder outputFolder = getProject().getFolder(Util.getGwtOutputFolder());
+		try {
+			outputFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (CoreException e) {
+			// ignore
+			Activator.logException(e);
+		}
 	}
 
 	public void doClean(IProgressMonitor monitor) throws CoreException {
