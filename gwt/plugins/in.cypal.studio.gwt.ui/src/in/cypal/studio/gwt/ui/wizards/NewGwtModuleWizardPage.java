@@ -46,56 +46,59 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Prakash G.R.
- *
+ * 
  */
 public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 
 	private boolean shouldAppendClient;
+
 	private HashMap templateVars;
+
 	private IPackageFragment basePackageFragment;
-//	private IStatus containerStatus = Status.OK_STATUS;
-//	private IStatus packageStatus = Status.OK_STATUS;
-//	private IStatus nameStatus = Status.OK_STATUS;
-	
+
+// private IStatus containerStatus = Status.OK_STATUS;
+// private IStatus packageStatus = Status.OK_STATUS;
+// private IStatus nameStatus = Status.OK_STATUS;
+
 	public NewGwtModuleWizardPage() {
 		super(true, "NewGwtModuleWizardPage");
-		setTitle("GWT Module"); 
-		setDescription("Creates a new GWT Module");  
+		setTitle("GWT Module");
+		setDescription("Creates a new GWT Module");
 	}
 
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
-		
-		Composite composite= new Composite(parent, SWT.NONE);
+
+		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setFont(parent.getFont());
-		
-		int nColumns= 4;
-		
-		GridLayout layout= new GridLayout();
-		layout.numColumns= nColumns;		
+
+		int nColumns = 4;
+
+		GridLayout layout = new GridLayout();
+		layout.numColumns = nColumns;
 		composite.setLayout(layout);
-		
+
 		// pick & choose the wanted UI components
-		
-		createContainerControls(composite, nColumns);	
-		createPackageControls(composite, nColumns);	
-//		createEnclosingTypeControls(composite, nColumns);
-				
+
+		createContainerControls(composite, nColumns);
+		createPackageControls(composite, nColumns);
+// createEnclosingTypeControls(composite, nColumns);
+
 		createSeparator(composite, nColumns);
-		
+
 		createTypeNameControls(composite, nColumns);
-//		createModifierControls(composite, nColumns);
-			
-//		createSuperClassControls(composite, nColumns);
+// createModifierControls(composite, nColumns);
+
+// createSuperClassControls(composite, nColumns);
 		createSuperInterfacesControls(composite, nColumns);
-				
-//		createMethodStubSelectionControls(composite, nColumns);
-		
+
+// createMethodStubSelectionControls(composite, nColumns);
+
 		createCommentControls(composite, nColumns);
 		enableCommentControl(true);
-		
+
 		setControl(composite);
-			
+
 		Dialog.applyDialogFont(composite);
 
 		List superInterfaces = new ArrayList(1);
@@ -103,54 +106,52 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 		setSuperInterfaces(superInterfaces, true);
 	}
 
-	
 	public void createType(IProgressMonitor monitor) throws CoreException, InterruptedException {
-		
+
 		monitor = Util.getNonNullMonitor(monitor);
 
 		basePackageFragment = getPackageFragment();
 		// Create server package
-		getPackageFragmentRoot().createPackageFragment(basePackageFragment.getElementName().concat("."+Constants.SERVER_PACKAGE), true, null); //$NON-NLS-1$
+		getPackageFragmentRoot().createPackageFragment(basePackageFragment.getElementName().concat("." + Constants.SERVER_PACKAGE), true, null); //$NON-NLS-1$
 
-		//create public folder
+		// create public folder
 		IProject project = basePackageFragment.getResource().getProject();
 		IFolder publicFolder = project.getFolder(basePackageFragment.getResource().getProjectRelativePath().append(Constants.PUBLIC_FOLDER));
-		if(!publicFolder.exists())
+		if (!publicFolder.exists())
 			publicFolder.create(true, true, null);
-		
+
 		shouldAppendClient = true;
 		super.createType(monitor);
 		shouldAppendClient = false;
-		
+
 		try {
 			initTemplateVars();
 
-			IFile moduleHtml = project.getFile(publicFolder.getProjectRelativePath().append(getTypeName() + ".html"));  //$NON-NLS-1$
+			IFile moduleHtml = project.getFile(publicFolder.getProjectRelativePath().append(getTypeName() + ".html")); //$NON-NLS-1$
 			Util.writeFile("/Module.html.template", moduleHtml, templateVars); //$NON-NLS-1$
 
-			IFile moduleXml = project.getFile(basePackageFragment.getResource().getProjectRelativePath().append(getTypeName()+'.'+Constants.GWT_XML_EXT));
+			IFile moduleXml = project.getFile(basePackageFragment.getResource().getProjectRelativePath().append(getTypeName() + '.' + Constants.GWT_XML_EXT));
 			Util.writeFile("/Module.gwt.xml.template", moduleXml, templateVars); //$NON-NLS-1$
-			
-			Util.createModuleEntry(project, basePackageFragment.getElementName()+'.'+getTypeName());
-			
+
+			Util.createModuleEntry(project, basePackageFragment.getElementName() + '.' + getTypeName());
+
 		} catch (IOException e) {
 			Activator.logException(e);
 			throw new CoreException(Util.getErrorStatus(e.getMessage()));
 		}
-		
+
 	}
-	
-	
+
 	protected void createTypeMembers(IType newType, ImportsManager imports, IProgressMonitor monitor) throws CoreException {
 		newType.createMethod("public void onModuleLoad() {\n\t// TODO Auto-generated method stub \n}", null, false, monitor);
 		super.createTypeMembers(newType, imports, monitor);
 	}
 
 	public IPackageFragment getPackageFragment() {
-		
+
 		IPackageFragment fragment = super.getPackageFragment();
-		if(shouldAppendClient)
-			fragment = getPackageFragmentRoot().getPackageFragment(fragment.getElementName().concat("."+Constants.CLIENT_PACKAGE)); //$NON-NLS-1$
+		if (shouldAppendClient)
+			fragment = getPackageFragmentRoot().getPackageFragment(fragment.getElementName().concat("." + Constants.CLIENT_PACKAGE)); //$NON-NLS-1$
 		return fragment;
 	}
 
@@ -161,7 +162,7 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 		shouldAppendClient = false;
 		return modifiedResource;
 	}
-	
+
 	private void initTemplateVars() throws CoreException {
 
 		templateVars = new HashMap();
@@ -175,20 +176,20 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 		initContainerPage(javaElement);
 		initTypePage(javaElement);
 	}
-	
+
 	protected IStatus packageChanged() {
 		String packageText = getPackageText();
-		if(packageText.trim().length() == 0) {
-			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Default package is not allowed");
+		if (packageText.trim().length() == 0) {
+			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, -1, "Default package is not allowed", null);
 			updateStatus(status);
 			return status;
 		}
 		return super.packageChanged();
 	}
-	
+
 	protected void handleFieldChanged(String fieldName) {
 		super.handleFieldChanged(fieldName);
-		updateStatus(new IStatus[] {fContainerStatus, fPackageStatus, fTypeNameStatus});
+		updateStatus(new IStatus[] { fContainerStatus, fPackageStatus, fTypeNameStatus });
 	}
 
 }
