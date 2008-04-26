@@ -107,7 +107,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
 	private Text serviceUriText;
 
-// private IFile modifiedResource;
+	// private IFile modifiedResource;
 	private IFile selectedModule;
 
 	private String selectedProject;
@@ -118,7 +118,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		setDescription("Create a new GWT Remote Service");
 	}
 
-// @Override
+	// @Override
 	public void createControl(Composite parent) {
 
 		initializeDialogUnits(parent);
@@ -221,7 +221,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
 		moduleCombo.setLayoutData(gridData);
 		moduleCombo.addSelectionListener(new SelectionAdapter() {
-// @Override
+			// @Override
 			public void widgetSelected(SelectionEvent e) {
 				moduleText = moduleCombo.getText();
 				doStatusUpdate();
@@ -271,7 +271,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
 		imports.addImport("com.google.gwt.core.client.GWT");
 		imports.addImport("com.google.gwt.user.client.rpc.ServiceDefTarget");
-		newType.createField("public static final String SERVICE_URI = \"/" + serviceUri + "\";", null, true, monitor); //$NON-NLS-1$ //$NON-NLS-2$
+		newType.createField("public static final String SERVICE_URI = \"" + serviceUri + "\";", null, true, monitor); //$NON-NLS-1$ //$NON-NLS-2$
 		newType.createType(getUtilClassContents(), null, true, monitor);
 		super.createTypeMembers(newType, imports, monitor);
 	}
@@ -288,7 +288,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 				"    }"; //$NON-NLS-1$
 	}
 
-// @Override
+	// @Override
 	public void createType(IProgressMonitor monitor) throws CoreException, InterruptedException {
 
 		monitor = Util.getNonNullMonitor(monitor);
@@ -307,7 +307,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		}
 	}
 
-// @Override
+	// @Override
 	public IResource getModifiedResource() {
 		try {
 			return getCreatedType().getCompilationUnit().getCorrespondingResource();
@@ -316,7 +316,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		}
 	}
 
-// @Override
+	// @Override
 	public IPackageFragmentRoot getPackageFragmentRoot() {
 
 		IPackageFragmentRoot root = null;
@@ -335,7 +335,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		return root;
 	}
 
-// @Override
+	// @Override
 	public IPackageFragment getPackageFragment() {
 
 		IPackageFragment packageFragment = null;
@@ -433,7 +433,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 			String typeName = getTypeName() + "Impl.java";
 			IPath file = getPackageFragment().getResource().getProjectRelativePath().append(typeName);
 			IFile remoteServiceImpl = Util.getProject(projectText).getFile(file);
-// modifiedResource = remoteServiceImpl;
+			// modifiedResource = remoteServiceImpl;
 			initTemplateVars(getTypeName(), "", getBasePackageFragment().getElementName());
 			Util.writeFile("/RemoteService.ServiceImpl.template", remoteServiceImpl, templateVars);
 		} finally {
@@ -441,7 +441,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		}
 	}
 
-// @SuppressWarnings("unchecked")
+	// @SuppressWarnings("unchecked")
 	private void addServletToWebXml(IProgressMonitor monitor) {
 
 		monitor = Util.getNonNullMonitor(monitor);
@@ -488,7 +488,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		templateVars.put("@serviceUri", serviceUri);
 	}
 
-// @Override
+	// @Override
 	protected void handleFieldChanged(String fieldName) {
 
 		super.handleFieldChanged(fieldName);
