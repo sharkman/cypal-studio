@@ -67,6 +67,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -84,33 +85,25 @@ import org.w3c.dom.Node;
 public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
 	protected IStatus moduleStatus = in.cypal.studio.gwt.core.common.Util.okStatus;
-
 	protected IStatus projectStatus = in.cypal.studio.gwt.core.common.Util.okStatus;
-
 	protected IStatus serviceUriStatus = in.cypal.studio.gwt.core.common.Util.okStatus;
 
 	private String serviceUri = "";//$NON-NLS-1$
-
 	private Map templateVars;
-
 	private Combo moduleCombo;
-
 	private String moduleText = "";//$NON-NLS-1$
-
 	private Combo projectCombo;
-
 	private String projectText = "";//$NON-NLS-1$
-
 	private IJavaProject[] gwtProjects;
-
 	private boolean isImplCreation;
-
+	private boolean shouldCreateImpl = true;
 	private Text serviceUriText;
 
 	// private IFile modifiedResource;
 	private IFile selectedModule;
 
 	private String selectedProject;
+	private Button implCreationButton;
 
 	public NewGwtRemoteServiceWizardPage() {
 		super();
@@ -175,6 +168,26 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 				if (serviceUri.startsWith("/"))//$NON-NLS-1$
 					serviceUri = serviceUri.substring(1);
 				doStatusUpdate();
+			}
+		});
+
+		createImplOptionControls(parent);
+	}
+
+	/**
+	 * @param parent
+	 */
+	private void createImplOptionControls(Composite parent) {
+		new Label(parent, SWT.NONE);
+		new Label(parent, SWT.NONE);
+
+		implCreationButton = new Button(parent, SWT.CHECK);
+		implCreationButton.setText("Also create default implementation file");
+		implCreationButton.setSelection(true);
+		implCreationButton.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
+		implCreationButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				shouldCreateImpl = implCreationButton.getSelection();
 			}
 		});
 	}
@@ -298,7 +311,8 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		isImplCreation = true;
 
 		try {
-			createRemoteServiceImpl(new SubProgressMonitor(monitor, 1));
+			if (shouldCreateImpl)
+				createRemoteServiceImpl(new SubProgressMonitor(monitor, 1));
 			addServletToWebXml(new SubProgressMonitor(monitor, 1));
 			addServletToGwtXml(new SubProgressMonitor(monitor, 1));
 		} catch (Exception e) {
