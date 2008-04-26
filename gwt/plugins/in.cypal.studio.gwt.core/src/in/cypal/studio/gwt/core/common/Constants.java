@@ -51,6 +51,9 @@ public class Constants {
 	public static final String LAUNCH_ATTR_MODULE_NAME = PLUGIN_ID+".launchModuleName";//$NON-NLS-1$
 	public static final String LAUNCH_ATTR_PROJECT_NAME = PLUGIN_ID+".launchProjectName";//$NON-NLS-1$
 	public static final String LAUNCH_ATTR_GWT_COMPILE = PLUGIN_ID+".launchProcess";//$NON-NLS-1$
+	public static final String LAUNCH_ATTR_WHITELIST = PLUGIN_ID+".launchWhitelist";//$NON-NLS-1$
+	public static final String LAUNCH_ATTR_BLACKLIST = PLUGIN_ID+".launchBlacklist";//$NON-NLS-1$
+	public static final String COMMA_SEPARATED_MESSAGE = "<comma separated list>";//$NON-NLS-1$
 
 	
 	//Folders
