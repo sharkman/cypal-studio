@@ -70,7 +70,7 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 				updateLaunchConfigurationDialog();
 			}
 		});
-		
+
 		Label moduleLabel = new Label(composite, SWT.NONE);
 		moduleLabel.setText("Module:");
 
@@ -82,9 +82,9 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 				updateLaunchConfigurationDialog();
 			}
 		});
-		
+
 		init();
-		
+
 		setControl(composite);
 	}
 
@@ -95,7 +95,7 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 			projectCombo.add(gwtProjects[i].getElementName());
 			projectCombo.setData(gwtProjects[i].getElementName(), gwtProjects[i]);
 		}
-		
+
 	}
 
 	protected void updateModule() {
@@ -104,20 +104,22 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 		List modules;
 		try {
 			IJavaProject project = (IJavaProject) projectCombo.getData(projectCombo.getText());
+			if (project == null)
+				return;
 			modules = Util.findModules(project);
 			for (Iterator i = modules.iterator(); i.hasNext();) {
 				IFile moduleFile = (IFile) i.next();
 				moduleCombo.add(Util.getQualifiedName(moduleFile));
 			}
-			
-			if(modules.size() > 0) {
+
+			if (modules.size() > 0) {
 				moduleCombo.select(0);
 			}
 
 		} catch (Exception e) {
 			Activator.logException(e);
 		}
-		
+
 	}
 
 	public String getName() {
@@ -132,14 +134,13 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 		String projectName = "";
 		String moduleName = "";
 		try {
-			projectName = configuration.getAttribute(Constants.LAUNCH_ATTR_PROJECT_NAME, "");	
+			projectName = configuration.getAttribute(Constants.LAUNCH_ATTR_PROJECT_NAME, "");
 			moduleName = configuration.getAttribute(Constants.LAUNCH_ATTR_MODULE_NAME, "");
-			if(projectName.equals("")) {
+			if (projectName.equals("")) {
 				// support previous versions...
 				projectName = configuration.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, "");
 			}
-		}
-		catch (CoreException ce) {
+		} catch (CoreException ce) {
 			setErrorMessage(ce.getStatus().getMessage());
 		}
 		projectCombo.setText(projectName);
@@ -148,7 +149,7 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 	}
 
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		
+
 		configuration.setAttribute(Constants.LAUNCH_ATTR_PROJECT_NAME, projectCombo.getText());
 		configuration.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, projectCombo.getText());
 		configuration.setAttribute(Constants.LAUNCH_ATTR_MODULE_NAME, moduleCombo.getText());
@@ -157,11 +158,11 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 
 		IJavaProject[] gwtProjects = Util.getGwtProjects();
-		if(gwtProjects.length > 0) {
+		if (gwtProjects.length > 0) {
 			projectName = gwtProjects[0].getElementName();
 			try {
 				List modules = Util.findModules(gwtProjects[0]);
-				if(modules.size() > 0) {
+				if (modules.size() > 0) {
 					moduleName = Util.getQualifiedName((IFile) modules.get(0));
 				}
 			} catch (CoreException e) {
@@ -169,6 +170,5 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 			}
 		}
 	}
-
 
 }
