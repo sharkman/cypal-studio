@@ -31,7 +31,6 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.core.model.PublishTaskDelegate;
 
-
 /**
  * @author Prakash G.R.
  * 
@@ -41,28 +40,26 @@ public class GwtPublishTaskDelegate extends PublishTaskDelegate {
 	public PublishOperation[] getTasks(IServer server, List modulesList) {
 		return super.getTasks(server, modulesList);
 	}
-	
-	
+
 	public PublishOperation[] getTasks(IServer server, int kind, List modulesList, List kindList) {
 
-		if(Preferences.getBoolean(Constants.COMPILE_AT_PUBLISH_PREFERENCE, true)
-				&& (kind == IServer.PUBLISH_FULL 
-						||kind==IServer.PUBLISH_AUTO 
-						|| kind== IServer.PUBLISH_INCREMENTAL)) {
+		if (Preferences.getBoolean(Constants.COMPILE_AT_PUBLISH_PREFERENCE, true) && (kind == IServer.PUBLISH_FULL || kind == IServer.PUBLISH_INCREMENTAL)) {
+			// ||kind==IServer.PUBLISH_AUTO
+
 			List tasksList = new ArrayList();
 			for (Iterator i = modulesList.iterator(); i.hasNext();) {
 				IModule[] modules = (IModule[]) i.next();
 				for (int j = 0; j < modules.length; j++) {
 					IModule module = modules[j];
 					IProject project = module.getProject();
-					if(Util.hasGwtNature(project)) {
+					if (Util.hasGwtNature(project)) {
 						tasksList.add(new GwtCompileOperation(project));
 					}
 				}
 			}
 			return (PublishOperation[]) tasksList.toArray(new PublishOperation[tasksList.size()]);
-			
-		}else {
+
+		} else {
 			return super.getTasks(server, kind, modulesList, kindList);
 		}
 	}
