@@ -21,14 +21,11 @@ import in.cypal.studio.gwt.core.Activator;
 import in.cypal.studio.gwt.core.common.Constants;
 import in.cypal.studio.gwt.core.common.Util;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jdt.core.IAccessRule;
 import org.eclipse.jdt.core.IClasspathAttribute;
@@ -36,7 +33,6 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 
@@ -66,15 +62,20 @@ public class InstallDelegate implements IDelegate {
 		}
 	}
 
-	private void addServletLibToWebInf(IProject project, IProgressMonitor monitor) {
+	private void addUserLibToClassPath(IProject project, IProgressMonitor monitor) {
 
 		monitor = Util.getNonNullMonitor(monitor);
 		try {
 
-			IPath webContent = ComponentCore.createComponent(project).getRootFolder().getProjectRelativePath();
-			IFile theLink = project.getFile(webContent.append("WEB-INF").append("lib").append("gwt-servlet.jar"));
-			IPath actualLocation = new Path(Constants.GWT_HOME_PATH + "/gwt-servlet.jar");
-			theLink.createLink(actualLocation, IResource.REPLACE, null);
+			IJavaProject javaProject = JavaCore.create(project);
+			IClasspathEntry[] oldClasspath = javaProject.getRawClasspath();
+			IClasspathEntry[] newClasspath = new IClasspathEntry[oldClasspath.length + 1];
+			System.arraycopy(oldClasspath, 0, newClasspath, 0, oldClasspath.length);
+			IClasspathEntry gwtuserJarEntry = JavaCore.newVariableEntry(Util.getGwtUserLibPath(), null, null);
+			gwtuserJarEntry = JavaCore.newVariableEntry(gwtuserJarEntry.getPath(), null, null, new IAccessRule[0], new IClasspathAttribute[0], false);
+			newClasspath[oldClasspath.length] = gwtuserJarEntry;
+			javaProject.setRawClasspath(newClasspath, monitor);
+
 		} catch (CoreException e) {
 			// the jar is already in the classpath.
 			Activator.logException(e);
@@ -84,7 +85,7 @@ public class InstallDelegate implements IDelegate {
 
 	}
 
-	private void addUserLibToClassPath(IProject project, IProgressMonitor monitor) {
+	private void addServletLibToWebInf(IProject project, IProgressMonitor monitor) {
 
 		monitor = Util.getNonNullMonitor(monitor);
 
@@ -95,10 +96,10 @@ public class InstallDelegate implements IDelegate {
 			IClasspathEntry[] oldClasspath = javaProject.getRawClasspath();
 			IClasspathEntry[] newClasspath = new IClasspathEntry[oldClasspath.length + 1];
 			System.arraycopy(oldClasspath, 0, newClasspath, 0, oldClasspath.length);
-			IClasspathEntry gwtUserJarEntry = JavaCore.newVariableEntry(Util.getGwtUserLibPath(), null, null);
+			IClasspathEntry gwtServletJarEntry = JavaCore.newVariableEntry(Util.getGwtServletLibPath(), null, null);
 			IClasspathAttribute attr = JavaCore.newClasspathAttribute("org.eclipse.jst.component.dependency", "/WEB-INF/lib");
-			gwtUserJarEntry = JavaCore.newVariableEntry(gwtUserJarEntry.getPath(), null, null, new IAccessRule[0], new IClasspathAttribute[] { attr }, false);
-			newClasspath[oldClasspath.length] = gwtUserJarEntry;
+			gwtServletJarEntry = JavaCore.newVariableEntry(gwtServletJarEntry.getPath(), null, null, new IAccessRule[0], new IClasspathAttribute[] { attr }, false);
+			newClasspath[oldClasspath.length] = gwtServletJarEntry;
 			javaProject.setRawClasspath(newClasspath, monitor);
 
 		} catch (JavaModelException e) {

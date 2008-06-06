@@ -67,6 +67,10 @@ public class Util {
 		return new Path(Constants.GWT_HOME_CPE).append("gwt-user.jar");//$NON-NLS-1$
 	}
 
+	public static IPath getGwtServletLibPath() {
+		return new Path(Constants.GWT_HOME_CPE).append("gwt-servlet.jar");//$NON-NLS-1$
+	}
+
 	public static IPath getGwtDevLibPath() {
 		IPath gwtHome = JavaCore.getClasspathVariable(Constants.GWT_HOME_CPE);
 		IPath devLibPath;
