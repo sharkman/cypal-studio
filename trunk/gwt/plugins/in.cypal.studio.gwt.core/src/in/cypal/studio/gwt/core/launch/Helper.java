@@ -18,6 +18,7 @@
 package in.cypal.studio.gwt.core.launch;
 
 import in.cypal.studio.gwt.core.common.Constants;
+import in.cypal.studio.gwt.core.common.Preferences;
 import in.cypal.studio.gwt.core.common.Util;
 
 import java.util.ArrayList;
@@ -213,6 +214,10 @@ public class Helper {
 	public static String getVMArguments(ILaunchConfiguration configuration) throws CoreException {
 
 		String args = configuration.getAttribute(Constants.LAUNCH_ATTR_VMOPTIONS, "");
+		if (args.equals("")) {
+			args = Preferences.getString(Constants.DEFAULT_VM_OPTION_PREFERENCE);
+		}
+
 		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
 			args += " -XstartOnFirstThread ";//$NON-NLS-1$
 		}

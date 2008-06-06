@@ -32,6 +32,9 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -70,10 +73,16 @@ public class MainPreferencePage extends FieldEditorPreferencePage implements IWo
 
 	protected void createFieldEditors() {
 		addField(new DirectoryFieldEditor(Constants.GWT_HOME_PREFERENCE, "GWT &Home:", getFieldEditorParent()));
-		addField(new StringFieldEditor(Constants.GWT_OUTPUT_PREFERENCE, "GWT Compiler &Output:", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Constants.UPDATE_ASYNC_PREFERENCE, "Manually manage Async files", getFieldEditorParent()));
-		addField(new BooleanFieldEditor(Constants.COMPILE_AT_FULLBUILD_PREFERENCE, "Invoke GWT Compiler on Clean &Build", getFieldEditorParent()));
-		addField(new BooleanFieldEditor(Constants.COMPILE_AT_PUBLISH_PREFERENCE, "Invoke GWT Compiler when publishing to an &external server", getFieldEditorParent()));
+		addField(new StringFieldEditor(Constants.DEFAULT_VM_OPTION_PREFERENCE, "Default &VM Options:", getFieldEditorParent()));
+
+		Group group = new Group(getFieldEditorParent(), SWT.NONE);
+		group.setText("GWT Compiler Options:");
+		group.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 3, 1));
+		addField(new StringFieldEditor(Constants.GWT_OUTPUT_PREFERENCE, "&Output Folder:", group));
+		addField(new BooleanFieldEditor(Constants.COMPILE_AT_FULLBUILD_PREFERENCE, "Invoke on Clean &Build", group));
+		addField(new BooleanFieldEditor(Constants.COMPILE_AT_PUBLISH_PREFERENCE, "Invoke when publishing to an &external server", group));
+
 	}
 
 	public void init(IWorkbench workbench) {
