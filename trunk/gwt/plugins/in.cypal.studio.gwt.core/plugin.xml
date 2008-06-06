@@ -153,6 +153,10 @@
                id="in.cypal.studio.gwt.core.gwtFacet"
                version="1.0"/>
          <runtime-component any="true"/>
+         <facet
+               id="in.cypal.studio.gwt.core.gwtFacet"
+               version="1.5">
+         </facet>
       </supported>
    </extension>
    <extension
