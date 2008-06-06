@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,9 +36,9 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 /**
  * @author Prakash G.R.
- *
+ * 
  */
-public class Util extends in.cypal.studio.gwt.core.common.Util{
+public class Util extends in.cypal.studio.gwt.core.common.Util {
 
 	private final static IPreferenceStore preferenceStore = new ScopedPreferenceStore(new InstanceScope(), Constants.PLUGIN_ID);
 	public static final String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
@@ -46,37 +46,37 @@ public class Util extends in.cypal.studio.gwt.core.common.Util{
 	public static IPreferenceStore getPreferenceStore() {
 		return preferenceStore;
 	}
-	
+
 	public static IProgressMonitor getNonNullMonitor(IProgressMonitor monitor) {
-		if(monitor == null)
+		if (monitor == null)
 			monitor = new NullProgressMonitor();
 		return monitor;
 	}
 
 	public static void writeFile(String templateResource, IFile output, Map templateVars) throws IOException, CoreException {
-		
+
 		String contents = Util.getResourceContents(templateResource);
-	
+
 		for (Iterator i = templateVars.keySet().iterator(); i.hasNext();) {
 			String aKey = (String) i.next();
-			
-			String value = ((String)templateVars.get(aKey)).replaceAll("\\\\", "\\\\\\\\");//$NON-NLS-1$ //$NON-NLS-2$ 
+
+			String value = ((String) templateVars.get(aKey)).replaceAll("\\\\", "\\\\\\\\");//$NON-NLS-1$ //$NON-NLS-2$ 
 			contents = contents.replaceAll(aKey, value);
 		}
-	
-		if(output.exists())
+
+		if (output.exists())
 			output.setContents(new StringBufferInputStream(contents), true, false, null);
 		else
 			output.create(new StringBufferInputStream(contents), true, null);
 	}
 
 	public static String getResourceContents(String resourceName) throws IOException {
-	
+
 		InputStream inputStream = Util.class.getResourceAsStream(resourceName);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-	
+
 		StringBuilder contents = new StringBuilder(5000);
-		while(reader.ready()) {
+		while (reader.ready()) {
 			contents.append(reader.readLine()).append(Util.lineSeparator);
 		}
 		return contents.toString();

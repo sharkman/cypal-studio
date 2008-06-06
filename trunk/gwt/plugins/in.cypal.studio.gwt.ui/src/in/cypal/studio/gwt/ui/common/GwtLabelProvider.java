@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,20 +22,19 @@ import org.eclipse.jface.viewers.LabelProvider;
 
 /**
  * @author Prakash G.R.
- *
+ * 
  */
 public class GwtLabelProvider extends LabelProvider {
 
-	
-//	@Override
+	// @Override
 	public String getText(Object element) {
-		
+
 		String text;
-		if(element == null) {
+		if (element == null) {
 			text = "";//$NON-NLS-1$
-		}else if(element instanceof IFile && Util.isGwtModuleFile((IFile) element)){
+		} else if (element instanceof IFile && Util.isGwtModuleFile((IFile) element)) {
 			text = Util.getSimpleName((IFile) element);
-		}else {
+		} else {
 			text = super.getText(element);
 		}
 		return text;

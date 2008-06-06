@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 -2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,27 +31,26 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.JavaLaunchDelegate;
 
-
 /**
  * @author Prakash G.R.
- *
+ * 
  */
 public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		super.launch(configuration, mode, launch, monitor);
 	}
-	
+
 	public String getMainTypeName(ILaunchConfiguration configuration) throws CoreException {
 
-		if(configuration.getAttribute(Constants.LAUNCH_ATTR_GWT_COMPILE, false))
+		if (configuration.getAttribute(Constants.LAUNCH_ATTR_GWT_COMPILE, false))
 			return Constants.GWT_COMPILER_CLASS;
-		return Constants.GWT_SHELL_CLASS;		
+		return Constants.GWT_SHELL_CLASS;
 	}
-	
+
 	public String getProgramArguments(ILaunchConfiguration configuration) throws CoreException {
 
-		if(configuration.getAttribute(Constants.LAUNCH_ATTR_GWT_COMPILE, false))
+		if (configuration.getAttribute(Constants.LAUNCH_ATTR_GWT_COMPILE, false))
 			return Helper.getArgs(configuration, true);
 		return Helper.getShellArgs(configuration);
 	}
@@ -64,26 +63,26 @@ public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 		IPackageFragmentRoot[] packageFragmentRoots = project.getPackageFragmentRoots();
 		for (int i = 0; i < packageFragmentRoots.length; i++) {
 			IPackageFragmentRoot packageFragmentRoot = packageFragmentRoots[i];
-			if(packageFragmentRoot.getKind() == IPackageFragmentRoot.K_SOURCE ) {
+			if (packageFragmentRoot.getKind() == IPackageFragmentRoot.K_SOURCE) {
 				classpath.add(packageFragmentRoot.getResource().getLocation().toOSString());
 			}
 		}
-		
+
 		String[] classpath2 = super.getClasspath(configuration);
 		for (int i = 0; i < classpath2.length; i++) {
-			String aClasspath = classpath2[i];   
+			String aClasspath = classpath2[i];
 			classpath.add(aClasspath);
 		}
-		
+
 		classpath.add(Util.getGwtDevLibPath().toPortableString());
 
 		return (String[]) classpath.toArray(new String[classpath.size()]);
-		
+
 	}
-	
+
 	public String getVMArguments(ILaunchConfiguration configuration) throws CoreException {
-		
+
 		return super.getVMArguments(configuration) + Helper.getVMArguments(configuration);
 	}
-	
+
 }

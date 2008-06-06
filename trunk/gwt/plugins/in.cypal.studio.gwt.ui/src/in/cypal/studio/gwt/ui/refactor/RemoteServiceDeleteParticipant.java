@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 Cypal Solutions (tools@cypal.in)
+ * Copyright 2007 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,7 @@
  *
  */
 
-
 package in.cypal.studio.gwt.ui.refactor;
-
 
 import in.cypal.studio.gwt.ui.Activator;
 
@@ -37,11 +35,10 @@ import org.eclipse.ltk.core.refactoring.participants.DeleteParticipant;
 
 /**
  * @author Prakash G.R.
- *
+ * 
  */
 public class RemoteServiceDeleteParticipant extends DeleteParticipant {
 
-	
 	private ICompilationUnit compilationUnit;
 
 	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException {
@@ -58,22 +55,30 @@ public class RemoteServiceDeleteParticipant extends DeleteParticipant {
 
 	protected boolean initialize(Object element) {
 		IJavaElement javaElement = JavaCore.create((IFile) element);
-		if(!(javaElement instanceof ICompilationUnit))
+		if (!(javaElement instanceof ICompilationUnit))
 			return false;
-		
+
 		boolean shouldParticipate = false;
 		compilationUnit = (ICompilationUnit) javaElement;
 		try {
 			IType[] types = compilationUnit.getTypes();
-			outer:
-			for (int i = 0; i < types.length; i++) {
-				
-				if(!types[i].isInterface())
+			outer: for (int i = 0; i < types.length; i++) {
+
+				if (!types[i].isInterface())
 					continue; // we are interested only in interfaces
-					
+
 				String[] superInterfaceNames = types[i].getSuperInterfaceNames();
 				for (int j = 0; j < superInterfaceNames.length; j++) {
-					if(superInterfaceNames[j].endsWith("RemoteService")) { // ugly. Can be someother RemoteService also. Lets go for now
+					if (superInterfaceNames[j].endsWith("RemoteService")) { // ugly.
+																			// Can
+																			// be
+																			// someother
+																			// RemoteService
+																			// also.
+																			// Lets
+																			// go
+																			// for
+																			// now
 						shouldParticipate = true;
 						break outer;
 					}
@@ -82,7 +87,7 @@ public class RemoteServiceDeleteParticipant extends DeleteParticipant {
 		} catch (JavaModelException e) {
 			Activator.logException(e);
 		}
-		
+
 		return shouldParticipate;
 	}
 

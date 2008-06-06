@@ -1,5 +1,5 @@
 /*
- * Copyright 2006  Ravi (kkravikumar@gmail.com)
+ * Copyright 2006 - 2008  Ravi (kkravikumar@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,35 +31,32 @@ import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
-
-
 /**
  * @author Ravi (kkravikumar@gmail.com)
- *
+ * 
  */
-public class NewGwtEntryPointClassWizard extends NewElementWizard implements IExecutableExtension{
+public class NewGwtEntryPointClassWizard extends NewElementWizard implements IExecutableExtension {
 
 	private NewGwtEntryPointClassWizardPage entryPointClassWizardPage;
 	private IConfigurationElement config;
-	
+
 	public NewGwtEntryPointClassWizard() {
 		setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(this.getClass(), "/icons/gwt_icon48.png"));//$NON-NLS-1$
 		setWindowTitle("New GWT Entry Point class");
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
 	}
 
-	protected void finishPage(IProgressMonitor monitor)
-			throws InterruptedException, CoreException {
+	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
 		entryPointClassWizardPage.createType(monitor);
 	}
 
 	public IJavaElement getCreatedElement() {
 		return entryPointClassWizardPage.getCreatedType();
 	}
-	
+
 	public void addPages() {
 
-		if(!Util.isGwtHomeSet())
+		if (!Util.isGwtHomeSet())
 			addPage(new GwtHomeConfirmationPage());
 
 		entryPointClassWizardPage = new NewGwtEntryPointClassWizardPage();
@@ -74,9 +71,9 @@ public class NewGwtEntryPointClassWizard extends NewElementWizard implements IEx
 		boolean response = super.performFinish();
 		if (response) {
 			IResource resource = entryPointClassWizardPage.getModifiedResource();
-			if ( resource != null ){ 
+			if (resource != null) {
 				selectAndReveal(resource);
-				openResource((IFile)resource);
+				openResource((IFile) resource);
 			}
 		}
 		BasicNewProjectResourceWizard.updatePerspective(config);

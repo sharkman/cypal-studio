@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 /**
  * 
  * @author Prakash G.R.
- *
+ * 
  */
 public class GwtHomeConfirmationPage extends WizardPage {
 
@@ -48,18 +48,18 @@ public class GwtHomeConfirmationPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
-		
+
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(3, false));
-		
+
 		Label locationLabel = new Label(composite, SWT.NONE);
 		locationLabel.setText("Location:");
-		
+
 		final Text locationText = new Text(composite, SWT.BORDER);
 		locationText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		locationText.setText(Preferences.getString(Constants.GWT_HOME_PREFERENCE));
 		locationText.setEditable(false);
-		
+
 		Button setButton = new Button(composite, SWT.PUSH);
 		setButton.setText("Set...");
 		setButton.addSelectionListener(new SelectionAdapter() {
@@ -70,19 +70,19 @@ public class GwtHomeConfirmationPage extends WizardPage {
 				updateStatus();
 			}
 		});
-		
+
 		setControl(composite);
-		
-		if(!Util.isGwtHomeSet())
+
+		if (!Util.isGwtHomeSet())
 			setPageComplete(false);
 	}
 
 	protected void updateStatus() {
-		
-		if(Util.isGwtHomeSet()){
+
+		if (Util.isGwtHomeSet()) {
 			setMessage(null);
 			setPageComplete(true);
-		}else {
+		} else {
 			setErrorMessage("The GWT Home is not valid");
 			setPageComplete(false);
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import in.cypal.studio.gwt.ui.Activator;
 
 /**
  * @author Prakash G.R.
- *
+ * 
  */
-public class Constants extends in.cypal.studio.gwt.core.common.Constants{
+public class Constants extends in.cypal.studio.gwt.core.common.Constants {
 
 	public static final String PLUGIN_ID = Activator.PLUGIN_ID;
-	
+
 }

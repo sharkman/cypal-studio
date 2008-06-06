@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 Cypal Solutions (tools@cypal.in)
+ * Copyright 2007 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ import org.w3c.dom.NodeList;
 
 /**
  * @author Prakash G.R.
- *
+ * 
  */
 public class DeleteRemoteServiceChange extends Change {
 
@@ -96,24 +96,23 @@ public class DeleteRemoteServiceChange extends Change {
 		IPackageFragmentRoot sourceFolder = (IPackageFragmentRoot) clientPackage.getParent();
 		IJavaElement[] subPackages = sourceFolder.getChildren();
 		for (int i = 0; i < subPackages.length; i++) {
-			
+
 			IPackageFragment packageFragment = (IPackageFragment) subPackages[i];
 			if (subPackages[i].getElementName().endsWith(Constants.SERVER_PACKAGE)) {
 				ICompilationUnit implClass = packageFragment.getCompilationUnit(getRemoteInterfaceName().concat("Impl.java"));
 				IResource implFile = implClass.getResource();
-				if(implFile.exists()) {
+				if (implFile.exists()) {
 					implFile.delete(true, null);
 				}
 			}
 		}
-		
-		
+
 		IFolder moduleFolder = (IFolder) sourceFolder.getCorrespondingResource();
 		moduleFolder.accept(new IResourceVisitor() {
 
 			public boolean visit(IResource resource) throws CoreException {
 
-				if(Util.isModuleXml(resource)) {
+				if (Util.isModuleXml(resource)) {
 					try {
 						deleteFromGwtXml((IFile) resource, null);
 					} catch (Exception e) {
@@ -122,39 +121,39 @@ public class DeleteRemoteServiceChange extends Change {
 				}
 				return true;
 			}
-			
+
 		});
-		
+
 		deleteFromWebXml(null);
-		
+
 		return null;
 	}
 
 	private String getRemoteInterfaceName() {
-		return compilationUnit.getElementName().substring(0, compilationUnit.getElementName().length()-5);
+		return compilationUnit.getElementName().substring(0, compilationUnit.getElementName().length() - 5);
 	}
-	
+
 	private void deleteFromGwtXml(IFile moduleFile, IProgressMonitor monitor) throws Exception {
 
 		monitor = Util.getNonNullMonitor(monitor);
 
 		try {
 
-			monitor.beginTask("", 1);  
+			monitor.beginTask("", 1);
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			
+
 			Document document = builder.parse(moduleFile.getContents());
 			Node module = document.getDocumentElement();
-			
+
 			NodeList childNodes = module.getChildNodes();
-			for(int i=0; i< childNodes.getLength(); i++) {
+			for (int i = 0; i < childNodes.getLength(); i++) {
 				Node item = childNodes.item(i);
-				if(item instanceof Element && ((Element)item).getTagName().equals("servlet")) {
-					String servletClass = ((Element)item).getAttribute("class");
-					if(servletClass.endsWith(getRemoteInterfaceName().concat("Impl"))) {
+				if (item instanceof Element && ((Element) item).getTagName().equals("servlet")) {
+					String servletClass = ((Element) item).getAttribute("class");
+					if (servletClass.endsWith(getRemoteInterfaceName().concat("Impl"))) {
 						module.removeChild(item);
 					}
 				}
@@ -164,19 +163,18 @@ public class DeleteRemoteServiceChange extends Change {
 
 			writer.transform(new DOMSource(document), new StreamResult(moduleFile.getLocation().toFile()));
 
-
 		} finally {
 			monitor.done();
 		}
 	}
-	
+
 	private void deleteFromWebXml(IProgressMonitor monitor) {
 
 		monitor = Util.getNonNullMonitor(monitor);
 
 		try {
 
-			monitor.beginTask("", 1);  
+			monitor.beginTask("", 1);
 
 			IVirtualComponent component = ComponentCore.createComponent(compilationUnit.getJavaProject().getProject());
 			WebArtifactEdit artifactEdit = WebArtifactEdit.getWebArtifactEditForWrite(component);
@@ -185,13 +183,13 @@ public class DeleteRemoteServiceChange extends Change {
 			for (Iterator i = servlets.iterator(); i.hasNext();) {
 				Servlet servlet = (Servlet) i.next();
 				WebType webType = servlet.getWebType();
-				if(webType instanceof ServletType && ((ServletType)webType).getClassName().endsWith(getRemoteInterfaceName().concat("Impl"))){
+				if (webType instanceof ServletType && ((ServletType) webType).getClassName().endsWith(getRemoteInterfaceName().concat("Impl"))) {
 					ServletMapping servletMapping = webApp.getServletMapping(servlet);
 					servlets.remove(servlet);
 					webApp.getServletMappings().remove(servletMapping);
 				}
 			}
-			
+
 			artifactEdit.saveIfNecessary(monitor);
 
 			artifactEdit.dispose();
@@ -200,8 +198,6 @@ public class DeleteRemoteServiceChange extends Change {
 			monitor.done();
 		}
 
-
 	}
-
 
 }

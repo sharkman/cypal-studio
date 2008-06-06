@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 Cypal Solutions (tools@cypal.in)
+ * Copyright 2007 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,9 +56,9 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 
 	private IPackageFragment basePackageFragment;
 
-// private IStatus containerStatus = Status.OK_STATUS;
-// private IStatus packageStatus = Status.OK_STATUS;
-// private IStatus nameStatus = Status.OK_STATUS;
+	// private IStatus containerStatus = Status.OK_STATUS;
+	// private IStatus packageStatus = Status.OK_STATUS;
+	// private IStatus nameStatus = Status.OK_STATUS;
 
 	public NewGwtModuleWizardPage() {
 		super(true, "NewGwtModuleWizardPage");
@@ -82,17 +82,17 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 
 		createContainerControls(composite, nColumns);
 		createPackageControls(composite, nColumns);
-// createEnclosingTypeControls(composite, nColumns);
+		// createEnclosingTypeControls(composite, nColumns);
 
 		createSeparator(composite, nColumns);
 
 		createTypeNameControls(composite, nColumns);
-// createModifierControls(composite, nColumns);
+		// createModifierControls(composite, nColumns);
 
-// createSuperClassControls(composite, nColumns);
+		// createSuperClassControls(composite, nColumns);
 		createSuperInterfacesControls(composite, nColumns);
 
-// createMethodStubSelectionControls(composite, nColumns);
+		// createMethodStubSelectionControls(composite, nColumns);
 
 		createCommentControls(composite, nColumns);
 		enableCommentControl(true);

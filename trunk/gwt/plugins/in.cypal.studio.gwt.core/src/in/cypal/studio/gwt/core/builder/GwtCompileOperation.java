@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,14 +38,15 @@ public class GwtCompileOperation extends PublishOperation {
 	}
 
 	public void execute(IProgressMonitor monitor, IAdaptable info) throws CoreException {
-		
+
 		GwtProject gwtProject = GwtProject.create(project);
 		gwtProject.doCompile();
 	}
+
 	public int getOrder() {
 		return -1;
 	}
-	
+
 	public int getKind() {
 		return REQUIRED;
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,23 +25,20 @@ import org.eclipse.jdt.debug.ui.launchConfigurations.JavaJRETab;
 
 /**
  * @author Prakash G.R.
- *
+ * 
  */
 public class GwtLaunchConfigurationTabGroup extends AbstractLaunchConfigurationTabGroup {
 
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] {
-			new MainTab(),
-			new ParametersTab(),
-//			new JavaArgumentsTab(),
-			new JavaJRETab(),
-//			new JavaClasspathTab(),
-//			new SourceLookupTab(),
-//			new EnvironmentTab(), - Do we really need env to launch GWT in hosted mode?
-			new CommonTab()
-		};
+		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] { new MainTab(), new ParametersTab(),
+		// new JavaArgumentsTab(),
+				new JavaJRETab(),
+				// new JavaClasspathTab(),
+				// new SourceLookupTab(),
+				// new EnvironmentTab(), - Do we really need env to launch GWT
+				// in hosted mode?
+				new CommonTab() };
 		setTabs(tabs);
 	}
-
 
 }
