@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 -2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,102 +40,95 @@ import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 
-
 /**
  * @author Prakash G.R.
- *
+ * 
  */
-public class InstallDelegate implements IDelegate{
+public class InstallDelegate implements IDelegate {
 
 	public void execute(IProject project, IProjectFacetVersion facetVersion, Object config, IProgressMonitor monitor) throws CoreException {
-		
+
 		monitor = Util.getNonNullMonitor(monitor);
-		
+
 		try {
-		
-			monitor.beginTask("", 3); 
-			
-			addNature(project, new SubProgressMonitor(monitor, 1)); 
+
+			monitor.beginTask("", 3);
+
+			addNature(project, new SubProgressMonitor(monitor, 1));
 			addUserLibToClassPath(project, new SubProgressMonitor(monitor, 1));
 			addServletLibToWebInf(project, new SubProgressMonitor(monitor, 1));
-			
-		}catch(CoreException e) {
+
+		} catch (CoreException e) {
 			monitor.setCanceled(true);
 			Activator.logException(e);
-		}finally {
+		} finally {
 			monitor.done();
 		}
 	}
 
-	
-	private void addServletLibToWebInf(IProject project, IProgressMonitor monitor){
-		
+	private void addServletLibToWebInf(IProject project, IProgressMonitor monitor) {
+
 		monitor = Util.getNonNullMonitor(monitor);
 		try {
-			
-	    	IPath webContent = ComponentCore.createComponent(project).getRootFolder().getProjectRelativePath();
-			IFile theLink = project.getFile(webContent.append("WEB-INF").append("lib").append("gwt-servlet.jar")); 
-			IPath actualLocation = new Path(Constants.GWT_HOME_PATH+"/gwt-servlet.jar");  
-			theLink.createLink(actualLocation, IResource.REPLACE, null);  
+
+			IPath webContent = ComponentCore.createComponent(project).getRootFolder().getProjectRelativePath();
+			IFile theLink = project.getFile(webContent.append("WEB-INF").append("lib").append("gwt-servlet.jar"));
+			IPath actualLocation = new Path(Constants.GWT_HOME_PATH + "/gwt-servlet.jar");
+			theLink.createLink(actualLocation, IResource.REPLACE, null);
 		} catch (CoreException e) {
-			// the jar is already in the classpath.  
+			// the jar is already in the classpath.
 			Activator.logException(e);
-		}finally {
+		} finally {
 			monitor.done();
 		}
-		
+
 	}
 
+	private void addUserLibToClassPath(IProject project, IProgressMonitor monitor) {
 
-	private void addUserLibToClassPath(IProject project, IProgressMonitor monitor){
-		
 		monitor = Util.getNonNullMonitor(monitor);
 
 		try {
-			monitor.beginTask("", 1); 
-			
+			monitor.beginTask("", 1);
+
 			IJavaProject javaProject = JavaCore.create(project);
 			IClasspathEntry[] oldClasspath = javaProject.getRawClasspath();
-			IClasspathEntry[] newClasspath = new IClasspathEntry[oldClasspath.length+1];
+			IClasspathEntry[] newClasspath = new IClasspathEntry[oldClasspath.length + 1];
 			System.arraycopy(oldClasspath, 0, newClasspath, 0, oldClasspath.length);
 			IClasspathEntry gwtUserJarEntry = JavaCore.newVariableEntry(Util.getGwtUserLibPath(), null, null);
 			IClasspathAttribute attr = JavaCore.newClasspathAttribute("org.eclipse.jst.component.dependency", "/WEB-INF/lib");
-			gwtUserJarEntry = JavaCore.newVariableEntry(gwtUserJarEntry.getPath(), null, null, new IAccessRule[0], new IClasspathAttribute[] {attr}, false);
+			gwtUserJarEntry = JavaCore.newVariableEntry(gwtUserJarEntry.getPath(), null, null, new IAccessRule[0], new IClasspathAttribute[] { attr }, false);
 			newClasspath[oldClasspath.length] = gwtUserJarEntry;
 			javaProject.setRawClasspath(newClasspath, monitor);
 
 		} catch (JavaModelException e) {
-			// the jar is already in the classpath.  
+			// the jar is already in the classpath.
 			Activator.logException(e);
-		}finally {
+		} finally {
 			monitor.done();
 		}
 	}
-
 
 	private void addNature(IProject project, IProgressMonitor monitor) throws CoreException {
-		
+
 		monitor = Util.getNonNullMonitor(monitor);
-		
+
 		try {
-			
-			monitor.beginTask("", 1); 
-			
+
+			monitor.beginTask("", 1);
+
 			IProjectDescription description = project.getDescription();
-			String[] prevNatures= description.getNatureIds();
-			String[] newNatures= new String[prevNatures.length + 1];
+			String[] prevNatures = description.getNatureIds();
+			String[] newNatures = new String[prevNatures.length + 1];
 			System.arraycopy(prevNatures, 0, newNatures, 1, prevNatures.length);
-			newNatures[0]= Constants.NATURE_ID;
+			newNatures[0] = Constants.NATURE_ID;
 			description.setNatureIds(newNatures);
-			
+
 			project.setDescription(description, IResource.FORCE, null);
 
-		}finally {
+		} finally {
 			monitor.done();
 		}
 	}
-	
-	
-	
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,15 +32,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
-
 /**
  * @author Prakash G.R.
- *
+ * 
  */
 public class LaunchShortcut implements ILaunchShortcut {
 
 	public void launch(ISelection selection, String mode) {
-		
+
 		IFile moduleFile = (IFile) ((IStructuredSelection) selection).getFirstElement();
 		launch(moduleFile, mode);
 	}
@@ -55,18 +54,18 @@ public class LaunchShortcut implements ILaunchShortcut {
 	public void launch(IFile moduleFile, String mode) {
 
 		try {
-			
+
 			String moduleName = Util.getQualifiedName(moduleFile);
 			String projectName = moduleFile.getProject().getName();
-			
+
 			ILaunchConfiguration toLaunch = Helper.findOrCreateLaunch(moduleName, projectName, true);
-			
+
 			// we need to save, if its a working copy
-			if(toLaunch instanceof ILaunchConfigurationWorkingCopy)
-				toLaunch = ((ILaunchConfigurationWorkingCopy)toLaunch).doSave();
+			if (toLaunch instanceof ILaunchConfigurationWorkingCopy)
+				toLaunch = ((ILaunchConfigurationWorkingCopy) toLaunch).doSave();
 
 			DebugUITools.launch(toLaunch, mode);
-			
+
 		} catch (CoreException e) {
 			Activator.handleException(e, null, "Launch Error", "Exception during launching. More details in log");
 		}

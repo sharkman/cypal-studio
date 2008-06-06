@@ -1,5 +1,5 @@
 /*
- * Copyright 2006  Ravi (kkravikumar@gmail.com)
+ * Copyright 2006 - 2008 Ravi (kkravikumar@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,115 +64,110 @@ import org.w3c.dom.Node;
 
 /**
  * @author Ravi (kkravikumar@gmail.com)
- *
+ * 
  */
 public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 
-	private static final String pageName = "NewGwtEntryPointClassWizardPage";  //$NON-NLS-1$
+	private static final String pageName = "NewGwtEntryPointClassWizardPage"; //$NON-NLS-1$
 	private Combo moduleCombo;
-	private String moduleText=""; //$NON-NLS-1$
-	private String projectText=""; //$NON-NLS-1$
+	private String moduleText = ""; //$NON-NLS-1$
+	private String projectText = ""; //$NON-NLS-1$
 	private Combo projectCombo;
 	private IJavaProject[] gwtProjects;
 	protected IStatus moduleStatus = in.cypal.studio.gwt.core.common.Util.okStatus;
 	protected IStatus projectStatus = in.cypal.studio.gwt.core.common.Util.okStatus;
 	private IFile selectedModule;
 	private String selectedProject;
-	
+
 	public NewGwtEntryPointClassWizardPage(boolean isClass, String pageName) {
 		super(isClass, pageName);
-		setTitle("Entry Point Class"); 
+		setTitle("Entry Point Class");
 		setDescription("Create a new GWT Entry Point Class");
 	}
 
 	public NewGwtEntryPointClassWizardPage() {
 		this(true, pageName);
 	}
-	
-	
+
 	public NewGwtEntryPointClassWizardPage(int typeKind, String pageName) {
 		super(typeKind, pageName);
 	}
 
 	public void createControl(Composite parent) {
-		
+
 		initializeDialogUnits(parent);
-		
-		Composite composite= new Composite(parent, SWT.NONE);
+
+		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setFont(parent.getFont());
-		
-		int nColumns= 4;
-		
-		GridLayout layout= new GridLayout();
-		layout.numColumns= nColumns;		
+
+		int nColumns = 4;
+
+		GridLayout layout = new GridLayout();
+		layout.numColumns = nColumns;
 		composite.setLayout(layout);
-		
+
 		// pick & choose the wanted UI components
-		createProjectControls(composite, nColumns);	
-		
+		createProjectControls(composite, nColumns);
+
 		createModuleControls(composite, nColumns);
-		
+
 		createSeparator(composite, nColumns);
-		
+
 		createTypeNameControls(composite, nColumns);
 		createModifierControls(composite, nColumns);
-			
+
 		createSuperClassControls(composite, nColumns);
 		createSuperInterfacesControls(composite, nColumns);
-				
+
 		createCommentControls(composite, nColumns);
 		enableCommentControl(true);
-		
+
 		setControl(composite);
-			
+
 		Dialog.applyDialogFont(composite);
-		
+
 		List interfaceList = new ArrayList(1);
 		interfaceList.add("com.google.gwt.core.client.EntryPoint"); //$NON-NLS-1$
 		setSuperClass("java.lang.Object", false);//$NON-NLS-1$
 		setSuperInterfaces(interfaceList, false);
-		
+
 		projectChanged();
 	}
 
 	private void doStatusUpdate() {
-		
-		if(projectCombo!=null) {
-			projectStatus = projectText.equals("")? Util.getErrorStatus("Project cannot be empty"):in.cypal.studio.gwt.core.common.Util.okStatus;
+
+		if (projectCombo != null) {
+			projectStatus = projectText.equals("") ? Util.getErrorStatus("Project cannot be empty") : in.cypal.studio.gwt.core.common.Util.okStatus;
 		}
-		
-		if(moduleCombo != null) {
-			moduleStatus = moduleText.equals("")? Util.getErrorStatus("Module cannot be empty"):in.cypal.studio.gwt.core.common.Util.okStatus;
+
+		if (moduleCombo != null) {
+			moduleStatus = moduleText.equals("") ? Util.getErrorStatus("Module cannot be empty") : in.cypal.studio.gwt.core.common.Util.okStatus;
 		}
-		
-		IStatus[] status= new IStatus[] {
-			projectStatus,
-			moduleStatus,
-			fTypeNameStatus,
-			fSuperInterfacesStatus
-		};
-		
-		// the mode severe status will be displayed and the OK button enabled/disabled.
+
+		IStatus[] status = new IStatus[] { projectStatus, moduleStatus, fTypeNameStatus, fSuperInterfacesStatus };
+
+		// the mode severe status will be displayed and the OK button
+		// enabled/disabled.
 		updateStatus(status);
 	}
-	
+
 	protected void handleFieldChanged(String fieldName) {
 		super.handleFieldChanged(fieldName);
-		
+
 		doStatusUpdate();
 	}
-	
-//	@Override
+
+	// @Override
 	protected void createTypeMembers(IType newType, ImportsManager imports, IProgressMonitor monitor) throws CoreException {
 		newType.createMethod("public void onModuleLoad() {\n\t// TODO Auto-generated method stub \n}", null, false, monitor);//$NON-NLS-1$
 		super.createTypeMembers(newType, imports, monitor);
 	}
-	
-//	@Override
+
+	// @Override
 	public void createType(IProgressMonitor monitor) throws CoreException, InterruptedException {
-		
+
 		super.createType(monitor);
-		
+
 		try {
 			addEntryPointClassToGwtXml(new SubProgressMonitor(monitor, 3));
 		} catch (Exception e) {
@@ -180,7 +175,7 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 			throw new CoreException(Util.getErrorStatus(e.getMessage()));
 		}
 	}
-	
+
 	private void addEntryPointClassToGwtXml(IProgressMonitor monitor) throws Exception {
 
 		monitor = Util.getNonNullMonitor(monitor);
@@ -192,15 +187,14 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			
+
 			File moduleFile = getModuleFile();
-			
+
 			Document document = builder.parse(moduleFile);
 			Node module = document.getDocumentElement();
 
-
 			Element newServlet = document.createElement("entry-point");//$NON-NLS-1$
-			newServlet.setAttribute("class", getPackageFragment().getElementName()+'.'+ getTypeName());//$NON-NLS-1$
+			newServlet.setAttribute("class", getPackageFragment().getElementName() + '.' + getTypeName());//$NON-NLS-1$
 
 			module.appendChild(newServlet);
 
@@ -208,18 +202,16 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 
 			writer.transform(new DOMSource(document), new StreamResult(moduleFile));
 
-
 		} finally {
 			monitor.done();
 		}
 	}
-	
+
 	private File getModuleFile() throws CoreException {
 		IResource resource = Util.getProject(projectText).findMember(moduleText);
 		return resource.getLocation().toFile();
 	}
-	
-	
+
 	public void createModuleControls(Composite parent, int nColumns) {
 
 		Label moduleLabel = new Label(parent, SWT.None);
@@ -229,7 +221,7 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 		moduleCombo = new Combo(parent, SWT.BORDER | SWT.READ_ONLY);
 		GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gridData.horizontalSpan = 2;
-		
+
 		moduleCombo.setLayoutData(gridData);
 		moduleCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -240,11 +232,11 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 
 		new Label(parent, SWT.NONE);
 	}
-	
+
 	public void createProjectControls(Composite parent, int nColumns) {
 
 		Label locationLabel = new Label(parent, SWT.NONE);
-		locationLabel.setText("Project:"); 
+		locationLabel.setText("Project:");
 		locationLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 		projectCombo = new Combo(parent, SWT.BORDER | SWT.READ_ONLY);
@@ -257,53 +249,53 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 				projectChanged();
 			}
 		});
-		
+
 		gwtProjects = Util.getGwtProjects();
-		
+
 		for (int i = 0; i < gwtProjects.length; i++) {
 			IJavaProject gwtProject = gwtProjects[i];
-			String name  = gwtProject.getProject().getName();
+			String name = gwtProject.getProject().getName();
 			projectCombo.add(name);
-			if(name.equals(selectedProject)) {
+			if (name.equals(selectedProject)) {
 				projectCombo.select(i);
 			}
 		}
-		
-		if(projectCombo.getSelectionIndex() == -1) {
+
+		if (projectCombo.getSelectionIndex() == -1) {
 			projectCombo.select(0);
 		}
 
 		new Label(parent, SWT.NONE);
 	}
-	
-	protected void projectChanged()  {
+
+	protected void projectChanged() {
 
 		projectText = projectCombo.getText();
 		IJavaProject selectedProject = null;
 		for (int i = 0; i < gwtProjects.length; i++) {
 			IJavaProject gwtProject = gwtProjects[i];
-			if(projectText.equals(gwtProject.getProject().getName())) {
+			if (projectText.equals(gwtProject.getProject().getName())) {
 				selectedProject = gwtProject;
 				break;
 			}
 		}
-		
-		if(selectedProject !=null) {
+
+		if (selectedProject != null) {
 			try {
 				moduleCombo.removeAll();
 				List modulesList = Util.findModules(selectedProject);
 				for (Iterator j = modulesList.iterator(); j.hasNext();) {
-					IFile file  = (IFile) j.next();
+					IFile file = (IFile) j.next();
 					IPath projectRelativePath = file.getProjectRelativePath();
 					String fileName = file.getName();
-					String moduleName = fileName.substring(0, fileName.length() - Constants.GWT_XML_EXT.length()-1);
+					String moduleName = fileName.substring(0, fileName.length() - Constants.GWT_XML_EXT.length() - 1);
 					moduleCombo.add(projectRelativePath.toString());
 					moduleCombo.setData(moduleName, file);
 				}
-				
+
 				int i = modulesList.indexOf(selectedModule);
-				if(i == -1)
-					i=0;
+				if (i == -1)
+					i = 0;
 				moduleCombo.select(i);
 				moduleText = moduleCombo.getText();
 			} catch (CoreException e) {
@@ -312,11 +304,11 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 		}
 		doStatusUpdate();
 	}
-	
-//	@Override
+
+	// @Override
 	public IPackageFragment getPackageFragment() {
 		IPackageFragment packageFragment = null;
-		if(!projectText.equals("")) {//$NON-NLS-1$
+		if (!projectText.equals("")) {//$NON-NLS-1$
 			try {
 				IJavaProject project = JavaCore.create(Util.getProject(projectText));
 				IPath moduleXmlPath = new Path(moduleText);
@@ -331,20 +323,20 @@ public class NewGwtEntryPointClassWizardPage extends NewTypeWizardPage {
 	}
 
 	public void init(IStructuredSelection selection) {
-		
-		if(selection!=null && selection instanceof IStructuredSelection) {
-			Object firstElement = ((IStructuredSelection)selection).getFirstElement();
-			if(firstElement instanceof IFile && Util.isModuleXml((IResource) firstElement)) { 
-				this.selectedModule = (IFile)firstElement;
-				this.selectedProject = ((IFile)firstElement).getProject().getName();
+
+		if (selection != null && selection instanceof IStructuredSelection) {
+			Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+			if (firstElement instanceof IFile && Util.isModuleXml((IResource) firstElement)) {
+				this.selectedModule = (IFile) firstElement;
+				this.selectedProject = ((IFile) firstElement).getProject().getName();
 			}
 		}
-		
-		IJavaElement jelem= getInitialJavaElement(selection);
-			
+
+		IJavaElement jelem = getInitialJavaElement(selection);
+
 		initContainerPage(jelem);
 		initTypePage(jelem);
 		doStatusUpdate();
 	}
-	
+
 }

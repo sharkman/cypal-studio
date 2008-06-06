@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 
 package in.cypal.studio.gwt.ui.wizards;
 
@@ -60,8 +59,8 @@ public class NewGwtModuleWizard extends Wizard implements INewWizard, IExecutabl
 	}
 
 	public void addPages() {
-		
-		if(!Util.isGwtHomeSet())
+
+		if (!Util.isGwtHomeSet())
 			addPage(new GwtHomeConfirmationPage());
 		wizardPage = new NewGwtModuleWizardPage();
 		wizardPage.init(selection);

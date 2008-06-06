@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,15 +53,13 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 
-
-
 /**
  * @author Prakash G.R.
- *
+ * 
  */
 public class GwtBuilder extends IncrementalProjectBuilder {
 
-	GwtProject gwtProject; 
+	GwtProject gwtProject;
 
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
 
@@ -69,18 +67,19 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 		try {
 
-			monitor.beginTask("Building GWT sources...", 2); 
+			monitor.beginTask("Building GWT sources...", 2);
 
 			gwtProject = GwtProject.create(getProject());
 
-			//Do a update of Async files only if the preference is not set. If set, its manual
-			if(!Preferences.getBoolean(Constants.UPDATE_ASYNC_PREFERENCE, true))
+			// Do a update of Async files only if the preference is not set. If
+			// set, its manual
+			if (!Preferences.getBoolean(Constants.UPDATE_ASYNC_PREFERENCE, true))
 				updateAsyncFiles(new SubProgressMonitor(monitor, 1));
 
-			//Do a compile only in full build and preference is set. 
+			// Do a compile only in full build and preference is set.
 			if (kind == IncrementalProjectBuilder.FULL_BUILD && Preferences.getBoolean(Constants.COMPILE_AT_FULLBUILD_PREFERENCE, true)) {
 				gwtProject.doCompile();
-		    }
+			}
 
 		} catch (Exception e) {
 			Activator.logException(e);
@@ -91,7 +90,7 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 		return null;
 	}
-	
+
 	private void updateAsyncFiles(IProgressMonitor monitor) throws CoreException, BadLocationException {
 
 		monitor = Util.getNonNullMonitor(monitor);
@@ -100,14 +99,14 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 			IResourceDelta delta = getDelta(getProject());
 			List remoteServices = gwtProject.getRemoteServices(delta);
-			monitor.beginTask("Updating Async files...", remoteServices.size()); 
+			monitor.beginTask("Updating Async files...", remoteServices.size());
 
 			for (Iterator i = remoteServices.iterator(); i.hasNext();) {
 
 				IFile aRemoteServiceFile = (IFile) i.next();
 
 				IPackageFragment clientPackage = (IPackageFragment) JavaCore.create(aRemoteServiceFile.getParent());
-				
+
 				ICompilationUnit asyncContents = (ICompilationUnit) JavaCore.create(aRemoteServiceFile);
 				String source = asyncContents.getBuffer().getContents();
 				Document document = new Document(source);
@@ -119,22 +118,22 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 				astRoot.recordModifications();
 
-				// Modify imports (+AsyncCallback, -RemoteService, -*Exception) 
+				// Modify imports (+AsyncCallback, -RemoteService, -*Exception)
 				List imports = astRoot.imports();
 				List importsToBeRemoved = new ArrayList();
-				
+
 				for (Iterator j = imports.iterator(); j.hasNext();) {
 
 					ImportDeclaration anImportDecl = (ImportDeclaration) j.next();
-					String importName = anImportDecl.getName().getFullyQualifiedName(); 
-					if(importName.endsWith("Exception") || //$NON-NLS-1$
-							importName.equals("com.google.gwt.core.client.GWT") ||//$NON-NLS-1$
+					String importName = anImportDecl.getName().getFullyQualifiedName();
+					if (importName.endsWith("Exception") || //$NON-NLS-1$
+							importName.equals("com.google.gwt.core.client.GWT") || //$NON-NLS-1$
 							importName.equals("com.google.gwt.user.client.rpc.ServiceDefTarget") || //$NON-NLS-1$
 							importName.equals("com.google.gwt.user.client.rpc.RemoteService")//$NON-NLS-1$
-							)  
+					)
 						importsToBeRemoved.add(anImportDecl);
 				}
-				
+
 				imports.removeAll(importsToBeRemoved);
 
 				ImportDeclaration importDecl = ast.newImportDeclaration();
@@ -143,20 +142,20 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 				// Add Async to the name
 				TypeDeclaration aRemoteService = (TypeDeclaration) astRoot.types().get(0);
-				String remoteServiceAsyncName = aRemoteService.getName().getFullyQualifiedName()+"Async"; //$NON-NLS-1$
+				String remoteServiceAsyncName = aRemoteService.getName().getFullyQualifiedName() + "Async"; //$NON-NLS-1$
 				aRemoteService.setName(astRoot.getAST().newSimpleName(remoteServiceAsyncName));
-				
+
 				// Remote all interfaces
 				aRemoteService.superInterfaceTypes().clear();
-				
+
 				// Change methods, fields and inner classes
 				List bodyDeclarations = aRemoteService.bodyDeclarations();
 				List declarationsToDelete = new ArrayList();
 				for (Iterator k = bodyDeclarations.iterator(); k.hasNext();) {
-					
+
 					Object currDeclaration = k.next();
-					
-					if(currDeclaration instanceof MethodDeclaration) {
+
+					if (currDeclaration instanceof MethodDeclaration) {
 						// Make return type void
 						MethodDeclaration aMethod = (MethodDeclaration) currDeclaration;
 						aMethod.setReturnType2(ast.newPrimitiveType(PrimitiveType.VOID));
@@ -166,35 +165,34 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 						asyncCallbackParam.setName(ast.newSimpleName("callback")); //$NON-NLS-1$
 						asyncCallbackParam.setType(ast.newSimpleType(ast.newName("AsyncCallback"))); //$NON-NLS-1$
 						aMethod.parameters().add(asyncCallbackParam);
-						
+
 						// Remove throws
 						aMethod.thrownExceptions().clear();
-						
+
 						// Remove @gwt tags
-                        Javadoc jdoc = aMethod.getJavadoc();
-                        if(jdoc != null) {
-	                        List tags =  jdoc.tags();
-	                        List tagsToRemove = new ArrayList();
-	                        for(Iterator itTags = tags.iterator(); itTags.hasNext();) {
-	                            TagElement tag = (TagElement) itTags.next();
-	                            if (tag.toString().contains("@gwt")) {
-	                                tagsToRemove.add(tag);
-	                            }  
-	                        }
-	                        tags.removeAll(tagsToRemove);
-                        }
-						
-					}else if(currDeclaration instanceof FieldDeclaration || currDeclaration instanceof TypeDeclaration) {
-						
+						Javadoc jdoc = aMethod.getJavadoc();
+						if (jdoc != null) {
+							List tags = jdoc.tags();
+							List tagsToRemove = new ArrayList();
+							for (Iterator itTags = tags.iterator(); itTags.hasNext();) {
+								TagElement tag = (TagElement) itTags.next();
+								if (tag.toString().contains("@gwt")) {
+									tagsToRemove.add(tag);
+								}
+							}
+							tags.removeAll(tagsToRemove);
+						}
+
+					} else if (currDeclaration instanceof FieldDeclaration || currDeclaration instanceof TypeDeclaration) {
+
 						// Remove the fields and inner classes
 						declarationsToDelete.add(currDeclaration);
 					}
-					
-					
+
 				}
-				
+
 				bodyDeclarations.removeAll(declarationsToDelete);
-				
+
 				// computation of the text edits
 				TextEdit edits = astRoot.rewrite(document, asyncContents.getJavaProject().getOptions(true));
 
@@ -202,9 +200,9 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 				edits.apply(document);
 				String newSource = document.get();
 
-				// update of the compilation unit			
-				clientPackage.createCompilationUnit(remoteServiceAsyncName+".java", newSource, true, monitor); //$NON-NLS-1$
-				
+				// update of the compilation unit
+				clientPackage.createCompilationUnit(remoteServiceAsyncName + ".java", newSource, true, monitor); //$NON-NLS-1$
+
 				monitor.worked(1);
 			}
 
@@ -212,9 +210,9 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 			monitor.done();
 		}
 	}
-	
+
 	protected void clean(IProgressMonitor monitor) throws CoreException {
-		
+
 		gwtProject = GwtProject.create(getProject());
 		gwtProject.doClean(monitor);
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,17 +27,17 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 /**
  * 
  * @author Prakash G.R.
- *
+ * 
  */
 public final class Preferences {
-	
+
 	static final IPreferencesService preferencesService = Platform.getPreferencesService();
-	static final IScopeContext[] contexts = new IScopeContext[] {new InstanceScope(), new DefaultScope()};
+	static final IScopeContext[] contexts = new IScopeContext[] { new InstanceScope(), new DefaultScope() };
 
 	public static String getString(String key, String defaultValue) {
 		return preferencesService.getString(Activator.PLUGIN_ID, key, defaultValue, contexts);
 	}
-	
+
 	public static boolean getBoolean(String key, boolean defaultValue) {
 		return preferencesService.getBoolean(Activator.PLUGIN_ID, key, defaultValue, contexts);
 	}
@@ -45,7 +45,7 @@ public final class Preferences {
 	public static String getString(String key) {
 		return getString(key, "");
 	}
-	
+
 	public static boolean getBoolean(String key) {
 		return getBoolean(key, false);
 	}

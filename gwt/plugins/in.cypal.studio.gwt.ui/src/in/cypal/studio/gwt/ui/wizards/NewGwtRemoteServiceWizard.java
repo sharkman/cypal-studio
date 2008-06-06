@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,37 +40,36 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 
-
 /**
  * @author Prakash G.R.
- *
+ * 
  */
-public class NewGwtRemoteServiceWizard extends Wizard implements INewWizard, IExecutableExtension{
+public class NewGwtRemoteServiceWizard extends Wizard implements INewWizard, IExecutableExtension {
 
 	private NewGwtRemoteServiceWizardPage wizardPage;
 	private IConfigurationElement config;
 	private IStructuredSelection selection;
 	private IWorkbench workbench;
-	
+
 	public NewGwtRemoteServiceWizard() {
 		setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(this.getClass(), "/icons/gwt_icon48.png"));//$NON-NLS-1$
 		setWindowTitle("New GWT Remote Service");
 	}
-	
+
 	public void addPages() {
 
-		if(!Util.isGwtHomeSet())
+		if (!Util.isGwtHomeSet())
 			addPage(new GwtHomeConfirmationPage());
-		wizardPage= new NewGwtRemoteServiceWizardPage();
+		wizardPage = new NewGwtRemoteServiceWizardPage();
 		wizardPage.init(selection);
 		addPage(wizardPage);
 	}
-	
+
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
-		
+
 		wizardPage.createType(monitor);
 	}
-		
+
 	public boolean performFinish() {
 		try {
 
@@ -105,16 +104,16 @@ public class NewGwtRemoteServiceWizard extends Wizard implements INewWizard, IEx
 			}
 		}
 	}
-	
+
 	public IJavaElement getCreatedElement() {
 
 		return wizardPage.getCreatedType();
 	}
-	
+
 	public String getUri() {
 		return wizardPage.getServiceUri();
 	}
-	
+
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
 		this.config = config;
 	}
@@ -124,5 +123,4 @@ public class NewGwtRemoteServiceWizard extends Wizard implements INewWizard, IEx
 		this.selection = selection;
 	}
 
-	
 }

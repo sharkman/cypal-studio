@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.eclipse.wst.common.componentcore.datamodel.FacetInstallDataModelProvi
 
 /**
  * @author Prakash G.R.
- *
+ * 
  */
 public class UnInstallActionConfigFactory extends FacetInstallDataModelProvider {
 
@@ -30,11 +30,11 @@ public class UnInstallActionConfigFactory extends FacetInstallDataModelProvider 
 
 		Object property;
 		if (propertyName.equals(FACET_ID)) {
-			property =  Constants.FACET_ID;
-		}else {
+			property = Constants.FACET_ID;
+		} else {
 			property = super.getDefaultProperty(propertyName);
 		}
-		
+
 		return property;
 	}
 

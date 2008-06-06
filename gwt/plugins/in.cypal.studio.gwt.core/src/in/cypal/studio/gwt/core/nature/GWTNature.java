@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,17 +27,17 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * @author Prakash G.R.
- *
+ * 
  */
 public class GWTNature implements IProjectNature {
 
 	private IProject project;
 
 	public void configure() throws CoreException {
-		
+
 		IProjectDescription description = project.getDescription();
 		ICommand[] oldBuilders = description.getBuildSpec();
-		ICommand[] newBuilders = new ICommand[oldBuilders.length+1];
+		ICommand[] newBuilders = new ICommand[oldBuilders.length + 1];
 		System.arraycopy(oldBuilders, 0, newBuilders, 1, oldBuilders.length);
 		newBuilders[0] = description.newCommand();
 		newBuilders[0].setBuilderName(Constants.BUILDER_ID);
@@ -45,17 +45,16 @@ public class GWTNature implements IProjectNature {
 
 		project.setDescription(description, IResource.FORCE, null);
 
-
 	}
 
 	public void deconfigure() throws CoreException {
 		IProjectDescription description = project.getDescription();
 		ICommand[] oldBuilders = description.getBuildSpec();
-		ICommand[] newBuilders = new ICommand[oldBuilders.length-1];
-		int i=0;
+		ICommand[] newBuilders = new ICommand[oldBuilders.length - 1];
+		int i = 0;
 		for (int j = 0; j < oldBuilders.length; j++) {
 			ICommand aCommand = oldBuilders[j];
-			if(!aCommand.getBuilderName().equals(Constants.BUILDER_ID))
+			if (!aCommand.getBuilderName().equals(Constants.BUILDER_ID))
 				newBuilders[i++] = aCommand;
 		}
 
