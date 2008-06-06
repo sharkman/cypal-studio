@@ -56,7 +56,7 @@
             facet="in.cypal.studio.gwt.core.gwtFacet"
             version="1.0">
          <action
-               id="in.cypal.studio.gwt.core.gwtFacet.install"
+               id="in.cypal.studio.gwt.core.gwtFacet.install_1_0"
                type="install">
             <config-factory class="in.cypal.studio.gwt.core.facet.InstallActionConfigFactory"/>
             <delegate class="in.cypal.studio.gwt.core.facet.InstallDelegate"/>
@@ -72,26 +72,58 @@
             </and>
          </constraint>
          <action
-               id="in.cypal.studio.gwt.core.gwtFacet.uninstall"
+               id="in.cypal.studio.gwt.core.gwtFacet.uninstall_1_0"
                type="uninstall">
             <config-factory class="in.cypal.studio.gwt.core.facet.UnInstallActionConfigFactory"/>
             <delegate class="in.cypal.studio.gwt.core.facet.UnInstallDelegate"/>
          </action>
       </project-facet-version>
-      <preset id="in.cypal.studio.gwt.core.gwtPreset">
-         <label>
-            Cypal Studio GWT Project
-         </label>
-         <facet
-               id="jst.java"
-               version="1.4"/>
-         <facet
-               id="jst.web"
-               version="2.2"/>
-         <facet
-               id="in.cypal.studio.gwt.core.gwtFacet"
-               version="1.0"/>
-      </preset>
+      <project-facet-version
+            facet="in.cypal.studio.gwt.core.gwtFacet"
+            version="1.5">
+         <action
+               id="in.cypal.studio.gwt.core.gwtFacet.install_1_5"
+               type="INSTALL">
+            <config-factory
+                  class="in.cypal.studio.gwt.core.facet.InstallActionConfigFactory">
+            </config-factory>
+            <delegate
+                  class="in.cypal.studio.gwt.core.facet.InstallDelegate">
+            </delegate>
+         </action>
+         <constraint>
+            <and>
+               <requires
+                     facet="jst.web"
+                     version="[2.2">
+               </requires>
+               <requires
+                     facet="jst.java"
+                     version="[1.4">
+               </requires>
+            </and>
+         </constraint>
+         <action
+               id="in.cypal.studio.gwt.core.gwtFacet.uninstall_1_5"
+               type="UNINSTALL">
+            <config-factory
+                  class="in.cypal.studio.gwt.core.facet.UnInstallActionConfigFactory">
+            </config-factory>
+            <delegate
+                  class="in.cypal.studio.gwt.core.facet.UnInstallDelegate">
+            </delegate>
+         </action>
+         <action
+               id="in.cypal.studio.gwt.core.gwtFacet.versionChange_1_5"
+               type="VERSION_CHANGE">
+            <delegate
+                  class="in.cypal.studio.gwt.core.facet.UpgradeDelegate">
+            </delegate>
+            <config-factory
+                  class="in.cypal.studio.gwt.core.facet.UnInstallActionConfigFactory">
+            </config-factory>
+         </action>
+      </project-facet-version>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
@@ -105,9 +137,6 @@
             id="in.cypal.studio.gwt.core.launchConfigurationType"
             modes="run, debug"
             name="GWT Hosted Mode Application">
-         <fileExtension
-               default="true"
-               extension="gwt.xml"/>
       </launchConfigurationType>
    </extension>
    <extension
@@ -137,6 +166,51 @@
                class="in.cypal.studio.gwt.core.builder.ExportWarApplication">
          </run>
       </application>
+   </extension>
+   <extension
+         point="org.eclipse.wst.common.project.facet.core.presets">
+      <static-preset
+            id="in.cypal.studio.gwt.core.gwtPreset_1_5">
+         <label>
+            Cypal Studio for GWT
+         </label>
+         <description>
+            Creates an Ajax Web project with Google Web Toolkit
+         </description>
+         <facet
+               id="jst.java"
+               version="5.0">
+         </facet>
+         <facet
+               id="jst.web"
+               version="2.4">
+         </facet>
+         <facet
+               id="in.cypal.studio.gwt.core.gwtFacet"
+               version="1.5">
+         </facet>
+      </static-preset>
+      <static-preset
+            id="in.cypal.studio.gwt.core.gwtPreset_1_0">
+         <label>
+            Cypal Studio for GWT (1.4 or earlier)
+         </label>
+         <description>
+            Creates an Ajax Web project with Google Web ToolkitThis is meant for old pre GWT 1.5 releases. Should not be used for GWT 1.5 or higher versions
+         </description>
+         <facet
+               id="jst.java"
+               version="1.4">
+         </facet>
+         <facet
+               id="jst.web"
+               version="2.2">
+         </facet>
+         <facet
+               id="in.cypal.studio.gwt.core.gwtFacet"
+               version="1.0">
+         </facet>
+      </static-preset>
    </extension>
 
 </plugin>
