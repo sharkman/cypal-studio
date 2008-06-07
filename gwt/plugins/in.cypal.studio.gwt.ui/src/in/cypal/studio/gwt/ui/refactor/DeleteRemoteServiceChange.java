@@ -37,6 +37,7 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
@@ -139,7 +140,7 @@ public class DeleteRemoteServiceChange extends Change {
 
 		try {
 
-			monitor.beginTask("", 1);
+			monitor.beginTask("", 2);
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -162,6 +163,9 @@ public class DeleteRemoteServiceChange extends Change {
 			Transformer writer = TransformerFactory.newInstance().newTransformer();
 
 			writer.transform(new DOMSource(document), new StreamResult(moduleFile.getLocation().toFile()));
+			monitor.worked(1);
+
+			moduleFile.refreshLocal(IResource.DEPTH_ONE, new SubProgressMonitor(monitor, 1));
 
 		} finally {
 			monitor.done();
@@ -187,6 +191,7 @@ public class DeleteRemoteServiceChange extends Change {
 					ServletMapping servletMapping = webApp.getServletMapping(servlet);
 					servlets.remove(servlet);
 					webApp.getServletMappings().remove(servletMapping);
+					break;
 				}
 			}
 

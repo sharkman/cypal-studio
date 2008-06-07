@@ -404,7 +404,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
 		try {
 
-			monitor.beginTask("", 1);
+			monitor.beginTask("", 2);
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -425,6 +425,10 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
 			writer.transform(new DOMSource(document), new StreamResult(moduleFile));
 
+			monitor.worked(1);
+
+			getModuleResource().refreshLocal(IResource.DEPTH_ONE, new SubProgressMonitor(monitor, 1));
+
 		} finally {
 			monitor.done();
 		}
@@ -432,8 +436,12 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
 	private File getModuleFile() throws CoreException {
 
-		IResource resource = Util.getProject(projectText).findMember(moduleText);
+		IResource resource = getModuleResource();
 		return resource.getLocation().toFile();
+	}
+
+	private IResource getModuleResource() {
+		return Util.getProject(projectText).findMember(moduleText);
 	}
 
 	private void createRemoteServiceImpl(IProgressMonitor monitor) throws IOException, CoreException {
