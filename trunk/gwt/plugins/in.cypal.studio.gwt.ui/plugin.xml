@@ -33,7 +33,7 @@
             finalPerspective="org.eclipse.jst.j2ee.J2EEPerspective"
             icon="icons/gwt_icon16.png"
             id="newModuleWizard"
-            name="Module"
+            name="GWT Module"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective"/>
       <wizard
             category="in.cypal.studio.gwt.ui.cypalNewWizardCategory"
@@ -41,7 +41,7 @@
             finalPerspective="org.eclipse.jst.j2ee.J2EEPerspective"
             icon="icons/gwt_icon16.png"
             id="newRemoteServiceWizard"
-            name="Remote Service"
+            name="GWT Remote Service"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective"/>
    </extension>
       <extension
