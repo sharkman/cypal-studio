@@ -62,7 +62,7 @@ public class InstallDelegate implements IDelegate {
 		}
 	}
 
-	private void addUserLibToClassPath(IProject project, IProgressMonitor monitor) {
+	public static void addUserLibToClassPath(IProject project, IProgressMonitor monitor) {
 
 		monitor = Util.getNonNullMonitor(monitor);
 		try {
@@ -85,7 +85,7 @@ public class InstallDelegate implements IDelegate {
 
 	}
 
-	private void addServletLibToWebInf(IProject project, IProgressMonitor monitor) {
+	public static void addServletLibToWebInf(IProject project, IProgressMonitor monitor) {
 
 		monitor = Util.getNonNullMonitor(monitor);
 

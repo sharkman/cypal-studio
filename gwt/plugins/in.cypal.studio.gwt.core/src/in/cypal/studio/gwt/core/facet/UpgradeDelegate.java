@@ -16,11 +16,24 @@
  */
 package in.cypal.studio.gwt.core.facet;
 
+import in.cypal.studio.gwt.core.Activator;
+import in.cypal.studio.gwt.core.common.Util;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
-import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 
 /**
@@ -30,8 +43,48 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 public class UpgradeDelegate implements IDelegate {
 
 	public void execute(IProject project, IProjectFacetVersion facetVersion, Object config, IProgressMonitor monitor) throws CoreException {
-		IProjectFacet projectFacet = facetVersion.getProjectFacet();
-		System.out.println(projectFacet);
+
+		monitor = Util.getNonNullMonitor(monitor);
+		monitor.beginTask("Updating classpath...", 3);
+		try {
+
+			removeGWTEntries(project, new SubProgressMonitor(monitor, 1));
+			InstallDelegate.addUserLibToClassPath(project, new SubProgressMonitor(monitor, 1));
+			InstallDelegate.addServletLibToWebInf(project, new SubProgressMonitor(monitor, 1));
+
+		} catch (CoreException e) {
+			Activator.logException(e);
+		} finally {
+			monitor.done();
+		}
+
+	}
+
+	private void removeGWTEntries(IProject project, IProgressMonitor monitor) throws JavaModelException {
+
+		monitor = Util.getNonNullMonitor(monitor);
+		monitor.beginTask("Removing old entries...", 2);
+		try {
+
+			IJavaProject javaProject = JavaCore.create(project);
+			List<IClasspathEntry> classpathEntries = new ArrayList<IClasspathEntry>();
+
+			IClasspathEntry[] oldClasspath = javaProject.getRawClasspath();
+			for (IClasspathEntry classpathEntry : oldClasspath) {
+				if (!classpathEntry.getPath().lastSegment().startsWith("gwt"))
+					classpathEntries.add(classpathEntry);
+			}
+			javaProject.setRawClasspath(classpathEntries.toArray(new IClasspathEntry[classpathEntries.size()]), new SubProgressMonitor(monitor, 1));
+
+			IPath webContent = ComponentCore.createComponent(project).getRootFolder().getProjectRelativePath();
+			IFile theLink = project.getFile(webContent.append("WEB-INF").append("lib").append("gwt-servlet.jar"));
+			theLink.delete(true, new SubProgressMonitor(monitor, 1));
+
+		} catch (CoreException e) {
+			Activator.logException(e);
+		} finally {
+			monitor.done();
+		}
 	}
 
 }
