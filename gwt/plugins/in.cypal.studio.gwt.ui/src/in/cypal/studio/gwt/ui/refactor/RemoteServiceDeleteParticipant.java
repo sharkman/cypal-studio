@@ -17,6 +17,8 @@
 
 package in.cypal.studio.gwt.ui.refactor;
 
+import in.cypal.studio.gwt.core.common.Constants;
+import in.cypal.studio.gwt.core.common.Preferences;
 import in.cypal.studio.gwt.ui.Activator;
 
 import org.eclipse.core.resources.IFile;
@@ -46,7 +48,10 @@ public class RemoteServiceDeleteParticipant extends DeleteParticipant {
 	}
 
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		return new DeleteRemoteServiceChange(compilationUnit);
+		if (Preferences.getBoolean(Constants.DELETE_SERVICE_PREFERENCE))
+			return new DeleteRemoteServiceChange(compilationUnit);
+		else
+			return null;
 	}
 
 	public String getName() {
@@ -69,16 +74,11 @@ public class RemoteServiceDeleteParticipant extends DeleteParticipant {
 
 				String[] superInterfaceNames = types[i].getSuperInterfaceNames();
 				for (int j = 0; j < superInterfaceNames.length; j++) {
-					if (superInterfaceNames[j].endsWith("RemoteService")) { // ugly.
-																			// Can
-																			// be
-																			// someother
-																			// RemoteService
-																			// also.
-																			// Lets
-																			// go
-																			// for
-																			// now
+					if (superInterfaceNames[j].endsWith("RemoteService")) {
+
+						// ugly.
+						// Can be some other RemoteService also.
+						// Lets go for now
 						shouldParticipate = true;
 						break outer;
 					}
