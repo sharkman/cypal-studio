@@ -22,8 +22,6 @@
 		<!-- If you add any GWT meta tags, they must   -->
 		<!-- be added before this line.                -->
 		<!--                                           -->
-		<script language='javascript' src='@basePackage.@className.nocache.js'></script>
-		
 	</head>
 
 	<!--                                           -->
@@ -36,6 +34,9 @@
 
 		<!-- OPTIONAL: include this if you want history support -->
 		<iframe src="javascript:''" id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe>
-
+		
+   		<script type="text/javascript" language="javascript" src="@basePackage.@className.nocache.js"></script>
+   		
+   		
 	</body>
 </html>
