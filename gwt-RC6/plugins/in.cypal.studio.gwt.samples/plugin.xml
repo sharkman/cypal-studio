@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.eclipse.ui.Examples/in.cypal.studio.gwt.samples.gwtCategory"
+            class="in.cypal.studio.gwt.samples.wizards.SamplesWizard"
+            finalPerspective="org.eclipse.jst.j2ee.J2EEPerspective"
+            icon="icons/gwt_icon16.png"
+            id="in.cypal.studio.gwt.samples.wizard1"
+            name="GWT Samples"
+            preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective">
+      </wizard>
+      <category
+            id="in.cypal.studio.gwt.samples.gwtCategory"
+            name="GWT"
+            parentCategory="org.eclipse.ui.Examples">
+      </category>
+   </extension>
+
+</plugin>
