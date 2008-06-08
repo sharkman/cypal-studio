@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.wst.common.project.facet.ui.images">
+      <image
+            facet="in.cypal.studio.gwt.core.gwtFacet"
+            path="icons/gwt_icon16.png"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="in.cypal.studio.gwt.ui.preferences.MainPreferencePage"
+            id="mainPreferencePage"
+            name="Cypal Studio">
+         <keywordReference id="in.cypal.studio.gwt.ui.mainPreferenceKeyword"/>
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.keywords">
+      <keyword
+            id="mainPreferenceKeyword"
+            label="GWT HOME compile Async Google Cypal"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="in.cypal.studio.gwt.ui.cypalNewWizardCategory"
+            name="Cypal Studio"/>
+      <wizard
+            category="in.cypal.studio.gwt.ui.cypalNewWizardCategory"
+            class="in.cypal.studio.gwt.ui.wizards.NewGwtModuleWizard"
+            finalPerspective="org.eclipse.jst.j2ee.J2EEPerspective"
+            icon="icons/gwt_icon16.png"
+            id="newModuleWizard"
+            name="GWT Module"
+            preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective"/>
+      <wizard
+            category="in.cypal.studio.gwt.ui.cypalNewWizardCategory"
+            class="in.cypal.studio.gwt.ui.wizards.NewGwtRemoteServiceWizard"
+            finalPerspective="org.eclipse.jst.j2ee.J2EEPerspective"
+            icon="icons/gwt_icon16.png"
+            id="newRemoteServiceWizard"
+            name="GWT Remote Service"
+            preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective"/>
+   </extension>
+      <extension
+         point="org.eclipse.debug.ui.launchShortcuts">
+      <shortcut
+            class="in.cypal.studio.gwt.ui.launch.LaunchShortcut"
+            icon="icons/gwt_icon16.png"
+            id="launchshortcut"
+            label="Gwt Hosted Mode Application"
+            modes="run, debug">
+         <contextualLaunch>
+            <enablement>
+               <with variable="selection">
+                  <count value="1"/>
+                  <iterate>
+                     <test
+                           forcePluginActivation="true"
+                           property="org.eclipse.debug.ui.matchesPattern"
+                           value="*.gwt.xml"/>
+                  </iterate>
+               </with>
+            </enablement>
+         </contextualLaunch>
+      </shortcut>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="in.cypal.studio.gwt.core.launchConfigurationType"
+            icon="icons/gwt_icon16.png"
+            id="gwtLaunchConfigurationTypeImage"/>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="in.cypal.studio.gwt.ui.launch.GwtLaunchConfigurationTabGroup"
+            id="gwtLaunchConfigurationTabGroup"
+            type="in.cypal.studio.gwt.core.launchConfigurationType"/>
+   </extension>
+   <extension
+         point="org.eclipse.ltk.core.refactoring.deleteParticipants">
+      <deleteParticipant
+            class="in.cypal.studio.gwt.ui.refactor.RemoteServiceDeleteParticipant"
+            id="in.cypal.studio.gwt.ui.RemoteServiceDeleteParticipant"
+            name="Remote Service Delete Participant">
+         <enablement>
+            <instanceof
+                  value="org.eclipse.core.resources.IFile">
+            </instanceof></enablement>
+      </deleteParticipant>
+   </extension>
+   
+
+</plugin>
