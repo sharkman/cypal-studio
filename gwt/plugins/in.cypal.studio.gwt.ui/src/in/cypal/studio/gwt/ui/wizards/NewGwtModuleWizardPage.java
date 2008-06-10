@@ -41,8 +41,11 @@ import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * @author Prakash G.R.
@@ -55,6 +58,12 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 	private HashMap templateVars;
 
 	private IPackageFragment basePackageFragment;
+
+	private Button standardThemeButton;
+
+	private Button chromeThemeButton;
+
+	private Button darkThemeButton;
 
 	// private IStatus containerStatus = Status.OK_STATUS;
 	// private IStatus packageStatus = Status.OK_STATUS;
@@ -92,6 +101,9 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 		// createSuperClassControls(composite, nColumns);
 		createSuperInterfacesControls(composite, nColumns);
 
+		createSeparator(composite, nColumns);
+
+		createThemeControls(composite, nColumns);
 		// createMethodStubSelectionControls(composite, nColumns);
 
 		createCommentControls(composite, nColumns);
@@ -104,6 +116,30 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 		List superInterfaces = new ArrayList(1);
 		superInterfaces.add("com.google.gwt.core.client.EntryPoint"); //$NON-NLS-1$
 		setSuperInterfaces(superInterfaces, true);
+	}
+
+	private void createThemeControls(Composite composite, int columns) {
+
+		Label label = new Label(composite, SWT.NONE);
+		label.setText("Select the GWT themes you want to use in the module:");
+		label.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, columns, 1));
+
+		new Label(composite, SWT.NONE);
+		standardThemeButton = new Button(composite, SWT.CHECK);
+		standardThemeButton.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, columns - 1, 1));
+		standardThemeButton.setText("Standard");
+		standardThemeButton.setSelection(true);
+
+		new Label(composite, SWT.NONE);
+		chromeThemeButton = new Button(composite, SWT.CHECK);
+		chromeThemeButton.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, columns - 1, 1));
+		chromeThemeButton.setText("Chrome");
+
+		new Label(composite, SWT.NONE);
+		darkThemeButton = new Button(composite, SWT.CHECK);
+		darkThemeButton.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, columns - 1, 1));
+		darkThemeButton.setText("Dark");
+
 	}
 
 	public void createType(IProgressMonitor monitor) throws CoreException, InterruptedException {
@@ -169,6 +205,11 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 		templateVars.put("@className", getTypeName()); //$NON-NLS-1$
 		templateVars.put("@basePackage", basePackageFragment.getElementName()); //$NON-NLS-1$
 		templateVars.put("@clientPackage", basePackageFragment.getElementName() + '.' + Constants.CLIENT_PACKAGE); //$NON-NLS-1$
+
+		templateVars.put("@standardTheme", standardThemeButton.getSelection() ? "<inherits name=\"com.google.gwt.user.theme.standard.Standard\"/>" + "" : ""); //$NON-NLS-1$
+		templateVars.put("@chromeTheme", chromeThemeButton.getSelection() ? "<inherits name=\"com.google.gwt.user.theme.chrome.Chrome\"/>" : ""); //$NON-NLS-1$
+		templateVars.put("@darkTheme", darkThemeButton.getSelection() ? "<inherits name=\"com.google.gwt.user.theme.dark.Dark\"/>" : ""); //$NON-NLS-1$
+
 	}
 
 	public void init(IStructuredSelection selection) {

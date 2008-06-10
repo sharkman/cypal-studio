@@ -6,4 +6,8 @@
 	<!-- Specify the app entry point class.                   -->
 	<entry-point class='@clientPackage.@className'/>
   
+  	@standardTheme
+  	@chromeTheme
+  	@darkTheme
+  	
 </module>
