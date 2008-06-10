@@ -45,9 +45,11 @@ import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TagElement;
+import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -158,12 +160,14 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 					if (currDeclaration instanceof MethodDeclaration) {
 						// Make return type void
 						MethodDeclaration aMethod = (MethodDeclaration) currDeclaration;
+						Type returnType = aMethod.getReturnType2();
 						aMethod.setReturnType2(ast.newPrimitiveType(PrimitiveType.VOID));
 
 						// Add AsyncCallback parameter
 						SingleVariableDeclaration asyncCallbackParam = ast.newSingleVariableDeclaration();
 						asyncCallbackParam.setName(ast.newSimpleName("callback")); //$NON-NLS-1$
-						asyncCallbackParam.setType(ast.newSimpleType(ast.newName("AsyncCallback"))); //$NON-NLS-1$
+						ParameterizedType parameterizedType = createAsyncCallbackType(ast, returnType);
+						asyncCallbackParam.setType(parameterizedType);
 						aMethod.parameters().add(asyncCallbackParam);
 
 						// Remove throws
@@ -209,6 +213,39 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 		} finally {
 			monitor.done();
 		}
+	}
+
+	private ParameterizedType createAsyncCallbackType(AST ast, Type returnType) {
+
+		ParameterizedType parameterizedType = ast.newParameterizedType(ast.newSimpleType(ast.newName("AsyncCallback"))); //$NON-NLS-1$
+		Type type;
+
+		if (!returnType.isPrimitiveType()) {
+			type = returnType;
+		} else {
+			PrimitiveType primitiveType = (PrimitiveType) returnType;
+			if (primitiveType.getPrimitiveTypeCode().equals(PrimitiveType.BOOLEAN)) {
+				type = ast.newSimpleType(ast.newName("Boolean"));
+			} else if (primitiveType.getPrimitiveTypeCode().equals(PrimitiveType.INT)) {
+				type = ast.newSimpleType(ast.newName("Integer"));
+			} else if (primitiveType.getPrimitiveTypeCode().equals(PrimitiveType.BYTE)) {
+				type = ast.newSimpleType(ast.newName("Byte"));
+			} else if (primitiveType.getPrimitiveTypeCode().equals(PrimitiveType.LONG)) {
+				type = ast.newSimpleType(ast.newName("Long"));
+			} else if (primitiveType.getPrimitiveTypeCode().equals(PrimitiveType.FLOAT)) {
+				type = ast.newSimpleType(ast.newName("Float"));
+			} else if (primitiveType.getPrimitiveTypeCode().equals(PrimitiveType.DOUBLE)) {
+				type = ast.newSimpleType(ast.newName("Double"));
+			} else if (primitiveType.getPrimitiveTypeCode().equals(PrimitiveType.CHAR)) {
+				type = ast.newSimpleType(ast.newName("Character"));
+			} else {
+				type = ast.newWildcardType(); // for void
+			}
+		}
+
+		parameterizedType.typeArguments().add(type);
+
+		return parameterizedType;
 	}
 
 	protected void clean(IProgressMonitor monitor) throws CoreException {
