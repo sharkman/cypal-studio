@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -54,6 +55,9 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
+import org.eclipse.wst.common.project.facet.core.IFacetedProject;
+import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
+import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
 /**
  * @author Prakash G.R.
@@ -102,6 +106,8 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 			IResourceDelta delta = getDelta(getProject());
 			List remoteServices = gwtProject.getRemoteServices(delta);
 			monitor.beginTask("Updating Async files...", remoteServices.size());
+			
+			boolean shouldUseGenerics = shouldUseGenerics(getProject());
 
 			for (Iterator i = remoteServices.iterator(); i.hasNext();) {
 
@@ -166,8 +172,14 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 						// Add AsyncCallback parameter
 						SingleVariableDeclaration asyncCallbackParam = ast.newSingleVariableDeclaration();
 						asyncCallbackParam.setName(ast.newSimpleName("callback")); //$NON-NLS-1$
-						ParameterizedType parameterizedType = createAsyncCallbackType(ast, returnType);
-						asyncCallbackParam.setType(parameterizedType);
+						
+						Type asyncCallbackType;
+						if(shouldUseGenerics)
+							asyncCallbackType = createAsyncCallbackType(ast, returnType);
+						else
+							asyncCallbackType = ast.newSimpleType(ast.newName("AsyncCallback")); //$NON-NLS-1$
+						
+						asyncCallbackParam.setType(asyncCallbackType);
 						aMethod.parameters().add(asyncCallbackParam);
 
 						// Remove throws
@@ -213,6 +225,28 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 		} finally {
 			monitor.done();
 		}
+	}
+
+	private boolean shouldUseGenerics(IProject project) {
+		boolean shouldUseGenerics = false;
+		try {
+			IFacetedProject facetedProject;
+			facetedProject = ProjectFacetsManager.create(project);
+			Set<IProjectFacetVersion> projectFacets = facetedProject.getProjectFacets();
+			for (IProjectFacetVersion projectFacetVersion : projectFacets) {
+				if(projectFacetVersion.getProjectFacet().getId().equals(Constants.FACET_ID)) {
+					
+					// 1.0 doesn't support generics, all above versions should be supporting generics
+					if(!projectFacetVersion.getVersionString().equals("1.0")) 
+						shouldUseGenerics = true;
+					
+					break;
+				}
+			}
+		} catch (CoreException e) {
+			Activator.logException(e);
+		}
+		return shouldUseGenerics;
 	}
 
 	private ParameterizedType createAsyncCallbackType(AST ast, Type returnType) {
