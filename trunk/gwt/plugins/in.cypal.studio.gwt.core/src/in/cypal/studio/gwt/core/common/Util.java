@@ -22,6 +22,7 @@ import in.cypal.studio.gwt.core.Activator;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -51,6 +52,9 @@ import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 import org.eclipse.wst.common.componentcore.resources.IVirtualResource;
+import org.eclipse.wst.common.project.facet.core.IFacetedProject;
+import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
+import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
 /**
  * @author Prakash G.R.
@@ -400,5 +404,28 @@ public class Util {
 		IVirtualFolder moduleOutputFolder = component.getRootFolder().getFolder("/"); //$NON-NLS-1$
 		moduleOutputFolder.createLink(new Path(getGwtOutputFolder()).append(moduleName), IResource.FORCE, null);
 
+	}
+
+	public static boolean shouldUse1_5(IProject project) {
+		boolean shouldUseGenerics = false;
+		try {
+			IFacetedProject facetedProject;
+			facetedProject = ProjectFacetsManager.create(project);
+			Set<IProjectFacetVersion> projectFacets = facetedProject.getProjectFacets();
+			for (IProjectFacetVersion projectFacetVersion : projectFacets) {
+				if (projectFacetVersion.getProjectFacet().getId().equals(Constants.FACET_ID)) {
+	
+					// 1.0 doesn't support generics, all above versions should
+					// be supporting generics
+					if (!projectFacetVersion.getVersionString().equals("1.0"))
+						shouldUseGenerics = true;
+	
+					break;
+				}
+			}
+		} catch (CoreException e) {
+			Activator.logException(e);
+		}
+		return shouldUseGenerics;
 	}
 }
