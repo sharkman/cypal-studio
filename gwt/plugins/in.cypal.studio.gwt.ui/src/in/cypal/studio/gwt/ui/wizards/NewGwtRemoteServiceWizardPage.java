@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -106,6 +107,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
 	private String selectedProject;
 	private Button implCreationButton;
+	private IJavaProject selectedJavaProject;
 
 	public NewGwtRemoteServiceWizardPage() {
 		super();
@@ -249,19 +251,19 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	protected void projectChanged() {
 
 		projectText = projectCombo.getText();
-		IJavaProject selectedProject = null;
+		selectedJavaProject = null;
 		for (int i = 0; i < gwtProjects.length; i++) {
 			IJavaProject gwtProject = gwtProjects[i];
 			if (projectText.equals(gwtProject.getProject().getName())) {
-				selectedProject = gwtProject;
+				selectedJavaProject = gwtProject;
 				break;
 			}
 		}
 
-		if (selectedProject != null) {
+		if (selectedJavaProject != null) {
 			try {
 				moduleCombo.removeAll();
-				List modulesList = Util.findModules(selectedProject);
+				List modulesList = Util.findModules(selectedJavaProject);
 				for (Iterator i = modulesList.iterator(); i.hasNext();) {
 					IFile file = (IFile) i.next();
 					IPath projectRelativePath = file.getProjectRelativePath();
@@ -282,25 +284,45 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		doStatusUpdate();
 	}
 
+	protected String constructCUContent(ICompilationUnit cu, String typeContent, String lineDelimiter) throws CoreException {
+
+		if (Util.shouldUse1_5(selectedJavaProject.getProject()))
+			typeContent = "@RemoteServiceRelativePath(\"" + serviceUri + "\")" + lineDelimiter + typeContent;
+		return super.constructCUContent(cu, typeContent, lineDelimiter);
+	}
+
 	protected void createTypeMembers(IType newType, ImportsManager imports, IProgressMonitor monitor) throws CoreException {
 
 		imports.addImport("com.google.gwt.core.client.GWT");
 		imports.addImport("com.google.gwt.user.client.rpc.ServiceDefTarget");
-		newType.createField("public static final String SERVICE_URI = \"" + serviceUri + "\";", null, true, monitor); //$NON-NLS-1$ //$NON-NLS-2$
+		if (Util.shouldUse1_5(selectedJavaProject.getProject())) {
+			imports.addImport("com.google.gwt.user.client.rpc.RemoteServiceRelativePath");
+		} else {
+			newType.createField("public static final String SERVICE_URI = \"" + serviceUri + "\";", null, true, monitor); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		newType.createType(getUtilClassContents(), null, true, monitor);
 		super.createTypeMembers(newType, imports, monitor);
 	}
 
 	private String getUtilClassContents() {
+		boolean shouldUse1_5 = Util.shouldUse1_5(selectedJavaProject.getProject());
 
-		return "    public static class Util{\n\n" + //$NON-NLS-1$
-				"      public static " + getTypeName() + "Async getInstance(){\n\n" + //$NON-NLS-1$ //$NON-NLS-2$
-				"            " + getTypeName() + "Async instance = (" + getTypeName() + "Async)GWT.create(" + getTypeName() + ".class);\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				"            ServiceDefTarget target = (ServiceDefTarget)instance;\n" + //$NON-NLS-1$
-				"            target.setServiceEntryPoint(GWT.getModuleBaseURL()+SERVICE_URI);\n" + //$NON-NLS-1$
-				"        	return instance;\n" + //$NON-NLS-1$
-				"      }\n" + //$NON-NLS-1$
-				"    }"; //$NON-NLS-1$
+		if (shouldUse1_5) {
+			return "    public static class Util{\n\n" + //$NON-NLS-1$
+					"      public static " + getTypeName() + "Async getInstance(){\n\n" + //$NON-NLS-1$ //$NON-NLS-2$
+					"            return GWT.create(" + getTypeName() + ".class);\n" + //$NON-NLS-1$ //$NON-NLS-2$ 
+					"      }\n" + //$NON-NLS-1$
+					"    }"; //$NON-NLS-1$
+		} else {
+			return "    public static class Util{\n\n" + //$NON-NLS-1$
+					"      public static " + getTypeName() + "Async getInstance(){\n\n" + //$NON-NLS-1$ //$NON-NLS-2$
+					"            " + getTypeName() + "Async instance = (" + getTypeName() + "Async)GWT.create(" + getTypeName() + ".class);\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					"            ServiceDefTarget target = (ServiceDefTarget)instance;\n" + //$NON-NLS-1$
+					"            target.setServiceEntryPoint(GWT.getModuleBaseURL()+SERVICE_URI);\n" + //$NON-NLS-1$
+					"        	return instance;\n" + //$NON-NLS-1$
+					"      }\n" + //$NON-NLS-1$
+					"    }"; //$NON-NLS-1$
+		}
 	}
 
 	// @Override
@@ -546,30 +568,31 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 				// if the selection is module xml, then our job is easy
 				this.selectedModule = (IFile) firstElement;
 				this.selectedProject = ((IFile) firstElement).getProject().getName();
-			} else if(firstElement instanceof IResource){
+			} else if (firstElement instanceof IResource) {
 
-				// if its a resource, then find the appropriate project and assign
+				// if its a resource, then find the appropriate project and
+				// assign
 				try {
-					IProject project = ((IResource)firstElement).getProject();
+					IProject project = ((IResource) firstElement).getProject();
 					if (project.hasNature(Constants.NATURE_ID)) {
 						this.selectedProject = project.getName();
 						IJavaProject javaProject = (IJavaProject) JavaCore.create(project);
 						List modulesList = Util.findModules(javaProject);
-						if(modulesList.size() > 0) {
+						if (modulesList.size() > 0) {
 							this.selectedModule = (IFile) modulesList.get(0);
 						}
 					}
 				} catch (CoreException e) {
 					Activator.logException(e);
 				}
-			} else if(firstElement instanceof IJavaElement) {
-				
+			} else if (firstElement instanceof IJavaElement) {
+
 				// its a JavaElement, then get the java project and assign
 				try {
-					IJavaProject javaProject = ((IJavaElement)firstElement).getJavaProject();
+					IJavaProject javaProject = ((IJavaElement) firstElement).getJavaProject();
 					this.selectedProject = javaProject.getProject().getName();
 					List modulesList = Util.findModules(javaProject);
-					if(modulesList.size() > 0) {
+					if (modulesList.size() > 0) {
 						this.selectedModule = (IFile) modulesList.get(0);
 					}
 				} catch (CoreException e) {
@@ -578,7 +601,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 			}
 		}
 		super.init(selection);
-		
+
 	}
 
 	/**

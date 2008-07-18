@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -48,6 +47,7 @@ import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.PrimitiveType;
+import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.Type;
@@ -55,9 +55,6 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.common.project.facet.core.IFacetedProject;
-import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
-import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
 /**
  * @author Prakash G.R.
@@ -106,8 +103,8 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 			IResourceDelta delta = getDelta(getProject());
 			List remoteServices = gwtProject.getRemoteServices(delta);
 			monitor.beginTask("Updating Async files...", remoteServices.size());
-			
-			boolean shouldUseGenerics = shouldUseGenerics(getProject());
+
+			boolean shouldUseGenerics = Util.shouldUse1_5(getProject());
 
 			for (Iterator i = remoteServices.iterator(); i.hasNext();) {
 
@@ -137,7 +134,8 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 					if (importName.endsWith("Exception") || //$NON-NLS-1$
 							importName.equals("com.google.gwt.core.client.GWT") || //$NON-NLS-1$
 							importName.equals("com.google.gwt.user.client.rpc.ServiceDefTarget") || //$NON-NLS-1$
-							importName.equals("com.google.gwt.user.client.rpc.RemoteService")//$NON-NLS-1$
+							importName.equals("com.google.gwt.user.client.rpc.RemoteService") || //$NON-NLS-1$
+							importName.equals("com.google.gwt.user.client.rpc.RemoteServiceRelativePath") //$NON-NLS-1$
 					)
 						importsToBeRemoved.add(anImportDecl);
 				}
@@ -156,6 +154,18 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 				// Remote all interfaces
 				aRemoteService.superInterfaceTypes().clear();
 
+				List modifiers = aRemoteService.modifiers();
+				for (Iterator m = modifiers.iterator(); m.hasNext();) {
+					Object modifier = m.next();
+					if (modifier instanceof SingleMemberAnnotation) {
+						SingleMemberAnnotation annotation = (SingleMemberAnnotation) modifier;
+						if (annotation.getTypeName().getFullyQualifiedName().equals("RemoteServiceRelativePath")) {
+							modifiers.remove(modifier);
+							break;
+						}
+					}
+				}
+
 				// Change methods, fields and inner classes
 				List bodyDeclarations = aRemoteService.bodyDeclarations();
 				List declarationsToDelete = new ArrayList();
@@ -172,13 +182,13 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 						// Add AsyncCallback parameter
 						SingleVariableDeclaration asyncCallbackParam = ast.newSingleVariableDeclaration();
 						asyncCallbackParam.setName(ast.newSimpleName("callback")); //$NON-NLS-1$
-						
+
 						Type asyncCallbackType;
-						if(shouldUseGenerics)
+						if (shouldUseGenerics)
 							asyncCallbackType = createAsyncCallbackType(ast, returnType);
 						else
 							asyncCallbackType = ast.newSimpleType(ast.newName("AsyncCallback")); //$NON-NLS-1$
-						
+
 						asyncCallbackParam.setType(asyncCallbackType);
 						aMethod.parameters().add(asyncCallbackParam);
 
@@ -225,28 +235,6 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 		} finally {
 			monitor.done();
 		}
-	}
-
-	private boolean shouldUseGenerics(IProject project) {
-		boolean shouldUseGenerics = false;
-		try {
-			IFacetedProject facetedProject;
-			facetedProject = ProjectFacetsManager.create(project);
-			Set<IProjectFacetVersion> projectFacets = facetedProject.getProjectFacets();
-			for (IProjectFacetVersion projectFacetVersion : projectFacets) {
-				if(projectFacetVersion.getProjectFacet().getId().equals(Constants.FACET_ID)) {
-					
-					// 1.0 doesn't support generics, all above versions should be supporting generics
-					if(!projectFacetVersion.getVersionString().equals("1.0")) 
-						shouldUseGenerics = true;
-					
-					break;
-				}
-			}
-		} catch (CoreException e) {
-			Activator.logException(e);
-		}
-		return shouldUseGenerics;
 	}
 
 	private ParameterizedType createAsyncCallbackType(AST ast, Type returnType) {
