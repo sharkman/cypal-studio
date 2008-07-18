@@ -38,6 +38,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -108,132 +109,146 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 			for (Iterator i = remoteServices.iterator(); i.hasNext();) {
 
-				IFile aRemoteServiceFile = (IFile) i.next();
-
-				IPackageFragment clientPackage = (IPackageFragment) JavaCore.create(aRemoteServiceFile.getParent());
-
-				ICompilationUnit asyncContents = (ICompilationUnit) JavaCore.create(aRemoteServiceFile);
-				String source = asyncContents.getBuffer().getContents();
-				Document document = new Document(source);
-
-				ASTParser parser = ASTParser.newParser(AST.JLS3);
-				parser.setSource(asyncContents);
-				CompilationUnit astRoot = (CompilationUnit) parser.createAST(null);
-				AST ast = astRoot.getAST();
-
-				astRoot.recordModifications();
-
-				// Modify imports (+AsyncCallback, -RemoteService, -*Exception)
-				List imports = astRoot.imports();
-				List importsToBeRemoved = new ArrayList();
-
-				for (Iterator j = imports.iterator(); j.hasNext();) {
-
-					ImportDeclaration anImportDecl = (ImportDeclaration) j.next();
-					String importName = anImportDecl.getName().getFullyQualifiedName();
-					if (importName.endsWith("Exception") || //$NON-NLS-1$
-							importName.equals("com.google.gwt.core.client.GWT") || //$NON-NLS-1$
-							importName.equals("com.google.gwt.user.client.rpc.ServiceDefTarget") || //$NON-NLS-1$
-							importName.equals("com.google.gwt.user.client.rpc.RemoteService") || //$NON-NLS-1$
-							importName.equals("com.google.gwt.user.client.rpc.RemoteServiceRelativePath") //$NON-NLS-1$
-					)
-						importsToBeRemoved.add(anImportDecl);
-				}
-
-				imports.removeAll(importsToBeRemoved);
-
-				ImportDeclaration importDecl = ast.newImportDeclaration();
-				importDecl.setName(ast.newName("com.google.gwt.user.client.rpc.AsyncCallback")); //$NON-NLS-1$
-				astRoot.imports().add(importDecl);
-
-				// Add Async to the name
-				TypeDeclaration aRemoteService = (TypeDeclaration) astRoot.types().get(0);
-				String remoteServiceAsyncName = aRemoteService.getName().getFullyQualifiedName() + "Async"; //$NON-NLS-1$
-				aRemoteService.setName(astRoot.getAST().newSimpleName(remoteServiceAsyncName));
-
-				// Remote all interfaces
-				aRemoteService.superInterfaceTypes().clear();
-
-				List modifiers = aRemoteService.modifiers();
-				for (Iterator m = modifiers.iterator(); m.hasNext();) {
-					Object modifier = m.next();
-					if (modifier instanceof SingleMemberAnnotation) {
-						SingleMemberAnnotation annotation = (SingleMemberAnnotation) modifier;
-						if (annotation.getTypeName().getFullyQualifiedName().equals("RemoteServiceRelativePath")) {
-							modifiers.remove(modifier);
-							break;
-						}
-					}
-				}
-
-				// Change methods, fields and inner classes
-				List bodyDeclarations = aRemoteService.bodyDeclarations();
-				List declarationsToDelete = new ArrayList();
-				for (Iterator k = bodyDeclarations.iterator(); k.hasNext();) {
-
-					Object currDeclaration = k.next();
-
-					if (currDeclaration instanceof MethodDeclaration) {
-						// Make return type void
-						MethodDeclaration aMethod = (MethodDeclaration) currDeclaration;
-						Type returnType = aMethod.getReturnType2();
-						aMethod.setReturnType2(ast.newPrimitiveType(PrimitiveType.VOID));
-
-						// Add AsyncCallback parameter
-						SingleVariableDeclaration asyncCallbackParam = ast.newSingleVariableDeclaration();
-						asyncCallbackParam.setName(ast.newSimpleName("callback")); //$NON-NLS-1$
-
-						Type asyncCallbackType;
-						if (shouldUseGenerics)
-							asyncCallbackType = createAsyncCallbackType(ast, returnType);
-						else
-							asyncCallbackType = ast.newSimpleType(ast.newName("AsyncCallback")); //$NON-NLS-1$
-
-						asyncCallbackParam.setType(asyncCallbackType);
-						aMethod.parameters().add(asyncCallbackParam);
-
-						// Remove throws
-						aMethod.thrownExceptions().clear();
-
-						// Remove @gwt tags
-						Javadoc jdoc = aMethod.getJavadoc();
-						if (jdoc != null) {
-							List tags = jdoc.tags();
-							List tagsToRemove = new ArrayList();
-							for (Iterator itTags = tags.iterator(); itTags.hasNext();) {
-								TagElement tag = (TagElement) itTags.next();
-								if (tag.toString().contains("@gwt")) {
-									tagsToRemove.add(tag);
-								}
-							}
-							tags.removeAll(tagsToRemove);
-						}
-
-					} else if (currDeclaration instanceof FieldDeclaration || currDeclaration instanceof TypeDeclaration) {
-
-						// Remove the fields and inner classes
-						declarationsToDelete.add(currDeclaration);
-					}
-
-				}
-
-				bodyDeclarations.removeAll(declarationsToDelete);
-
-				// computation of the text edits
-				TextEdit edits = astRoot.rewrite(document, asyncContents.getJavaProject().getOptions(true));
-
-				// computation of the new source code
-				edits.apply(document);
-				String newSource = document.get();
-
-				// update of the compilation unit
-				clientPackage.createCompilationUnit(remoteServiceAsyncName + ".java", newSource, true, monitor); //$NON-NLS-1$
+				updateAsyncFile(monitor, shouldUseGenerics, (IFile) i.next());
 
 				monitor.worked(1);
 			}
 
 		} finally {
 			monitor.done();
+		}
+	}
+
+	private void updateAsyncFile(IProgressMonitor monitor, boolean shouldUseGenerics, IFile aRemoteServiceFile) throws JavaModelException, BadLocationException {
+
+		IPackageFragment clientPackage = (IPackageFragment) JavaCore.create(aRemoteServiceFile.getParent());
+
+		ICompilationUnit asyncContents = (ICompilationUnit) JavaCore.create(aRemoteServiceFile);
+		String source = asyncContents.getBuffer().getContents();
+		Document document = new Document(source);
+
+		ASTParser parser = ASTParser.newParser(AST.JLS3);
+		parser.setSource(asyncContents);
+		CompilationUnit astRoot = (CompilationUnit) parser.createAST(null);
+		AST ast = astRoot.getAST();
+
+		astRoot.recordModifications();
+
+		// Modify imports (+AsyncCallback, -RemoteService, -*Exception)
+		updateImports(astRoot, ast);
+
+		// Add Async to the name
+		TypeDeclaration aRemoteService = (TypeDeclaration) astRoot.types().get(0);
+		String remoteServiceAsyncName = aRemoteService.getName().getFullyQualifiedName() + "Async"; //$NON-NLS-1$
+		aRemoteService.setName(astRoot.getAST().newSimpleName(remoteServiceAsyncName));
+
+		// Remote all interfaces
+		aRemoteService.superInterfaceTypes().clear();
+
+		updateModifier(aRemoteService);
+
+		// Change methods, fields and inner classes
+		List bodyDeclarations = aRemoteService.bodyDeclarations();
+		List declarationsToDelete = new ArrayList();
+		for (Iterator k = bodyDeclarations.iterator(); k.hasNext();) {
+
+			Object currDeclaration = k.next();
+
+			if (currDeclaration instanceof MethodDeclaration) {
+				updateMethod(shouldUseGenerics, ast, currDeclaration);
+
+			} else if (currDeclaration instanceof FieldDeclaration || currDeclaration instanceof TypeDeclaration) {
+				// Remove the fields and inner classes
+				declarationsToDelete.add(currDeclaration);
+			}
+
+		}
+
+		bodyDeclarations.removeAll(declarationsToDelete);
+
+		// computation of the text edits
+		TextEdit edits = astRoot.rewrite(document, asyncContents.getJavaProject().getOptions(true));
+
+		// computation of the new source code
+		edits.apply(document);
+		String newSource = document.get();
+
+		// update of the compilation unit
+		clientPackage.createCompilationUnit(remoteServiceAsyncName + ".java", newSource, true, monitor); //$NON-NLS-1$
+	}
+
+	private void updateImports(CompilationUnit astRoot, AST ast) {
+		List imports = astRoot.imports();
+		List importsToBeRemoved = new ArrayList();
+
+		for (Iterator j = imports.iterator(); j.hasNext();) {
+
+			ImportDeclaration anImportDecl = (ImportDeclaration) j.next();
+			String importName = anImportDecl.getName().getFullyQualifiedName();
+			if (importName.endsWith("Exception") || //$NON-NLS-1$
+					importName.equals("com.google.gwt.core.client.GWT") || //$NON-NLS-1$
+					importName.equals("com.google.gwt.user.client.rpc.ServiceDefTarget") || //$NON-NLS-1$
+					importName.equals("com.google.gwt.user.client.rpc.RemoteService") || //$NON-NLS-1$
+					importName.equals("com.google.gwt.user.client.rpc.RemoteServiceRelativePath") //$NON-NLS-1$
+			)
+				importsToBeRemoved.add(anImportDecl);
+		}
+
+		imports.removeAll(importsToBeRemoved);
+
+		ImportDeclaration importDecl = ast.newImportDeclaration();
+		importDecl.setName(ast.newName("com.google.gwt.user.client.rpc.AsyncCallback")); //$NON-NLS-1$
+		astRoot.imports().add(importDecl);
+	}
+
+	private void updateMethod(boolean shouldUseGenerics, AST ast, Object currDeclaration) {
+		// Make return type void
+		MethodDeclaration aMethod = (MethodDeclaration) currDeclaration;
+		Type returnType = aMethod.getReturnType2();
+		aMethod.setReturnType2(ast.newPrimitiveType(PrimitiveType.VOID));
+
+		// Add AsyncCallback parameter
+		SingleVariableDeclaration asyncCallbackParam = ast.newSingleVariableDeclaration();
+		asyncCallbackParam.setName(ast.newSimpleName("callback")); //$NON-NLS-1$
+
+		Type asyncCallbackType;
+		if (shouldUseGenerics)
+			asyncCallbackType = createAsyncCallbackType(ast, returnType);
+		else
+			asyncCallbackType = ast.newSimpleType(ast.newName("AsyncCallback")); //$NON-NLS-1$
+
+		asyncCallbackParam.setType(asyncCallbackType);
+		aMethod.parameters().add(asyncCallbackParam);
+
+		// Remove throws
+		aMethod.thrownExceptions().clear();
+
+		// Remove @gwt tags
+		Javadoc jdoc = aMethod.getJavadoc();
+		if (jdoc != null) {
+			List tags = jdoc.tags();
+			List tagsToRemove = new ArrayList();
+			for (Iterator itTags = tags.iterator(); itTags.hasNext();) {
+				TagElement tag = (TagElement) itTags.next();
+				if (tag.toString().contains("@gwt")) {
+					tagsToRemove.add(tag);
+				}
+			}
+			tags.removeAll(tagsToRemove);
+		}
+	}
+
+	private void updateModifier(TypeDeclaration aRemoteService) {
+		List modifiers = aRemoteService.modifiers();
+		for (Iterator m = modifiers.iterator(); m.hasNext();) {
+			Object modifier = m.next();
+			if (modifier instanceof SingleMemberAnnotation) {
+				SingleMemberAnnotation annotation = (SingleMemberAnnotation) modifier;
+				if (annotation.getTypeName().getFullyQualifiedName().equals("RemoteServiceRelativePath")) {
+					modifiers.remove(modifier);
+					break;
+				}
+			}
 		}
 	}
 
