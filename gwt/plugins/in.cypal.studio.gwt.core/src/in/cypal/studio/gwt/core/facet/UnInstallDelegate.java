@@ -16,6 +16,7 @@
  */
 package in.cypal.studio.gwt.core.facet;
 
+import in.cypal.studio.gwt.core.Activator;
 import in.cypal.studio.gwt.core.common.Constants;
 import in.cypal.studio.gwt.core.common.Util;
 
@@ -28,12 +29,16 @@ import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 
 /**
+ * 
  * @author Prakash G.R.
  * 
  */
 public class UnInstallDelegate implements IDelegate {
 
 	public void execute(IProject project, IProjectFacetVersion facetVersion, Object config, IProgressMonitor monitor) throws CoreException {
+
+		long start = System.currentTimeMillis();
+		Activator.debugMessage("Uninstalling Cypal Studio for GWT Facet...");
 
 		monitor = Util.getNonNullMonitor(monitor);
 
@@ -55,6 +60,8 @@ public class UnInstallDelegate implements IDelegate {
 			project.setDescription(description, IResource.FORCE, null);
 
 		} finally {
+			long end = System.currentTimeMillis();
+			Activator.debugMessage("Done uninstalling Cypal Studio for GWT Facet in "+(end-start)+" msecs");
 			monitor.done();
 		}
 	}

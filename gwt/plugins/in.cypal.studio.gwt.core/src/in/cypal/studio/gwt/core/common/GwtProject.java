@@ -135,6 +135,8 @@ public class GwtProject {
 	private void compileModule(IFile moduleFile) throws CoreException {
 
 		String moduleName = Util.getQualifiedName(moduleFile);
+		long start = System.currentTimeMillis();
+		Activator.debugMessage("Invoking GWT Compiler on module '"+moduleName+"'");
 		String projectName = project.getName();
 		IProject project = Util.getProject(projectName);
 
@@ -160,6 +162,8 @@ public class GwtProject {
 			// ok;
 		}
 
+		long end = System.currentTimeMillis();
+		Activator.debugMessage("GWT Compiler finished. Took "+(end-start)+" msecs");
 		IFolder outputLocation = Helper.getOutputLocation(project);
 		outputLocation.refreshLocal(IResource.DEPTH_INFINITE, null);
 

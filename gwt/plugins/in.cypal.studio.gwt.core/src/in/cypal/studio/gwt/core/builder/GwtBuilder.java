@@ -67,6 +67,8 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
 
+		long start = System.currentTimeMillis();
+		Activator.debugMessage("Building GWT Project...");
 		monitor = Util.getNonNullMonitor(monitor);
 
 		try {
@@ -82,6 +84,7 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 			// Do a compile only in full build and preference is set.
 			if (kind == IncrementalProjectBuilder.FULL_BUILD && Preferences.getBoolean(Constants.COMPILE_AT_FULLBUILD_PREFERENCE, true)) {
+				Activator.debugMessage("Full Build and preference is turned on to invoke GWT Compiler");
 				gwtProject.doCompile();
 			}
 
@@ -89,6 +92,8 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 			Activator.logException(e);
 			monitor.setCanceled(true);
 		} finally {
+			long end = System.currentTimeMillis();
+			Activator.debugMessage("Done building GWT Project. Took "+(end-start)+" msecs");
 			monitor.done();
 		}
 
@@ -97,6 +102,7 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 	private void updateAsyncFiles(IProgressMonitor monitor) throws CoreException, BadLocationException {
 
+		Activator.debugMessage("Manual update turned off. Updating Async files");
 		monitor = Util.getNonNullMonitor(monitor);
 
 		try {
@@ -106,6 +112,7 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 			monitor.beginTask("Updating Async files...", remoteServices.size());
 
 			boolean shouldUseGenerics = Util.shouldUse1_5(getProject());
+			Activator.debugMessage("Facet version is greater than 1.0. Generics will be used");
 
 			for (Iterator i = remoteServices.iterator(); i.hasNext();) {
 
@@ -121,6 +128,8 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 	private void updateAsyncFile(IProgressMonitor monitor, boolean shouldUseGenerics, IFile aRemoteServiceFile) throws JavaModelException, BadLocationException {
 
+		Activator.debugMessage("Updating Async file for RemoteService '"+aRemoteServiceFile.getName()+"'");
+		
 		IPackageFragment clientPackage = (IPackageFragment) JavaCore.create(aRemoteServiceFile.getParent());
 
 		ICompilationUnit asyncContents = (ICompilationUnit) JavaCore.create(aRemoteServiceFile);
