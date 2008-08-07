@@ -17,6 +17,7 @@
 
 package in.cypal.studio.gwt.core.builder;
 
+import in.cypal.studio.gwt.core.Activator;
 import in.cypal.studio.gwt.core.common.GwtProject;
 
 import org.eclipse.core.resources.IProject;
@@ -39,6 +40,7 @@ public class GwtCompileOperation extends PublishOperation {
 
 	public void execute(IProgressMonitor monitor, IAdaptable info) throws CoreException {
 
+		Activator.debugMessage("GWT Compile operation during publishing");
 		GwtProject gwtProject = GwtProject.create(project);
 		gwtProject.doCompile();
 	}

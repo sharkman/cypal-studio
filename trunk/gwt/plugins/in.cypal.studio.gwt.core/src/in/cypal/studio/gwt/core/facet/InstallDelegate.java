@@ -37,6 +37,7 @@ import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 
 /**
+ * 
  * @author Prakash G.R.
  * 
  */
@@ -44,6 +45,8 @@ public class InstallDelegate implements IDelegate {
 
 	public void execute(IProject project, IProjectFacetVersion facetVersion, Object config, IProgressMonitor monitor) throws CoreException {
 
+		Activator.debugMessage("Installing Cypal Studio for GWT Facet...");
+		long start = System.currentTimeMillis();
 		monitor = Util.getNonNullMonitor(monitor);
 
 		try {
@@ -58,11 +61,15 @@ public class InstallDelegate implements IDelegate {
 			monitor.setCanceled(true);
 			Activator.logException(e);
 		} finally {
+			long end = System.currentTimeMillis();
+			Activator.debugMessage("Done installing Cypal Studio for GWT Facet in "+(end-start)+" msecs");
 			monitor.done();
 		}
 	}
 
 	public static void addUserLibToClassPath(IProject project, IProgressMonitor monitor) {
+
+		Activator.debugMessage("Adding gwt-user.jar to classpath of project '"+project.getName()+"'");
 
 		monitor = Util.getNonNullMonitor(monitor);
 		try {
@@ -87,6 +94,7 @@ public class InstallDelegate implements IDelegate {
 
 	public static void addServletLibToWebInf(IProject project, IProgressMonitor monitor) {
 
+		Activator.debugMessage("Adding gwt-servlet.jar to classpath of project '"+project.getName()+"'");
 		monitor = Util.getNonNullMonitor(monitor);
 
 		try {
@@ -112,6 +120,7 @@ public class InstallDelegate implements IDelegate {
 
 	private void addNature(IProject project, IProgressMonitor monitor) throws CoreException {
 
+		Activator.debugMessage("Adding Cypal Studio for GWT nature to project '"+project.getName()+"'");
 		monitor = Util.getNonNullMonitor(monitor);
 
 		try {

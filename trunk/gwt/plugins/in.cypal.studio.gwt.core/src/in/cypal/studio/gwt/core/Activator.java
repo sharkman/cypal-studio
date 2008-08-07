@@ -17,6 +17,7 @@
 package in.cypal.studio.gwt.core;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
@@ -36,7 +37,7 @@ public class Activator extends Plugin {
 
 	// The shared instance
 	private static Activator plugin;
-
+	
 	/**
 	 * The constructor
 	 */
@@ -51,6 +52,9 @@ public class Activator extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		if(Platform.inDebugMode() && Boolean.parseBoolean(Platform.getDebugOption(PLUGIN_ID+"/debug"))){
+			shouldDebug = true;
+		}
 	}
 
 	/*
@@ -74,6 +78,14 @@ public class Activator extends Plugin {
 
 	public static void logException(Exception e) {
 		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, -1, e.getMessage(), e));
+	}
+	
+	private static boolean shouldDebug;
+	
+	public static void debugMessage(String message) {
+
+		if(shouldDebug)
+			System.out.println(message);
 	}
 
 }

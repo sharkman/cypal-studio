@@ -16,10 +16,12 @@
  */
 package in.cypal.studio.gwt.core.launch;
 
+import in.cypal.studio.gwt.core.Activator;
 import in.cypal.studio.gwt.core.common.Constants;
 import in.cypal.studio.gwt.core.common.Util;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -59,8 +61,9 @@ public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 	}
 
 	public String[] getClasspath(ILaunchConfiguration configuration) throws CoreException {
-
+		
 		String projectName = configuration.getAttribute(Constants.LAUNCH_ATTR_PROJECT_NAME, ""); //$NON-NLS-1$
+		Activator.debugMessage("Calculating GWT classpath for project '"+projectName+"'");
 		IJavaProject project = JavaCore.create(Util.getProject(projectName));
 		List classpath = new ArrayList();
 
@@ -80,6 +83,12 @@ public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 		}
 
 		classpath.add(Util.getGwtDevLibPath().toPortableString());
+		
+		StringBuilder classpathString = new StringBuilder();
+		Activator.debugMessage("GWT Classpath:");
+		for (Iterator i = classpath.iterator(); i.hasNext();) {
+			Activator.debugMessage("\t"+(String) i.next());
+		}
 
 		return (String[]) classpath.toArray(new String[classpath.size()]);
 
@@ -87,6 +96,7 @@ public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 
 	private List getSourceFolders(IJavaProject project) throws JavaModelException {
 
+		Activator.debugMessage("Adding source folders of project '"+project.getProject().getName()+"' to classpath");
 		List sourceFolders = new ArrayList();
 		IPackageFragmentRoot[] packageFragmentRoots = project.getPackageFragmentRoots();
 		for (int i = 0; i < packageFragmentRoots.length; i++) {

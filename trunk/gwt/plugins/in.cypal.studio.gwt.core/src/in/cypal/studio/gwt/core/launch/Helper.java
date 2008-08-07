@@ -17,6 +17,7 @@
 
 package in.cypal.studio.gwt.core.launch;
 
+import in.cypal.studio.gwt.core.Activator;
 import in.cypal.studio.gwt.core.common.Constants;
 import in.cypal.studio.gwt.core.common.Preferences;
 import in.cypal.studio.gwt.core.common.Util;
@@ -164,7 +165,9 @@ public class Helper {
 		args.append(blacklist);
 		args.append(noServer);
 
-		return args.toString();
+		String shellArgs = args.toString();
+		Activator.debugMessage("GWT Shell args:'"+shellArgs+"'");
+		return shellArgs;
 	}
 
 	public static String getArgs(ILaunchConfiguration configuration, boolean addModuleName) throws CoreException {
@@ -185,7 +188,9 @@ public class Helper {
 			args.append(' ');
 			args.append(configuration.getAttribute(Constants.LAUNCH_ATTR_MODULE_NAME, ""));
 		}
-		return args.toString();
+		String launchArgs = args.toString();
+		Activator.debugMessage("GWT Launch args:'"+launchArgs+"'");
+		return launchArgs;
 	}
 
 	public static List getCommonArgs(ILaunchConfiguration configuration) throws CoreException {
