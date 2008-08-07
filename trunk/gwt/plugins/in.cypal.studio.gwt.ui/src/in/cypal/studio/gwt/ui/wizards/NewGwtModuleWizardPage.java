@@ -206,9 +206,9 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 		templateVars.put("@basePackage", basePackageFragment.getElementName()); //$NON-NLS-1$
 		templateVars.put("@clientPackage", basePackageFragment.getElementName() + '.' + Constants.CLIENT_PACKAGE); //$NON-NLS-1$
 
-		templateVars.put("@standardTheme", standardThemeButton.getSelection() ? "<inherits name=\"com.google.gwt.user.theme.standard.Standard\"/>" + "" : ""); //$NON-NLS-1$
-		templateVars.put("@chromeTheme", chromeThemeButton.getSelection() ? "<inherits name=\"com.google.gwt.user.theme.chrome.Chrome\"/>" : ""); //$NON-NLS-1$
-		templateVars.put("@darkTheme", darkThemeButton.getSelection() ? "<inherits name=\"com.google.gwt.user.theme.dark.Dark\"/>" : ""); //$NON-NLS-1$
+		templateVars.put("@standardTheme", standardThemeButton.getSelection() ? "<inherits name=\"com.google.gwt.user.theme.standard.Standard\"/>" : "<!-- <inherits name=\"com.google.gwt.user.theme.standard.Standard\"/> -->"); //$NON-NLS-1$ //$NON-NLS-2$
+		templateVars.put("@chromeTheme", chromeThemeButton.getSelection() ? "<inherits name=\"com.google.gwt.user.theme.chrome.Chrome\"/>" : "<!-- <inherits name=\"com.google.gwt.user.theme.chrome.Chrome\"/> -->"); //$NON-NLS-1$  //$NON-NLS-2$
+		templateVars.put("@darkTheme", darkThemeButton.getSelection() ? "<inherits name=\"com.google.gwt.user.theme.dark.Dark\"/>" : "<!-- <inherits name=\"com.google.gwt.user.theme.dark.Dark\"/> -->"); //$NON-NLS-1$  //$NON-NLS-2$
 
 	}
 
