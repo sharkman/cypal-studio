@@ -22,6 +22,8 @@ import in.cypal.studio.gwt.core.common.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
@@ -29,6 +31,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.launching.JavaLaunchDelegate;
 
 /**
@@ -59,13 +62,15 @@ public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 
 		String projectName = configuration.getAttribute(Constants.LAUNCH_ATTR_PROJECT_NAME, ""); //$NON-NLS-1$
 		IJavaProject project = JavaCore.create(Util.getProject(projectName));
-		List classpath = new ArrayList(4);
-		IPackageFragmentRoot[] packageFragmentRoots = project.getPackageFragmentRoots();
-		for (int i = 0; i < packageFragmentRoots.length; i++) {
-			IPackageFragmentRoot packageFragmentRoot = packageFragmentRoots[i];
-			if (packageFragmentRoot.getKind() == IPackageFragmentRoot.K_SOURCE) {
-				classpath.add(packageFragmentRoot.getResource().getLocation().toOSString());
-			}
+		List classpath = new ArrayList();
+
+		classpath.addAll(getSourceFolders(project));
+
+		String[] requiredProjectNames = project.getRequiredProjectNames();
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		for (String requiredProjectName : requiredProjectNames) {
+			IJavaProject requiredProject = JavaCore.create(root.getProject(requiredProjectName));
+			classpath.addAll(getSourceFolders(requiredProject));
 		}
 
 		String[] classpath2 = super.getClasspath(configuration);
@@ -78,6 +83,20 @@ public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 
 		return (String[]) classpath.toArray(new String[classpath.size()]);
 
+	}
+
+	private List getSourceFolders(IJavaProject project) throws JavaModelException {
+
+		List sourceFolders = new ArrayList();
+		IPackageFragmentRoot[] packageFragmentRoots = project.getPackageFragmentRoots();
+		for (int i = 0; i < packageFragmentRoots.length; i++) {
+			IPackageFragmentRoot packageFragmentRoot = packageFragmentRoots[i];
+			if (packageFragmentRoot.getKind() == IPackageFragmentRoot.K_SOURCE) {
+				sourceFolders.add(packageFragmentRoot.getResource().getLocation().toOSString());
+			}
+		}
+
+		return sourceFolders;
 	}
 
 	public String getVMArguments(ILaunchConfiguration configuration) throws CoreException {
