@@ -74,7 +74,7 @@ public class MainPreferencePage extends FieldEditorPreferencePage implements IWo
 	protected void createFieldEditors() {
 		addField(new DirectoryFieldEditor(Constants.GWT_HOME_PREFERENCE, "GWT &Home:", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Constants.UPDATE_ASYNC_PREFERENCE, "Manually manage Async files", getFieldEditorParent()));
-		addField(new BooleanFieldEditor(Constants.DELETE_SERVICE_PREFERENCE, "Delete associated files & entries when deleting a RemoteService", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(Constants.DELETE_SERVICE_PREFERENCE, "When deleting a RemoteService, delete associated Async, Impl files and remove entries from gwt.xml and web.xml", getFieldEditorParent()));
 		addField(new StringFieldEditor(Constants.DEFAULT_VM_OPTION_PREFERENCE, "Default &VM Options:", getFieldEditorParent()));
 
 		Group group = new Group(getFieldEditorParent(), SWT.NONE);
