@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Cypal Studio for GWT Core
 Bundle-SymbolicName: in.cypal.studio.gwt.core;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: in.cypal.studio.gwt.core.Activator
 Bundle-Vendor: Cypal Solutions (tools@cypal.in)
 Require-Bundle: org.eclipse.core.runtime,
@@ -11,11 +11,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.core,
  org.eclipse.jdt.launching,
  org.eclipse.jface.text,
- org.eclipse.wst.server.core,
- org.eclipse.wst.common.project.facet.core,
- org.eclipse.wst.common.frameworks,
- org.eclipse.jst.j2ee.web,
- org.eclipse.jst.j2ee,
+ org.eclipse.wst.server.core;resolution:=optional,
+ org.eclipse.wst.common.project.facet.core;resolution:=optional,
+ org.eclipse.wst.common.frameworks;resolution:=optional,
+ org.eclipse.jst.j2ee.web;resolution:=optional,
+ org.eclipse.jst.j2ee;resolution:=optional,
  org.eclipse.core.commands
 Eclipse-LazyStart: true
 Export-Package: in.cypal.studio.gwt.core.common;
