@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2009 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 
 package in.cypal.studio.gwt.ui.common;
 
+import in.cypal.studio.gwt.core.common.GwtRuntime;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.LabelProvider;
 
@@ -26,7 +28,7 @@ import org.eclipse.jface.viewers.LabelProvider;
  */
 public class GwtLabelProvider extends LabelProvider {
 
-	// @Override
+	@Override
 	public String getText(Object element) {
 
 		String text;
@@ -34,6 +36,8 @@ public class GwtLabelProvider extends LabelProvider {
 			text = "";//$NON-NLS-1$
 		} else if (element instanceof IFile && Util.isGwtModuleFile((IFile) element)) {
 			text = Util.getSimpleName((IFile) element);
+		} else if (element instanceof GwtRuntime) {
+			text = ((GwtRuntime) element).getName();
 		} else {
 			text = super.getText(element);
 		}

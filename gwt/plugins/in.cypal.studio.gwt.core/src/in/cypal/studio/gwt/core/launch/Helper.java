@@ -24,7 +24,6 @@ import in.cypal.studio.gwt.core.common.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
@@ -91,14 +90,14 @@ public class Helper {
 		return toLaunch;
 	}
 
-	public static List getClasspath(IJavaProject project) throws CoreException {
+	public static List<String> getClasspath(IJavaProject project) throws CoreException {
 
 		String[] defaultClasspath = JavaRuntime.computeDefaultRuntimeClassPath(project);
 
-		List classpath = new ArrayList();
+		List<String> classpath = new ArrayList<String>();
 		classpath.addAll(Arrays.asList(defaultClasspath));
 
-		classpath.add(Util.getGwtDevLibPath().toPortableString());
+		classpath.add(Util.getGwtDevLibPath(project).toPortableString());
 
 		return classpath;
 	}
@@ -124,15 +123,15 @@ public class Helper {
 	//	
 	public static String getShellArgs(ILaunchConfiguration configuration) throws CoreException {
 
-		boolean useDefaultUrl = configuration.getAttribute(Constants.LAUNCH_ATTR_USE_DEFAULT_URL, true);
+		String moduleName = configuration.getAttribute(Constants.LAUNCH_ATTR_MODULE_NAME, "");//$NON-NLS-1$
 
+		boolean useDefaultUrl = configuration.getAttribute(Constants.LAUNCH_ATTR_USE_DEFAULT_URL, true);
 		String urlArg;
 		if (useDefaultUrl) {
 
-			String moduleName = configuration.getAttribute(Constants.LAUNCH_ATTR_MODULE_NAME, "");//$NON-NLS-1$
 			int index = moduleName.lastIndexOf('.');
 			String moduleHtml = moduleName.substring(index + 1) + ".html";//$NON-NLS-1$
-			urlArg = " " + moduleName + "/" + moduleHtml;//$NON-NLS-1$ //$NON-NLS-2$
+			urlArg = " -startupUrl " + moduleHtml;//$NON-NLS-1$ 
 		} else {
 			urlArg = configuration.getAttribute(Constants.LAUNCH_ATTR_URL, "<no url specified>"); //$NON-NLS-1$
 		}
@@ -160,10 +159,11 @@ public class Helper {
 		StringBuilder args = new StringBuilder();
 		args.append(getArgs(configuration, false));
 		args.append(portArg);
-		args.append(urlArg);
 		args.append(whitelist);
 		args.append(blacklist);
 		args.append(noServer);
+		args.append(urlArg);
+		args.append(" " + moduleName + " ");
 
 		String shellArgs = args.toString();
 		Activator.debugMessage("GWT Shell args:'"+shellArgs+"'");
@@ -172,10 +172,9 @@ public class Helper {
 
 	public static String getArgs(ILaunchConfiguration configuration, boolean addModuleName) throws CoreException {
 		StringBuilder args = new StringBuilder();
-		List commonArgs = getCommonArgs(configuration);
+		List<String> commonArgs = getCommonArgs(configuration);
 		boolean isOut = false;
-		for (Iterator i = commonArgs.iterator(); i.hasNext();) {
-			String aCommonArg = (String) i.next();
+		for (String aCommonArg : commonArgs) {
 			if (isOut) {
 				isOut = false;
 				aCommonArg = "\"" + aCommonArg + "\"";
@@ -193,12 +192,7 @@ public class Helper {
 		return launchArgs;
 	}
 
-	public static List getCommonArgs(ILaunchConfiguration configuration) throws CoreException {
-
-		String projectName = configuration.getAttribute(Constants.LAUNCH_ATTR_PROJECT_NAME, "");//$NON-NLS-1$
-
-		IFolder outputDir = Helper.getOutputLocation(Util.getProject(projectName));
-		String outArg = outputDir.getLocation().toPortableString();
+	public static List<String> getCommonArgs(ILaunchConfiguration configuration) throws CoreException {
 
 		int logLevel = configuration.getAttribute(Constants.LAUNCH_ATTR_LOGLEVEL, 3);
 		String logLevelArg = logLevels[logLevel];
@@ -206,9 +200,9 @@ public class Helper {
 		int style = configuration.getAttribute(Constants.LAUNCH_ATTR_STYLE, 1);
 		String styleArg = "" + styles[style];//$NON-NLS-1$
 
-		List commonArgs = new ArrayList();
-		commonArgs.add("-out");//$NON-NLS-1$
-		commonArgs.add(outArg);
+		List<String> commonArgs = new ArrayList<String>();
+		//		commonArgs.add("-out");//$NON-NLS-1$
+		// commonArgs.add(outArg);
 		commonArgs.add("-logLevel");//$NON-NLS-1$
 		commonArgs.add(logLevelArg);
 		commonArgs.add("-style");//$NON-NLS-1$
@@ -226,6 +220,8 @@ public class Helper {
 		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
 			args += " -XstartOnFirstThread ";//$NON-NLS-1$
 		}
+
+		args += " -Dgwt.nowarn.webapp.classpath ";
 		return args;
 	}
 

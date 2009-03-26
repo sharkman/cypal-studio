@@ -42,6 +42,10 @@ public final class Preferences {
 		return preferencesService.getBoolean(Activator.PLUGIN_ID, key, defaultValue, contexts);
 	}
 
+	public static int getInt(String key, int defaultValue) {
+		return preferencesService.getInt(Activator.PLUGIN_ID, key, defaultValue, contexts);
+	}
+
 	public static String getString(String key) {
 		return getString(key, "");
 	}

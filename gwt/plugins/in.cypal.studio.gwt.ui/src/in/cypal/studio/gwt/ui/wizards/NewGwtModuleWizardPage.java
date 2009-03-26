@@ -33,6 +33,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -142,6 +143,7 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 
 	}
 
+	@Override
 	public void createType(IProgressMonitor monitor) throws CoreException, InterruptedException {
 
 		monitor = Util.getNonNullMonitor(monitor);
@@ -163,7 +165,7 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 		try {
 			initTemplateVars();
 
-			IFile moduleHtml = project.getFile(publicFolder.getProjectRelativePath().append(getTypeName() + ".html")); //$NON-NLS-1$
+			IFile moduleHtml = project.getFile(new Path("war").append(getTypeName() + ".html")); //$NON-NLS-1$
 			Util.writeFile("/Module.html.template", moduleHtml, templateVars); //$NON-NLS-1$
 
 			IFile moduleXml = project.getFile(basePackageFragment.getResource().getProjectRelativePath().append(getTypeName() + '.' + Constants.GWT_XML_EXT));
@@ -178,11 +180,13 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 
 	}
 
+	@Override
 	protected void createTypeMembers(IType newType, ImportsManager imports, IProgressMonitor monitor) throws CoreException {
 		newType.createMethod("public void onModuleLoad() {\n\t// TODO Auto-generated method stub \n}", null, false, monitor);
 		super.createTypeMembers(newType, imports, monitor);
 	}
 
+	@Override
 	public IPackageFragment getPackageFragment() {
 
 		IPackageFragment fragment = super.getPackageFragment();
@@ -191,6 +195,7 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 		return fragment;
 	}
 
+	@Override
 	public IResource getModifiedResource() {
 
 		shouldAppendClient = true;
@@ -218,6 +223,7 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 		initTypePage(javaElement);
 	}
 
+	@Override
 	protected IStatus packageChanged() {
 		String packageText = getPackageText();
 		if (packageText.trim().length() == 0) {
@@ -228,6 +234,7 @@ public class NewGwtModuleWizardPage extends NewTypeWizardPage {
 		return super.packageChanged();
 	}
 
+	@Override
 	protected void handleFieldChanged(String fieldName) {
 		super.handleFieldChanged(fieldName);
 		updateStatus(new IStatus[] { fContainerStatus, fPackageStatus, fTypeNameStatus });

@@ -18,6 +18,9 @@ package in.cypal.studio.gwt.core.common;
 
 import in.cypal.studio.gwt.core.Activator;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+
 /**
  * @author Prakash G.R.
  * 
@@ -28,8 +31,10 @@ public class Constants {
 
 	// GWT related stuff
 	public static final String GWT_ENTRY_POINT_CLASS = "com.google.gwt.core.client.EntryPoint"; //$NON-NLS-1$
-	public static final String GWT_SHELL_CLASS = "com.google.gwt.dev.GWTShell"; //$NON-NLS-1$
-	public static final String GWT_COMPILER_CLASS = "com.google.gwt.dev.GWTCompiler"; //$NON-NLS-1$
+	public static final String GWT_SHELL_CLASS = "com.google.gwt.dev.HostedMode"; //$NON-NLS-1$
+	public static final String GWT_COMPILER_CLASS = "com.google.gwt.dev.Compiler"; //$NON-NLS-1$
+	public static final String GWT_ABOUT_CLASS = "com.google.gwt.dev.About"; //$NON-NLS-1$
+
 	public static final Object REMOTE_SERVICE_CLASS = "RemoteService";
 	public static final String GWT_XML_EXT = "gwt.xml";
 	public static final String CLIENT_PACKAGE = "client";
@@ -60,13 +65,17 @@ public class Constants {
 	// //$NON-NLS-1$
 
 	// Preference keys
-	public static final String GWT_HOME_PREFERENCE = "GWT_HOME_PREFERENCE";
+	// public static final String GWT_HOME_PREFERENCE = "GWT_HOME_PREFERENCE";
 	public static final String GWT_OUTPUT_PREFERENCE = "GWT_OUTPUT_PREFERENCE";
 	public static final String UPDATE_ASYNC_PREFERENCE = "UPDATE_ASYNC_PREFERENCE";
 	public static final String DEFAULT_VM_OPTION_PREFERENCE = "DEFAULT_VM_OPTION_PREFERENCE";
 	public static final String DELETE_SERVICE_PREFERENCE = "DELETE_SERVICE_PREFERENCE";
 	public static final String COMPILE_AT_FULLBUILD_PREFERENCE = "COMPILE_AT_FULLBUILD_PREFERENCE";
 	public static final String COMPILE_AT_PUBLISH_PREFERENCE = "COMPILE_AT_PUBLISH_PREFERENCE";
+	public static final String GWT_RUNTIME_COUNT = "GWT_RUNTIME_COUNT";
+	public static final String GWT_RUNTIME_NAME = "GWT_RUNTIME_NAME";
+	public static final String GWT_RUNTIME_LOCATION = "GWT_RUNTIME_LOCATION";
+	public static final String GWT_RUNTIME_DEFAULT = "GWT_RUNTIME_DEFAULT";
 
 	// Plugin.xml defined
 	private static final String QUALIFIER = PLUGIN_ID + ".";
@@ -74,9 +83,12 @@ public class Constants {
 	public static final String NATURE_ID = QUALIFIER + "gwtNature";
 	public static final String BUILDER_ID = QUALIFIER + "gwtBuilder";
 	public static final String MODULE_XML_CONTENT_ID = QUALIFIER + "moduleXml";
+	public static final String GWT_RUNTIME_ID = "in.cypal.studio.gwt.core.GWT_RUNTIME";
 
-	public static final String GWT_HOME_CPE = "GWT_HOME";
+	// Misc
+	// public static final String GWT_HOME_CPE = "GWT_HOME";
 	// public static final QualifiedName IS_HOSTED_DEPLOY_MODE = null;
-	public static final String GWT_HOME_PATH = "GWT_HOME";
-
+	// public static final String GWT_HOME_PATH = "GWT_HOME";
+	public static final String GWT_RUNTIME_WORKSPACE_DEFAULT = "GWT_RUNTIME_WORKSPACE_DEFAULT";
+	public static final IPath GWT_LIBRARY_CLASSPATH = new Path(Constants.GWT_RUNTIME_ID);
 }

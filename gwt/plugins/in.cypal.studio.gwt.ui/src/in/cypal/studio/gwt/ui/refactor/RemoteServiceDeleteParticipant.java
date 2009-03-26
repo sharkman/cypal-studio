@@ -17,8 +17,6 @@
 
 package in.cypal.studio.gwt.ui.refactor;
 
-import in.cypal.studio.gwt.core.common.Constants;
-import in.cypal.studio.gwt.core.common.Preferences;
 import in.cypal.studio.gwt.ui.Activator;
 
 import org.eclipse.core.resources.IFile;
@@ -43,21 +41,25 @@ public class RemoteServiceDeleteParticipant extends DeleteParticipant {
 
 	private ICompilationUnit compilationUnit;
 
+	@Override
 	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException {
 		return new RefactoringStatus(); // we are OK to delete
 	}
 
+	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		if (Preferences.getBoolean(Constants.DELETE_SERVICE_PREFERENCE))
-			return new DeleteRemoteServiceChange(compilationUnit);
-		else
+		// if (Preferences.getBoolean(Constants.DELETE_SERVICE_PREFERENCE))
+		// return new DeleteRemoteServiceChange(compilationUnit);
+		// else
 			return null;
 	}
 
+	@Override
 	public String getName() {
 		return "Remote Service Delete Participant";
 	}
 
+	@Override
 	protected boolean initialize(Object element) {
 		IJavaElement javaElement = JavaCore.create((IFile) element);
 		if (!(javaElement instanceof ICompilationUnit))

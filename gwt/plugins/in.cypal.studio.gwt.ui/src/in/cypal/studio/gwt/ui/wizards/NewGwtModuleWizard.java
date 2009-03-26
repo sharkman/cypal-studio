@@ -18,7 +18,6 @@
 package in.cypal.studio.gwt.ui.wizards;
 
 import in.cypal.studio.gwt.ui.Activator;
-import in.cypal.studio.gwt.ui.common.Util;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -58,15 +57,15 @@ public class NewGwtModuleWizard extends Wizard implements INewWizard, IExecutabl
 		setWindowTitle("New GWT Module");
 	}
 
+	@Override
 	public void addPages() {
 
-		if (!Util.isGwtHomeSet())
-			addPage(new GwtHomeConfirmationPage());
 		wizardPage = new NewGwtModuleWizardPage();
 		wizardPage.init(selection);
 		addPage(wizardPage);
 	}
 
+	@Override
 	public boolean performFinish() {
 		try {
 

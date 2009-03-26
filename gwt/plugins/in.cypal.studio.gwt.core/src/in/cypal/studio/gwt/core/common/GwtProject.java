@@ -21,7 +21,6 @@ import in.cypal.studio.gwt.core.Activator;
 import in.cypal.studio.gwt.core.launch.Helper;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -48,8 +47,8 @@ public class GwtProject {
 
 	IJavaProject javaProject;
 	IProject project;
-	List moduleFiles;
-	List remoteServiceFiles;
+	List<IFile> moduleFiles;
+	List<IFile> remoteServiceFiles;
 
 	private GwtProject(IJavaProject javaProject) {
 		this.javaProject = javaProject;
@@ -62,27 +61,27 @@ public class GwtProject {
 		return new GwtProject(javaProject);
 	}
 
-	public List getModules() {
+	public List<IFile> getModules() {
 
 		if (moduleFiles == null) {
 			try {
 				moduleFiles = Util.findModules(javaProject);
 			} catch (CoreException e) {
 				Activator.logException(e);
-				moduleFiles = new ArrayList();
+				moduleFiles = new ArrayList<IFile>();
 			}
 		}
 		return moduleFiles;
 	}
 
-	public List getRemoteServices() {
+	public List<IFile> getRemoteServices() {
 
 		if (remoteServiceFiles == null) {
 			try {
 				remoteServiceFiles = Util.findRemoteServices(javaProject);
 			} catch (CoreException e) {
 				Activator.logException(e);
-				remoteServiceFiles = new ArrayList();
+				remoteServiceFiles = new ArrayList<IFile>();
 			}
 		}
 		return remoteServiceFiles;
@@ -90,9 +89,8 @@ public class GwtProject {
 
 	public void doCompile() {
 
-		List modules = getModules();
-		for (Iterator i = modules.iterator(); i.hasNext();) {
-			IFile aModule = (IFile) i.next();
+		List<IFile> modules = getModules();
+		for (IFile aModule : modules) {
 			try {
 				compileModule(aModule);
 			} catch (CoreException e) {
@@ -114,11 +112,11 @@ public class GwtProject {
 
 		monitor = Util.getNonNullMonitor(monitor);
 		try {
-			List modules = getModules();
+			List<IFile> modules = getModules();
 			monitor.beginTask("Starting clean...", modules.size() * 2);
 			IFolder folder = project.getFolder(Util.getGwtOutputFolder());
 			for (int i = 0; i < modules.size(); i++) {
-				IFile aModuleFile = (IFile) modules.get(i);
+				IFile aModuleFile = modules.get(i);
 				String moduleName = Util.getQualifiedName(aModuleFile);
 				IFolder moduleOutputFolder = folder.getFolder(moduleName);
 				if (moduleOutputFolder.exists()) {
@@ -257,12 +255,12 @@ public class GwtProject {
 		return javaProject;
 	}
 
-	public List getRemoteServices(IResourceDelta delta) {
+	public List<IFile> getRemoteServices(IResourceDelta delta) {
 
 		if (delta == null) {
 			remoteServiceFiles = getRemoteServices();
 		} else {
-			remoteServiceFiles = new ArrayList();
+			remoteServiceFiles = new ArrayList<IFile>();
 			try {
 				delta.accept(new ResourceDeltaVisitor());
 			} catch (CoreException e) {
