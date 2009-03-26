@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2009 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,10 @@
 package in.cypal.studio.gwt.ui.preferences;
 
 import in.cypal.studio.gwt.core.common.Constants;
-import in.cypal.studio.gwt.ui.Activator;
 import in.cypal.studio.gwt.ui.common.Util;
 
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -47,15 +40,17 @@ public class MainPreferencePage extends FieldEditorPreferencePage implements IWo
 	static final IPropertyChangeListener changeListener = new IPropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(Constants.GWT_HOME_PREFERENCE)) {
-				IPath newGwtHome = new Path((String) event.getNewValue());
-				try {
-					JavaCore.setClasspathVariable(Constants.GWT_HOME_CPE, newGwtHome, new NullProgressMonitor());
-					ResourcesPlugin.getWorkspace().getPathVariableManager().setValue(Constants.GWT_HOME_PATH, newGwtHome);
-				} catch (Exception e) {
-					Activator.logException(e);
-				}
-			}
+			// if (event.getProperty().equals(Constants.GWT_HOME_PREFERENCE)) {
+			// IPath newGwtHome = new Path((String) event.getNewValue());
+			// try {
+			// JavaCore.setClasspathVariable(Constants.GWT_HOME_CPE, newGwtHome,
+			// new NullProgressMonitor());
+			// ResourcesPlugin.getWorkspace().getPathVariableManager().setValue(Constants.GWT_HOME_PATH,
+			// newGwtHome);
+			// } catch (Exception e) {
+			// Activator.logException(e);
+			// }
+			// }
 
 			if (event.getProperty().equals(Constants.GWT_OUTPUT_PREFERENCE)) {
 				MessageDialog.openInformation(null, "Cypal Studio for GWT", "Compiler output location is saved and will be reflected during next GWT Compilation");
@@ -66,15 +61,17 @@ public class MainPreferencePage extends FieldEditorPreferencePage implements IWo
 
 	public MainPreferencePage() {
 		super(GRID);
-		setDescription("Options for Cypal Studio for GWT");
+		setDescription("Options for Cypal Studio for GWT:");
 		setPreferenceStore(Util.getPreferenceStore());
 
 	}
 
+	@Override
 	protected void createFieldEditors() {
-		addField(new DirectoryFieldEditor(Constants.GWT_HOME_PREFERENCE, "GWT &Home:", getFieldEditorParent()));
+		// addField(new DirectoryFieldEditor(Constants.GWT_HOME_PREFERENCE,
+		// "GWT &Home:", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Constants.UPDATE_ASYNC_PREFERENCE, "Manually manage Async files", getFieldEditorParent()));
-		addField(new BooleanFieldEditor(Constants.DELETE_SERVICE_PREFERENCE, "When deleting a RemoteService, delete associated Async, Impl files and remove entries from gwt.xml and web.xml", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(Constants.DELETE_SERVICE_PREFERENCE, "When deleting a RemoteService, delete associated Async, Impl files and remove entries from web.xml", getFieldEditorParent()));
 		addField(new StringFieldEditor(Constants.DEFAULT_VM_OPTION_PREFERENCE, "Default &VM Options:", getFieldEditorParent()));
 
 		Group group = new Group(getFieldEditorParent(), SWT.NONE);
@@ -82,7 +79,9 @@ public class MainPreferencePage extends FieldEditorPreferencePage implements IWo
 		group.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 3, 1));
 		addField(new StringFieldEditor(Constants.GWT_OUTPUT_PREFERENCE, "&Output Folder:", group));
 		addField(new BooleanFieldEditor(Constants.COMPILE_AT_FULLBUILD_PREFERENCE, "Invoke on Clean &Build", group));
-		addField(new BooleanFieldEditor(Constants.COMPILE_AT_PUBLISH_PREFERENCE, "Invoke when publishing to an &external server", group));
+		// addField(new
+		// BooleanFieldEditor(Constants.COMPILE_AT_PUBLISH_PREFERENCE,
+		// "Invoke when publishing to an &external server", group));
 
 	}
 
@@ -90,6 +89,7 @@ public class MainPreferencePage extends FieldEditorPreferencePage implements IWo
 		getPreferenceStore().addPropertyChangeListener(changeListener);
 	}
 
+	@Override
 	public void dispose() {
 		super.dispose();
 		getPreferenceStore().removePropertyChangeListener(changeListener);

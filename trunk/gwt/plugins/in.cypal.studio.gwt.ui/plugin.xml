@@ -2,18 +2,18 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="org.eclipse.wst.common.project.facet.ui.images">
-      <image
-            facet="in.cypal.studio.gwt.core.gwtFacet"
-            path="icons/gwt_icon16.png"/>
-   </extension>
-   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             class="in.cypal.studio.gwt.ui.preferences.MainPreferencePage"
             id="mainPreferencePage"
             name="Cypal Studio">
          <keywordReference id="in.cypal.studio.gwt.ui.mainPreferenceKeyword"/>
+      </page>
+      <page
+            category="mainPreferencePage"
+            class="in.cypal.studio.gwt.ui.preferences.GwtVersionsPreferencePage"
+            id="gwtVersionsPreferencePage"
+            name="GWT Versions">
       </page>
    </extension>
    <extension
@@ -30,7 +30,7 @@
       <wizard
             category="in.cypal.studio.gwt.ui.cypalNewWizardCategory"
             class="in.cypal.studio.gwt.ui.wizards.NewGwtModuleWizard"
-            finalPerspective="org.eclipse.jst.j2ee.J2EEPerspective"
+            finalPerspective="org.eclipse.jdt.ui.JavaPerspective"
             icon="icons/gwt_icon16.png"
             id="newModuleWizard"
             name="GWT Module"
@@ -38,35 +38,50 @@
       <wizard
             category="in.cypal.studio.gwt.ui.cypalNewWizardCategory"
             class="in.cypal.studio.gwt.ui.wizards.NewGwtRemoteServiceWizard"
-            finalPerspective="org.eclipse.jst.j2ee.J2EEPerspective"
+            finalPerspective="org.eclipse.jdt.ui.JavaPerspective"
             icon="icons/gwt_icon16.png"
             id="newRemoteServiceWizard"
             name="GWT Remote Service"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective"/>
+      <wizard
+            category="in.cypal.studio.gwt.ui.cypalNewWizardCategory"
+            class="in.cypal.studio.gwt.ui.wizards.NewGwtProjectWizard"
+            finalPerspective="org.eclipse.jdt.ui.JavaPerspective"
+            icon="icons/gwt_icon16.png"
+            id="newProjectWizard"
+            name="GWT Project"
+            preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective"
+            project="true">
+      </wizard>
    </extension>
       <extension
          point="org.eclipse.debug.ui.launchShortcuts">
       <shortcut
             class="in.cypal.studio.gwt.ui.launch.LaunchShortcut"
             icon="icons/gwt_icon16.png"
-            id="launchshortcut"
-            label="Gwt Hosted Mode Application"
+            id="in.cypal.studio.gwt.ui.launch.launchShortcut"
+            label="GWT Hosted Mode"
             modes="run, debug">
          <contextualLaunch>
-            <enablement>
-               <with variable="selection">
-                  <count value="1"/>
-                  <iterate>
+           <enablement>
+             <with variable="selection">
+             <count value="1"/>
+               <iterate>
+                  <adapt
+                        type="org.eclipse.core.resources.IResource">
                      <test
-                           forcePluginActivation="true"
-                           property="org.eclipse.debug.ui.matchesPattern"
-                           value="*.gwt.xml"/>
-                  </iterate>
-               </with>
-            </enablement>
-         </contextualLaunch>
-      </shortcut>
-   </extension>
+                           property="org.eclipse.core.resources.projectNature"
+                           value="in.cypal.studio.gwt.core.gwtNature">
+                     </test>
+                  </adapt>
+               </iterate>
+           	</with>
+           </enablement>
+  		 </contextualLaunch>
+         <configurationType
+               id="in.cypal.studio.gwt.core.launchConfigurationType">
+         </configurationType>
+      </shortcut>   </extension>
    <extension
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
@@ -92,6 +107,14 @@
                   value="org.eclipse.core.resources.IFile">
             </instanceof></enablement>
       </deleteParticipant>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            class="in.cypal.studio.gwt.ui.wizards.GwtRuntimeContainerPage"
+            id="in.cypal.studio.gwt.core.GWT_RUNTIME"
+            name="GWT Runtime">
+      </classpathContainerPage>
    </extension>
    
 

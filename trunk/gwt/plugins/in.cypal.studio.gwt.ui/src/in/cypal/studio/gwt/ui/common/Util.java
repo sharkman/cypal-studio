@@ -17,6 +17,7 @@
 package in.cypal.studio.gwt.ui.common;
 
 import in.cypal.studio.gwt.core.common.Constants;
+import in.cypal.studio.gwt.core.common.GwtRuntime;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -82,4 +83,12 @@ public class Util extends in.cypal.studio.gwt.core.common.Util {
 		return contents.toString();
 	}
 
+	public static void setRuntimes(GwtRuntime[] runtimes) {
+		preferenceStore.setValue(Constants.GWT_RUNTIME_COUNT, runtimes.length);
+		for (int i = 0; i < runtimes.length; i++) {
+			preferenceStore.setValue(Constants.GWT_RUNTIME_NAME + i, runtimes[i].getName());
+			preferenceStore.setValue(Constants.GWT_RUNTIME_LOCATION + i, runtimes[i].getLocation());
+			preferenceStore.setValue(Constants.GWT_RUNTIME_DEFAULT + i, runtimes[i].isWorkspaceDefault());
+		}
+	}
 }

@@ -17,10 +17,8 @@
 
 package in.cypal.studio.gwt.ui.wizards;
 
-import in.cypal.studio.gwt.ui.common.Util;
-
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -46,18 +44,18 @@ public class NewGwtEntryPointClassWizard extends NewElementWizard implements IEx
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
 	}
 
+	@Override
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
 		entryPointClassWizardPage.createType(monitor);
 	}
 
+	@Override
 	public IJavaElement getCreatedElement() {
 		return entryPointClassWizardPage.getCreatedType();
 	}
 
+	@Override
 	public void addPages() {
-
-		if (!Util.isGwtHomeSet())
-			addPage(new GwtHomeConfirmationPage());
 
 		entryPointClassWizardPage = new NewGwtEntryPointClassWizardPage();
 		entryPointClassWizardPage.init(getSelection());
@@ -66,6 +64,7 @@ public class NewGwtEntryPointClassWizard extends NewElementWizard implements IEx
 		super.addPages();
 	}
 
+	@Override
 	public boolean performFinish() {
 		warnAboutTypeCommentDeprecation();
 		boolean response = super.performFinish();

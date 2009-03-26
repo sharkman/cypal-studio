@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2009 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
  */
 public class DefaultPreferencesInitializer extends AbstractPreferenceInitializer {
 
+	@Override
 	public void initializeDefaultPreferences() {
 
 		IEclipsePreferences node = new DefaultScope().getNode(Constants.PLUGIN_ID);
-		node.put(Constants.GWT_HOME_PREFERENCE, "C:\\Program Files\\gwt"); //$NON-NLS-1$
 		node.put(Constants.GWT_OUTPUT_PREFERENCE, "build/gwtOutput"); //$NON-NLS-1$
 		node.put(Constants.COMPILE_AT_FULLBUILD_PREFERENCE, Boolean.toString(true));
 		node.put(Constants.DELETE_SERVICE_PREFERENCE, Boolean.toString(true));

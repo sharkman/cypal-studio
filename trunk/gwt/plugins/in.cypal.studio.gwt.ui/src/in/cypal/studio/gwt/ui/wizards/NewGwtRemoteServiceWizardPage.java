@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2009 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -57,12 +56,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.wizards.NewInterfaceWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jst.j2ee.web.componentcore.util.WebArtifactEdit;
-import org.eclipse.jst.j2ee.webapplication.Servlet;
-import org.eclipse.jst.j2ee.webapplication.ServletMapping;
-import org.eclipse.jst.j2ee.webapplication.ServletType;
-import org.eclipse.jst.j2ee.webapplication.WebApp;
-import org.eclipse.jst.j2ee.webapplication.WebapplicationFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -75,8 +68,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wst.common.componentcore.ComponentCore;
-import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -92,7 +83,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	protected IStatus serviceUriStatus = in.cypal.studio.gwt.core.common.Util.okStatus;
 
 	private String serviceUri = "";//$NON-NLS-1$
-	private Map templateVars;
+	private Map<String, String> templateVars;
 	private Combo moduleCombo;
 	private String moduleText = "";//$NON-NLS-1$
 	private Combo projectCombo;
@@ -116,6 +107,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	}
 
 	// @Override
+	@Override
 	public void createControl(Composite parent) {
 
 		initializeDialogUnits(parent);
@@ -147,7 +139,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
 		Dialog.applyDialogFont(composite);
 
-		List superInterfaces = new ArrayList(1);
+		List<String> superInterfaces = new ArrayList<String>(1);
 		superInterfaces.add("com.google.gwt.user.client.rpc.RemoteService");//$NON-NLS-1$
 		setSuperInterfaces(superInterfaces, false);
 
@@ -190,6 +182,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		implCreationButton.setSelection(true);
 		implCreationButton.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
 		implCreationButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				shouldCreateImpl = implCreationButton.getSelection();
 			}
@@ -207,6 +200,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		data.horizontalSpan = 2;
 		projectCombo.setLayoutData(data);
 		projectCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				projectText = projectCombo.getText();
 				projectChanged();
@@ -239,6 +233,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		moduleCombo.setLayoutData(gridData);
 		moduleCombo.addSelectionListener(new SelectionAdapter() {
 			// @Override
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				moduleText = moduleCombo.getText();
 				doStatusUpdate();
@@ -263,9 +258,8 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		if (selectedJavaProject != null) {
 			try {
 				moduleCombo.removeAll();
-				List modulesList = Util.findModules(selectedJavaProject);
-				for (Iterator i = modulesList.iterator(); i.hasNext();) {
-					IFile file = (IFile) i.next();
+				List<IFile> modulesList = Util.findModules(selectedJavaProject);
+				for (IFile file : modulesList) {
 					IPath projectRelativePath = file.getProjectRelativePath();
 					String fileName = file.getName();
 					String moduleName = fileName.substring(0, fileName.length() - Constants.GWT_XML_EXT.length() - 1);
@@ -284,6 +278,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		doStatusUpdate();
 	}
 
+	@Override
 	protected String constructCUContent(ICompilationUnit cu, String typeContent, String lineDelimiter) throws CoreException {
 
 		if (Util.shouldUse1_5(selectedJavaProject.getProject()))
@@ -291,6 +286,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		return super.constructCUContent(cu, typeContent, lineDelimiter);
 	}
 
+	@Override
 	protected void createTypeMembers(IType newType, ImportsManager imports, IProgressMonitor monitor) throws CoreException {
 
 		imports.addImport("com.google.gwt.core.client.GWT");
@@ -326,6 +322,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	}
 
 	// @Override
+	@Override
 	public void createType(IProgressMonitor monitor) throws CoreException, InterruptedException {
 
 		monitor = Util.getNonNullMonitor(monitor);
@@ -338,7 +335,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 			if (shouldCreateImpl)
 				createRemoteServiceImpl(new SubProgressMonitor(monitor, 1));
 			addServletToWebXml(new SubProgressMonitor(monitor, 1));
-			addServletToGwtXml(new SubProgressMonitor(monitor, 1));
+			// addServletToGwtXml(new SubProgressMonitor(monitor, 1));
 		} catch (Exception e) {
 			Activator.logException(e);
 			throw new CoreException(Util.getErrorStatus(e.getMessage()));
@@ -346,6 +343,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	}
 
 	// @Override
+	@Override
 	public IResource getModifiedResource() {
 		try {
 			return getCreatedType().getCompilationUnit().getCorrespondingResource();
@@ -355,6 +353,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	}
 
 	// @Override
+	@Override
 	public IPackageFragmentRoot getPackageFragmentRoot() {
 
 		IPackageFragmentRoot root = null;
@@ -374,6 +373,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	}
 
 	// @Override
+	@Override
 	public IPackageFragment getPackageFragment() {
 
 		IPackageFragment packageFragment = null;
@@ -418,45 +418,43 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		return packageFragment;
 	}
 
-	/**
-	 * @param monitor
-	 * @throws Exception
-	 */
-	private void addServletToGwtXml(IProgressMonitor monitor) throws Exception {
-
-		monitor = Util.getNonNullMonitor(monitor);
-
-		try {
-
-			monitor.beginTask("", 2);
-
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-			DocumentBuilder builder = factory.newDocumentBuilder();
-
-			File moduleFile = getModuleFile();
-
-			Document document = builder.parse(moduleFile);
-			Node module = document.getDocumentElement();
-
-			Element newServlet = document.createElement("servlet");
-			newServlet.setAttribute("path", "/" + serviceUri); //$NON-NLS-2$
-			newServlet.setAttribute("class", getPackageFragment().getElementName() + '.' + getTypeName() + "Impl"); //$NON-NLS-2$
-
-			module.appendChild(newServlet);
-
-			Transformer writer = TransformerFactory.newInstance().newTransformer();
-
-			writer.transform(new DOMSource(document), new StreamResult(moduleFile));
-
-			monitor.worked(1);
-
-			getModuleResource().refreshLocal(IResource.DEPTH_ONE, new SubProgressMonitor(monitor, 1));
-
-		} finally {
-			monitor.done();
-		}
-	}
+	// /**
+	// * @param monitor
+	// * @throws Exception
+	// */
+	// private void addServletToGwtXml(IProgressMonitor monitor) throws
+	// Exception {
+	//
+	// monitor = Util.getNonNullMonitor(monitor);
+	//
+	// try {
+	//
+	// monitor.beginTask("", 2);
+	//
+	// DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	//
+	// DocumentBuilder builder = factory.newDocumentBuilder();
+	//
+	// File moduleFile = getModuleFile();
+	//
+	// Document document = builder.parse(moduleFile);
+	// Node module = document.getDocumentElement();
+	//
+	// addServlet(document, module);
+	//
+	// Transformer writer = TransformerFactory.newInstance().newTransformer();
+	//
+	// writer.transform(new DOMSource(document), new StreamResult(moduleFile));
+	//
+	// monitor.worked(1);
+	//
+	// getModuleResource().refreshLocal(IResource.DEPTH_ONE, new
+	// SubProgressMonitor(monitor, 1));
+	//
+	// } finally {
+	// monitor.done();
+	// }
+	// }
 
 	private File getModuleFile() throws CoreException {
 
@@ -466,6 +464,11 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
 	private IResource getModuleResource() {
 		return Util.getProject(projectText).findMember(moduleText);
+	}
+
+	private File getWebXmlFile() {
+		IFile webXmlFile = Util.getWebXml(Util.getProject(projectText));
+		return webXmlFile.getLocation().toFile();
 	}
 
 	private void createRemoteServiceImpl(IProgressMonitor monitor) throws IOException, CoreException {
@@ -488,7 +491,37 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 	}
 
 	// @SuppressWarnings("unchecked")
-	private void addServletToWebXml(IProgressMonitor monitor) {
+	private void addServletToWebXml(IProgressMonitor monitor) throws Exception {
+
+		monitor = Util.getNonNullMonitor(monitor);
+
+		try {
+
+			monitor.beginTask("", 2);
+
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+			DocumentBuilder builder = factory.newDocumentBuilder();
+
+			File webXmlFile = getWebXmlFile();
+
+			Document document = builder.parse(webXmlFile);
+
+			Node webApp = document.getDocumentElement();
+
+			addServlet(document, webApp);
+
+			Transformer writer = TransformerFactory.newInstance().newTransformer();
+
+			writer.transform(new DOMSource(document), new StreamResult(webXmlFile));
+
+			monitor.worked(1);
+
+			getModuleResource().refreshLocal(IResource.DEPTH_ONE, new SubProgressMonitor(monitor, 1));
+
+		} finally {
+			monitor.done();
+		}
 
 		monitor = Util.getNonNullMonitor(monitor);
 
@@ -496,29 +529,33 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
 			monitor.beginTask("", 1);
 
-			WebapplicationFactory factory = WebapplicationFactory.eINSTANCE;
-
-			Servlet servlet = factory.createServlet();
-			servlet.setServletName(getTypeName());
-
-			ServletType servletType = factory.createServletType();
-			servletType.setClassName(getPackageFragment().getElementName() + '.' + getTypeName() + "Impl");
-			servlet.setWebType(servletType);
-
-			IVirtualComponent component = ComponentCore.createComponent(Util.getProject(projectText));
-			WebArtifactEdit artifactEdit = WebArtifactEdit.getWebArtifactEditForWrite(component);
-			WebApp webApp = (WebApp) artifactEdit.getContentModelRoot();
-			webApp.getServlets().add(servlet);
-
-			ServletMapping mapping = WebapplicationFactory.eINSTANCE.createServletMapping();
-			mapping.setServlet(servlet);
-			mapping.setName(servlet.getServletName());
-			mapping.setUrlPattern("/" + serviceUri);
-			webApp.getServletMappings().add(mapping);
-
-			artifactEdit.saveIfNecessary(monitor);
-
-			artifactEdit.dispose();
+			// WebapplicationFactory factory = WebapplicationFactory.eINSTANCE;
+			//
+			// Servlet servlet = factory.createServlet();
+			// servlet.setServletName(getTypeName());
+			//
+			// ServletType servletType = factory.createServletType();
+			// servletType.setClassName(getPackageFragment().getElementName() +
+			// '.' + getTypeName() + "Impl");
+			// servlet.setWebType(servletType);
+			//
+			// IVirtualComponent component =
+			// ComponentCore.createComponent(Util.getProject(projectText));
+			// WebArtifactEdit artifactEdit =
+			// WebArtifactEdit.getWebArtifactEditForWrite(component);
+			// WebApp webApp = (WebApp) artifactEdit.getContentModelRoot();
+			// webApp.getServlets().add(servlet);
+			//
+			// ServletMapping mapping =
+			// WebapplicationFactory.eINSTANCE.createServletMapping();
+			// mapping.setServlet(servlet);
+			// mapping.setName(servlet.getServletName());
+			// mapping.setUrlPattern("/" + serviceUri);
+			// webApp.getServletMappings().add(mapping);
+			//
+			// artifactEdit.saveIfNecessary(monitor);
+			//
+			// artifactEdit.dispose();
 
 		} finally {
 			monitor.done();
@@ -526,15 +563,51 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 
 	}
 
+	private void addServlet(Document document, Node webApp) {
+
+		// <servlet>
+		// <servlet-name>SomeNameHere</servlet-name>
+		// <servlet-class>fully.qualified.name.of.TheServlet</servlet-class>
+		// </servlet>
+
+		Element servletName1 = document.createElement("servlet-name");
+		servletName1.setTextContent(getTypeName());
+		Element servletClass = document.createElement("servlet-class");
+		servletClass.setTextContent(getPackageFragment().getElementName() + '.' + getTypeName() + "Impl");
+
+		Element servlet = document.createElement("servlet");
+		servlet.appendChild(servletName1);
+		servlet.appendChild(servletClass);
+
+		// <servlet-mapping>
+		// <servlet-name>SomeNameHere</servlet-name>
+		// <url-pattern>/module.name/serviceUri</url-pattern>
+		// </servlet-mapping>
+
+		Element servletName2 = document.createElement("servlet-name");
+		servletName2.setTextContent(getTypeName());
+		Element urlPattern = document.createElement("url-pattern");
+		urlPattern.setTextContent(Util.getQualifiedName(getModuleResource()) + '/' + serviceUri);
+
+		Element servletMapping = document.createElement("servlet-mapping");
+		servletMapping.appendChild(servletName2);
+		servletMapping.appendChild(urlPattern);
+
+		webApp.appendChild(servlet);
+		webApp.appendChild(servletMapping);
+
+	}
+
 	private void initTemplateVars(String serviceName, String serviceUri, String basePackage) {
 
-		templateVars = new HashMap();
+		templateVars = new HashMap<String, String>();
 		templateVars.put("@serviceName", serviceName);
 		templateVars.put("@basePackage", basePackage);
 		templateVars.put("@serviceUri", serviceUri);
 	}
 
 	// @Override
+	@Override
 	protected void handleFieldChanged(String fieldName) {
 
 		super.handleFieldChanged(fieldName);
@@ -560,6 +633,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 		updateStatus(status);
 	}
 
+	@Override
 	public void init(IStructuredSelection selection) {
 		if (selection != null && selection instanceof IStructuredSelection) {
 			Object firstElement = (selection).getFirstElement();
@@ -576,7 +650,7 @@ public class NewGwtRemoteServiceWizardPage extends NewInterfaceWizardPage {
 					IProject project = ((IResource) firstElement).getProject();
 					if (project.hasNature(Constants.NATURE_ID)) {
 						this.selectedProject = project.getName();
-						IJavaProject javaProject = (IJavaProject) JavaCore.create(project);
+						IJavaProject javaProject = JavaCore.create(project);
 						List modulesList = Util.findModules(javaProject);
 						if (modulesList.size() > 0) {
 							this.selectedModule = (IFile) modulesList.get(0);

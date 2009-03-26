@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 -2008 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 -2009 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import in.cypal.studio.gwt.core.common.Constants;
 import in.cypal.studio.gwt.core.common.Util;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -42,10 +41,12 @@ import org.eclipse.jdt.launching.JavaLaunchDelegate;
  */
 public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 
+	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		super.launch(configuration, mode, launch, monitor);
 	}
 
+	@Override
 	public String getMainTypeName(ILaunchConfiguration configuration) throws CoreException {
 
 		if (configuration.getAttribute(Constants.LAUNCH_ATTR_GWT_COMPILE, false))
@@ -53,6 +54,7 @@ public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 		return Constants.GWT_SHELL_CLASS;
 	}
 
+	@Override
 	public String getProgramArguments(ILaunchConfiguration configuration) throws CoreException {
 
 		if (configuration.getAttribute(Constants.LAUNCH_ATTR_GWT_COMPILE, false))
@@ -60,44 +62,46 @@ public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 		return Helper.getShellArgs(configuration);
 	}
 
+	@Override
 	public String[] getClasspath(ILaunchConfiguration configuration) throws CoreException {
 		
 		String projectName = configuration.getAttribute(Constants.LAUNCH_ATTR_PROJECT_NAME, ""); //$NON-NLS-1$
 		Activator.debugMessage("Calculating GWT classpath for project '"+projectName+"'");
 		IJavaProject project = JavaCore.create(Util.getProject(projectName));
-		List classpath = new ArrayList();
+		List<String> classpaths = new ArrayList<String>();
 
-		classpath.addAll(getSourceFolders(project));
+		classpaths.addAll(getSourceFolders(project));
 
 		String[] requiredProjectNames = project.getRequiredProjectNames();
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		for (String requiredProjectName : requiredProjectNames) {
 			IJavaProject requiredProject = JavaCore.create(root.getProject(requiredProjectName));
-			classpath.addAll(getSourceFolders(requiredProject));
+			classpaths.addAll(getSourceFolders(requiredProject));
 		}
 
 		String[] classpath2 = super.getClasspath(configuration);
 		for (int i = 0; i < classpath2.length; i++) {
 			String aClasspath = classpath2[i];
-			classpath.add(aClasspath);
+			classpaths.add(aClasspath);
 		}
 
-		classpath.add(Util.getGwtDevLibPath().toPortableString());
+		classpaths.add(Util.getGwtDevLibPath(project).toPortableString());
 		
-		StringBuilder classpathString = new StringBuilder();
+
+		// StringBuilder classpathString = new StringBuilder();
 		Activator.debugMessage("GWT Classpath:");
-		for (Iterator i = classpath.iterator(); i.hasNext();) {
-			Activator.debugMessage("\t"+(String) i.next());
+		for (String classpath : classpaths) {
+			Activator.debugMessage("\t" + classpath);
 		}
 
-		return (String[]) classpath.toArray(new String[classpath.size()]);
+		return classpaths.toArray(new String[classpaths.size()]);
 
 	}
 
-	private List getSourceFolders(IJavaProject project) throws JavaModelException {
+	private List<String> getSourceFolders(IJavaProject project) throws JavaModelException {
 
 		Activator.debugMessage("Adding source folders of project '"+project.getProject().getName()+"' to classpath");
-		List sourceFolders = new ArrayList();
+		List<String> sourceFolders = new ArrayList<String>();
 		IPackageFragmentRoot[] packageFragmentRoots = project.getPackageFragmentRoots();
 		for (int i = 0; i < packageFragmentRoots.length; i++) {
 			IPackageFragmentRoot packageFragmentRoot = packageFragmentRoots[i];
@@ -109,6 +113,7 @@ public class LaunchConfigurationDelegate extends JavaLaunchDelegate {
 		return sourceFolders;
 	}
 
+	@Override
 	public String getVMArguments(ILaunchConfiguration configuration) throws CoreException {
 
 		return super.getVMArguments(configuration) + Helper.getVMArguments(configuration);

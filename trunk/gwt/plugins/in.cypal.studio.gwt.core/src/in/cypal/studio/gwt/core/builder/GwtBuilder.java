@@ -65,6 +65,7 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 
 	GwtProject gwtProject;
 
+	@Override
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
 
 		long start = System.currentTimeMillis();
@@ -108,15 +109,15 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 		try {
 
 			IResourceDelta delta = getDelta(getProject());
-			List remoteServices = gwtProject.getRemoteServices(delta);
+			List<IFile> remoteServices = gwtProject.getRemoteServices(delta);
 			monitor.beginTask("Updating Async files...", remoteServices.size());
 
 			boolean shouldUseGenerics = Util.shouldUse1_5(getProject());
 			Activator.debugMessage("Facet version is greater than 1.0. Generics will be used");
 
-			for (Iterator i = remoteServices.iterator(); i.hasNext();) {
+			for (IFile iFile : remoteServices) {
 
-				updateAsyncFile(monitor, shouldUseGenerics, (IFile) i.next());
+				updateAsyncFile(monitor, shouldUseGenerics, iFile);
 
 				monitor.worked(1);
 			}
@@ -294,6 +295,7 @@ public class GwtBuilder extends IncrementalProjectBuilder {
 		return parameterizedType;
 	}
 
+	@Override
 	protected void clean(IProgressMonitor monitor) throws CoreException {
 
 		gwtProject = GwtProject.create(getProject());

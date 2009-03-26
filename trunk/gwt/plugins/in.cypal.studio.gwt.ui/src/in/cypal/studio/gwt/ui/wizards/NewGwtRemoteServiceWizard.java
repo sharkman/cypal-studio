@@ -18,7 +18,6 @@
 package in.cypal.studio.gwt.ui.wizards;
 
 import in.cypal.studio.gwt.ui.Activator;
-import in.cypal.studio.gwt.ui.common.Util;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -56,10 +55,9 @@ public class NewGwtRemoteServiceWizard extends Wizard implements INewWizard, IEx
 		setWindowTitle("New GWT Remote Service");
 	}
 
+	@Override
 	public void addPages() {
 
-		if (!Util.isGwtHomeSet())
-			addPage(new GwtHomeConfirmationPage());
 		wizardPage = new NewGwtRemoteServiceWizardPage();
 		wizardPage.init(selection);
 		addPage(wizardPage);
@@ -70,6 +68,7 @@ public class NewGwtRemoteServiceWizard extends Wizard implements INewWizard, IEx
 		wizardPage.createType(monitor);
 	}
 
+	@Override
 	public boolean performFinish() {
 		try {
 

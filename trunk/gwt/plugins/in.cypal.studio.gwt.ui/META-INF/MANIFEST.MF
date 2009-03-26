@@ -10,17 +10,13 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources,
  org.eclipse.jdt.core,
  org.eclipse.jdt.ui,
- org.eclipse.jst.j2ee.web;resolution:=optional,
- org.eclipse.jst.j2ee.core;resolution:=optional,
- org.eclipse.jst.j2ee;resolution:=optional,
  in.cypal.studio.gwt.core,
  org.eclipse.ui.ide,
  org.eclipse.debug.ui,
  org.eclipse.jdt.debug.ui,
  org.eclipse.jdt.launching,
- org.eclipse.wst.xml.core;resolution:=optional,
- org.eclipse.emf.edit.ui;resolution:=optional,
  org.eclipse.ltk.core.refactoring,
  org.eclipse.ltk.ui.refactoring
 Eclipse-LazyStart: true
 Export-Package: in.cypal.studio.gwt.ui.wizards
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

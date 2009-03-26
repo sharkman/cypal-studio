@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 - 2008 Cypal Solutions (tools@cypal.in)
+ * Copyright 2006 - 2009 Cypal Solutions (tools@cypal.in)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,13 @@ package in.cypal.studio.gwt.core.common;
 
 import in.cypal.studio.gwt.core.Activator;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -48,13 +47,6 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.wst.common.componentcore.ComponentCore;
-import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
-import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
-import org.eclipse.wst.common.componentcore.resources.IVirtualResource;
-import org.eclipse.wst.common.project.facet.core.IFacetedProject;
-import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
-import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
 /**
  * @author Prakash G.R.
@@ -67,25 +59,51 @@ public class Util {
 	public static final IStatus okStatus = Status.OK_STATUS;
 	public static final IStatus errorStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, -1, "Error", null);
 
-	public static IPath getGwtUserLibPath() {
-		return new Path(Constants.GWT_HOME_CPE).append("gwt-user.jar");//$NON-NLS-1$
+	public static GwtRuntime getRuntime(IJavaProject project) throws JavaModelException {
+		IClasspathEntry gwtLibraryEntry = getGwtLibraryEntry(project);
+		String runtimeId = gwtLibraryEntry.getPath().lastSegment();
+		GwtRuntime runtime = getRuntime(runtimeId);
+		return runtime;
 	}
 
-	public static IPath getGwtServletLibPath() {
-		return new Path(Constants.GWT_HOME_CPE).append("gwt-servlet.jar");//$NON-NLS-1$
+	public static IPath getGwtUserLibPath(IJavaProject project) throws JavaModelException {
+		GwtRuntime runtime = getRuntime(project);
+		return new Path(runtime.getLocation()).append(getGwtUserLibJarName());//$NON-NLS-1$
 	}
 
-	public static IPath getGwtDevLibPath() {
-		IPath gwtHome = JavaCore.getClasspathVariable(Constants.GWT_HOME_CPE);
-		IPath devLibPath;
-		if (Platform.getOS().equals(Platform.OS_MACOSX))
-			devLibPath = gwtHome.append("gwt-dev-mac.jar");//$NON-NLS-1$
-		else if (Platform.getOS().equals(Platform.OS_WIN32))
-			devLibPath = gwtHome.append("gwt-dev-windows.jar");//$NON-NLS-1$
-		else
-			// the default is linux
-			devLibPath = gwtHome.append("gwt-dev-linux.jar"); //$NON-NLS-1$
-		return devLibPath;
+	public static IPath getGwtServletLibPath(IJavaProject project) throws JavaModelException {
+		GwtRuntime runtime = getRuntime(project);
+		return new Path(runtime.getLocation()).append(getGwtServletJarName());//$NON-NLS-1$
+	}
+
+	public static String getGwtServletJarName() {
+		return "gwt-servlet.jar";
+	}
+
+	private static String gwtDevLibJarName;
+
+	public static String getGwtDevLibJarName() {
+
+		if (gwtDevLibJarName == null) {
+			if (Platform.getOS().equals(Platform.OS_MACOSX))
+				gwtDevLibJarName = "gwt-dev-mac.jar";//$NON-NLS-1$
+			else if (Platform.getOS().equals(Platform.OS_WIN32))
+				gwtDevLibJarName = "gwt-dev-windows.jar";//$NON-NLS-1$
+			else
+				// the default is linux
+				gwtDevLibJarName = "gwt-dev-linux.jar"; //$NON-NLS-1$
+		}
+		return gwtDevLibJarName;
+
+	}
+
+	public static String getGwtUserLibJarName() {
+		return "gwt-user.jar";
+	}
+
+	public static IPath getGwtDevLibPath(IJavaProject project) throws JavaModelException {
+		GwtRuntime runtime = getRuntime(project);
+		return new Path(runtime.getLocation()).append(getGwtDevLibJarName());//$NON-NLS-1$
 	}
 
 	public static boolean isModuleXml(IResource resource) {
@@ -114,7 +132,7 @@ public class Util {
 
 	public static IJavaProject[] filterGwtProjects(IJavaProject[] javaProjects) {
 
-		List gwtProjects = new ArrayList(javaProjects.length);
+		List<IJavaProject> gwtProjects = new ArrayList<IJavaProject>(javaProjects.length);
 
 		for (int i = 0; i < javaProjects.length; i++) {
 
@@ -127,8 +145,19 @@ public class Util {
 			}
 		}
 
-		return (IJavaProject[]) gwtProjects.toArray(new IJavaProject[gwtProjects.size()]);
+		return gwtProjects.toArray(new IJavaProject[gwtProjects.size()]);
 
+	}
+
+	public static String getWarLocation() {
+		return "war";
+	}
+
+	public static IFile getWebXml(IProject project) {
+		IFolder warFolder = (IFolder) project.findMember(Util.getWarLocation());
+		IFolder webInfFolder = warFolder.getFolder("WEB-INF");
+		IFile webXmlFile = webInfFolder.getFile("web.xml");
+		return webXmlFile;
 	}
 
 	public static String getOutputLocation(String projectName, String moduleName) {
@@ -175,9 +204,9 @@ public class Util {
 		return monitor;
 	}
 
-	public static List findModules(IJavaProject javaProject) throws CoreException {
+	public static List<IFile> findModules(IJavaProject javaProject) throws CoreException {
 
-		List moduleFiles = new ArrayList();
+		List<IFile> moduleFiles = new ArrayList<IFile>();
 
 		for (int i = 0; i < javaProject.getPackageFragmentRoots().length; i++) {
 
@@ -212,9 +241,9 @@ public class Util {
 		return moduleFiles;
 	}
 
-	public static List findRemoteServices(IJavaProject javaProject) throws CoreException {
+	public static List<IFile> findRemoteServices(IJavaProject javaProject) throws CoreException {
 
-		List remoteServiceFiles = new ArrayList();
+		List<IFile> remoteServiceFiles = new ArrayList<IFile>();
 
 		IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
 		for (int i = 0; i < packageFragmentRoots.length; i++) {
@@ -252,7 +281,7 @@ public class Util {
 							for (int m = 0; m < superInterfaceNames.length; m++) {
 								String aSuperInterface = superInterfaceNames[m];
 								if (aSuperInterface.equals(Constants.REMOTE_SERVICE_CLASS)) {
-									remoteServiceFiles.add(resource);
+									remoteServiceFiles.add((IFile) resource);
 								}
 							}
 						}
@@ -307,24 +336,24 @@ public class Util {
 		return isGwtModuleFile;
 	}
 
-	public static String getSimpleName(IFile file) {
+	public static String getSimpleName(IResource iResource) {
 
 		String simpleName = "";//$NON-NLS-1$
-		if (file != null) {
-			simpleName = file.getName();
+		if (iResource != null) {
+			simpleName = iResource.getName();
 			int index = simpleName.indexOf(Constants.GWT_XML_EXT);
 			simpleName = simpleName.substring(0, index - 1);
 		}
 		return simpleName;
 	}
 
-	public static String getQualifiedName(IFile file) {
+	public static String getQualifiedName(IResource iResource) {
 
 		String qualifiedName = "";//$NON-NLS-1$
-		if (file != null) {
+		if (iResource != null) {
 			StringBuilder builder = new StringBuilder();
 
-			String[] segments = getSegmentsFromSourceFolder(file);
+			String[] segments = getSegmentsFromSourceFolder(iResource);
 			for (int i = 0; i < segments.length; i++) {
 				builder.append(segments[i]);
 				builder.append('.');
@@ -336,21 +365,21 @@ public class Util {
 	}
 
 	/**
-	 * @param file
+	 * @param iResource
 	 * @return
 	 */
-	private static String[] getSegmentsFromSourceFolder(IFile file) {
+	private static String[] getSegmentsFromSourceFolder(IResource iResource) {
 
 		int removeCount = 1;// by default, just remove the source folder;
 		try {
-			IJavaProject javaProject = JavaCore.create(file.getProject());
+			IJavaProject javaProject = JavaCore.create(iResource.getProject());
 			IClasspathEntry[] classpathEntries = javaProject.getRawClasspath();
 			for (int i = 0; i < classpathEntries.length; i++) {
 
 				if (classpathEntries[i].getEntryKind() != IClasspathEntry.CPE_SOURCE)
 					continue;// we are interested only in source folders
 				IPath path = classpathEntries[i].getPath();
-				if (path.isPrefixOf(file.getFullPath())) {
+				if (path.isPrefixOf(iResource.getFullPath())) {
 					removeCount = path.segmentCount() - 1;
 				}
 
@@ -359,23 +388,13 @@ public class Util {
 			Activator.logException(new Exception(e));
 		}
 
-		IPath filePath = file.getProjectRelativePath().removeFirstSegments(removeCount);
+		IPath filePath = iResource.getProjectRelativePath().removeFirstSegments(removeCount);
 		return filePath.segments();
 	}
 
 	public static String getGwtOutputFolder() {
 		return Preferences.getString(Constants.GWT_OUTPUT_PREFERENCE);
 
-	}
-
-	public static boolean isGwtHomeSet() {
-
-		boolean set = false;
-		if (JavaCore.getClasspathVariable(Constants.GWT_HOME_CPE) != null) {
-			File gwtUserJar = new File(Preferences.getString(Constants.GWT_HOME_PREFERENCE) + "/gwt-user.jar");
-			set = gwtUserJar.exists();
-		}
-		return set;
 	}
 
 	public static IProject getProject(String name) {
@@ -386,46 +405,113 @@ public class Util {
 		return new Status(IStatus.ERROR, Activator.PLUGIN_ID, IStatus.OK, errorMessage, null);
 	}
 
-	public static void deleteModules(IProject project) throws CoreException {
+	// public static void deleteModules(IProject project) throws CoreException {
+	//
+	// }
 
-	}
+	public static void createModuleEntry(IProject project, String moduleName) {
 
-	public static void createModuleEntry(IProject project, String moduleName) throws CoreException {
-
-		IVirtualComponent component = ComponentCore.createComponent(project);
-		IVirtualFolder folder = component.getRootFolder().getFolder("/");
-		IContainer[] underlyingFolders = folder.getUnderlyingFolders();
-		IResource[] underlyingResources = folder.getUnderlyingResources();
-		IVirtualResource[] members = folder.members();
-		// IVirtualResource[] members = folder.members();
-		// IVirtualFolder folder2 = folder.getFolder(new
-		// Path(getGwtOutputFolder()).append(moduleName));
+		// IVirtualComponent component = ComponentCore.createComponent(project);
+		// IVirtualFolder folder = component.getRootFolder().getFolder("/");
 		// IContainer[] underlyingFolders = folder.getUnderlyingFolders();
-		IVirtualFolder moduleOutputFolder = component.getRootFolder().getFolder("/"); //$NON-NLS-1$
-		moduleOutputFolder.createLink(new Path(getGwtOutputFolder()).append(moduleName), IResource.FORCE, null);
+		// IResource[] underlyingResources = folder.getUnderlyingResources();
+		// IVirtualResource[] members = folder.members();
+		// // IVirtualResource[] members = folder.members();
+		// // IVirtualFolder folder2 = folder.getFolder(new
+		// // Path(getGwtOutputFolder()).append(moduleName));
+		// // IContainer[] underlyingFolders = folder.getUnderlyingFolders();
+		//		IVirtualFolder moduleOutputFolder = component.getRootFolder().getFolder("/"); //$NON-NLS-1$
+		// moduleOutputFolder.createLink(new
+		// Path(getGwtOutputFolder()).append(moduleName), IResource.FORCE,
+		// null);
 
 	}
 
 	public static boolean shouldUse1_5(IProject project) {
-		boolean shouldUseGenerics = false;
-		try {
-			IFacetedProject facetedProject;
-			facetedProject = ProjectFacetsManager.create(project);
-			Set<IProjectFacetVersion> projectFacets = facetedProject.getProjectFacets();
-			for (IProjectFacetVersion projectFacetVersion : projectFacets) {
-				if (projectFacetVersion.getProjectFacet().getId().equals(Constants.FACET_ID)) {
-	
-					// 1.0 doesn't support generics, all above versions should
-					// be supporting generics
-					if (!projectFacetVersion.getVersionString().equals("1.0"))
-						shouldUseGenerics = true;
-	
-					break;
-				}
-			}
-		} catch (CoreException e) {
-			Activator.logException(e);
-		}
+		boolean shouldUseGenerics = true;
+		// try {
+		// IFacetedProject facetedProject;
+		// facetedProject = ProjectFacetsManager.create(project);
+		// Set<IProjectFacetVersion> projectFacets =
+		// facetedProject.getProjectFacets();
+		// for (IProjectFacetVersion projectFacetVersion : projectFacets) {
+		// if
+		// (projectFacetVersion.getProjectFacet().getId().equals(Constants.FACET_ID))
+		// {
+		//
+		// // 1.0 doesn't support generics, all above versions should
+		// // be supporting generics
+		// if (!projectFacetVersion.getVersionString().equals("1.0"))
+		// shouldUseGenerics = true;
+		//
+		// break;
+		// }
+		// }
+		// } catch (CoreException e) {
+		// Activator.logException(e);
+		// }
 		return shouldUseGenerics;
 	}
+
+	public static GwtRuntime[] getRuntimes() {
+		int runtimeCount = Preferences.getInt(Constants.GWT_RUNTIME_COUNT, 0);
+		GwtRuntime[] runtimes = new GwtRuntime[runtimeCount];
+		for (int i = 0; i < runtimes.length; i++) {
+			runtimes[i] = new GwtRuntime();
+			runtimes[i].setName(Preferences.getString(Constants.GWT_RUNTIME_NAME + i));
+			runtimes[i].setLocation(Preferences.getString(Constants.GWT_RUNTIME_LOCATION + i));
+			runtimes[i].setWorkspaceDefault(Preferences.getBoolean(Constants.GWT_RUNTIME_DEFAULT + i));
+		}
+		return runtimes;
+	}
+
+	public static GwtRuntime getRuntime(String runtimeId) {
+
+		boolean isWorkspaceDefault = runtimeId.equals(Constants.GWT_RUNTIME_WORKSPACE_DEFAULT);
+		GwtRuntime runtime = null;
+		for (GwtRuntime gwtRuntime : getRuntimes()) {
+			if (runtimeId.equals(gwtRuntime.getName()) || isWorkspaceDefault && gwtRuntime.isWorkspaceDefault()) {
+				runtime = gwtRuntime;
+				break;
+			}
+		}
+		return runtime;
+	}
+
+	public static void addNature(IProject project, IProgressMonitor monitor) throws CoreException {
+
+		Activator.debugMessage("Adding Cypal Studio for GWT nature to project '" + project.getName() + "'");
+		monitor = Util.getNonNullMonitor(monitor);
+
+		try {
+
+			monitor.beginTask("", 1);
+
+			IProjectDescription description = project.getDescription();
+			String[] prevNatures = description.getNatureIds();
+			String[] newNatures = new String[prevNatures.length + 1];
+			System.arraycopy(prevNatures, 0, newNatures, 1, prevNatures.length);
+			newNatures[0] = Constants.NATURE_ID;
+			description.setNatureIds(newNatures);
+
+			project.setDescription(description, IResource.FORCE, null);
+
+		} finally {
+			monitor.done();
+		}
+	}
+
+	public static IClasspathEntry getGwtLibraryEntry(IJavaProject javaProject) throws JavaModelException {
+
+		IClasspathEntry[] classpathEntries = javaProject.getRawClasspath();
+		IClasspathEntry entry = null;
+		for (IClasspathEntry iClasspathEntry : classpathEntries) {
+			if (Constants.GWT_LIBRARY_CLASSPATH.isPrefixOf(iClasspathEntry.getPath())) {
+				entry = iClasspathEntry;
+				break;
+			}
+		}
+		return entry;
+	}
+
 }
